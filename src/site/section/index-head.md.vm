@@ -1,0 +1,12 @@
+
+Instrumentation and dynamic programming tools, supporting JDK 8, 9 and 10.
+
+Provides in-memory and on-disk support for compilation and archiving, proxing of classes and dynamic instrumentation.
+  
+See the module list and examples for more.
+
+These modules are not quite ready for prime-time, until such time, SNAPSHOT artifacts will only be available (in Sontatype OSS repo). 
+
+Due to various pains regarding multi-release JARs (Maven/Jacoco/Sonar lack of support), and no well-defined 
+way to run tests against different JDKs in Maven - the build is currently dependent on JDK paths.
+

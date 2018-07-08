@@ -1,0 +1,33 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Example
+
+
+Given some setup:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/AbstractAgentJarTest.java", "setup" )
+
+A JUnit 4 `Rule` can be used with the Agent class:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/rule/AgentRuleClassTest.java", "class" )
+
+Or, almost identically, with the Agent JAR:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/rule/AgentRuleJarTest.java", "jar" )
+
+
+Similarly a JUnit 5 `Extension` may be used with the Agent class:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/extension/AgentClassTest.java", "class" )
+
+Or with the Agent JAR:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/extension/AgentJarTest.java", "jar" )
+
+
+
+View full [sources](xref-test/io/earcam/instrumental/agent/junit/) of associated tests.

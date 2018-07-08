@@ -1,0 +1,63 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+
+$h3 In lieu of decent documentation, a ridiculous "Hello World" example is presented 
+
+The following compiles, from String source, to 3 archives (API, Imp and App), complete with OSGi and 
+JMPS meta. The archives are then run in various contexts (vanilla Java, JPMS Jigsaw and OSGi).
+
+
+$h4 API JAR
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "api-jar" ) 
+
+$h4 Imp JAR
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "imp-jar" )
+
+(Programmatic OSGi above, swapped for declaratively annotated component below) 
+
+$h4 App JAR
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "app-jar" ) 
+
+
+$h4 Running as vanilla Java
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-vanilla" ) 
+
+The output is something like:
+
+		unnamed module @3a60c416: Hello World
+		
+
+$h4 Onto filesystem for next runs (won't be necessary in the future)
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "filesystem" ) 
+
+
+$h4 Running as JPMS
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-jpms" ) 
+
+The output is:
+
+		module com.acme.app: Hello World
+
+
+
+
+$h4 Running as OSGi
+
+Using felix.connect (aka PojoSR, the phoenix has risen).
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-osgi" ) 
+
+The output is:
+
+		OSGi: Hello World
+		

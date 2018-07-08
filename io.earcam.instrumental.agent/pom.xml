@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.earcam</groupId>
+		<artifactId>io.earcam.instrumental</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>io.earcam.instrumental</groupId>
+	<artifactId>io.earcam.instrumental.agent</artifactId>
+	<packaging>jar</packaging>
+
+	<description>Dynamically load a Java Agent without prerequisite JAR file or JVM arguments. Or acquire java.lang.instrument.Instrumentation via SPI</description>
+
+	<distributionManagement>
+		<site>
+			<id>site</id>
+			<url>${site.url}${earcam.project.name.short}/</url>
+		</site>
+	</distributionManagement>
+
+	<properties>
+		<!-- SonarQube breaks as Jacoco freaks out due to multi-release JAR - see https://github.com/jacoco/jacoco/issues/407 
+		<jacoco.skip>true</jacoco.skip>
+		-->
+		<sonar.coverage.exclusions>**/InstrumentationWrapper.*</sonar.coverage.exclusions>
+
+		<earcam.project.name.short>agent</earcam.project.name.short>
+
+		<java.9.sourceDirectory>${project.basedir}/src/main/java9</java.9.sourceDirectory>
+		<java.9.build.outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</java.9.build.outputDirectory>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.earcam.wrapped</groupId>
+			<artifactId>com.sun.tools.attach</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam</groupId>
+			<artifactId>io.earcam.unexceptional</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.archive</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.reflect</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.charstar</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>java-hamcrest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.19.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.maven.surefire</groupId>
+			<artifactId>surefire-logger-api</artifactId>
+			<version>2.22.0</version>
+			<!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>**/InstrumentationWrapper.*</exclude><!-- multi-release JARs suck -->
+						</excludes>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>capture-classpaths-as-properties</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<exportAntProperties>true</exportAntProperties>
+							<target>
+								<property name="maven.classpath.compile" refid="maven.compile.classpath" />
+								<property name="maven.classpath.runtime" refid="maven.runtime.classpath" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile-java9-multi-release-guff</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>${java.home.9}/bin/javac</executable>
+							<arguments>
+								<argument>-cp</argument>
+								<argument>${maven.classpath.runtime}</argument>
+								<argument>-sourcepath</argument>
+								<argument>${java.9.sourceDirectory}</argument>
+								<argument>-d</argument>
+								<argument>${java.9.build.outputDirectory}</argument>
+								<argument>${java.9.sourceDirectory}/io/earcam/instrumental/agent/InstrumentationWrapper.java</argument> <!-- shoot me -->
+							</arguments>
+							<successCodes>
+								<successCode>0</successCode>
+							</successCodes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<inherited>true</inherited>
+				<configuration>
+					<instructions>
+						<Multi-Release>true</Multi-Release>
+					</instructions>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkCount>1</forkCount>
+					<reuseForks>false</reuseForks>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>${version.junit.platform}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>${version.junit5}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+</project>

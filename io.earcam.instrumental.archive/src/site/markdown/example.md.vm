@@ -1,0 +1,18 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Example
+
+The following creates an in-memory JAR with the supplied class and a manifest header indicating the `Main-Class`:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/AsJarTest.java", "jar-main" )
+
+The following demonstrates creating a JAR with 2 SPI implementations, and loading into a classloader:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/AsJarTest.java", "jar-spi-classload" )
+
+
+View full [source](xref-test/io/earcam/instrumental/archive/AsJarTest.html) of associated test.

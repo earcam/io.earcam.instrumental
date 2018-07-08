@@ -1,0 +1,21 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+A very simple [Java Agent][java-agent] to defi<span class="color-highlight">nalize</span>.
+
+Leverages [ASM][asm] to strip `final` modifiers from classes, methods and fields. 
+
+Use:
+
+* Dynamically with module [instrumental.agent][instrumental-agent]
+* In [JUnit][junit] tests with the other module [instrumental.agent.junit][instrumental-agent-junit] 
+
+
+[instrumental-agent]: /agent
+[instrumental-agent-junit]: /agent/junit
+
+[asm]: http://asm.ow2.org
+[junit]: http://junit.org
+[java-agent]: https://docs.oracle.com/javase/${version.java.platform}/docs/api/java/lang/instrument/package-summary.html

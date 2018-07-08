@@ -1,0 +1,62 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Examples
+
+$h4 Method handle
+
+Find a method and then get a handle for it:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/MethodsTest.java", "normal-handle" )
+
+([source](xref-test/io/earcam/instrumental/reflect/MethodsTest.html))
+
+
+$h4 Find resource
+
+For a given class, locate it's origin, in a directory:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/ResourcesTest.java", "source-dir" )
+
+Or in a JAR:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/ResourcesTest.java", "source-jar" )
+
+([source](xref-test/io/earcam/instrumental/reflect/ResourcesTest.html))
+
+$h4 Names
+
+Get a binary name for a type:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/NamesTest.java", "type-to-binary" )
+
+Get a binary name for a type:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/NamesTest.java", "binary-to-type" )
+
+List all binary names declared within a compilation unit:
+
+Given:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/NamesTest.java", "declared-binaries" )
+
+We shall use:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/NamesTest.java", "declared-binary-names" )
+
+([source](xref-test/io/earcam/instrumental/reflect/NamesTest.html))
+
+$h4 Types
+
+Argument checking `requires*` methods, such as:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/TypesTest.java", "require-class" )
+
+Query methods, such as:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/reflect/TypesTest.java", "implements-all" )
+
+([source](xref-test/io/earcam/instrumental/reflect/TypesTest.html))

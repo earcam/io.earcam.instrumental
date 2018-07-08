@@ -1,0 +1,24 @@
+#*
+*##if( $project.collectedProjects.size() > 0 )#*
+	*#
+<h3>Module List</h3>
+<table>
+ <thead>
+ <tr>
+ <th>Module</th><th>Description</th>
+ </tr>
+ </thead>
+ <tbody>
+#*
+	*##foreach( $module in $project.collectedProjects )##
+ <tr>
+ <td><a href="/$module.properties.get('earcam.project.name.short')">${module.artifactId}</a></td><td>$escape.html(${module.description})</td>
+ </tr>
+#*
+	*##end##
+ </tbody>
+ </table>
+
+#*
+*##end#*
+*#

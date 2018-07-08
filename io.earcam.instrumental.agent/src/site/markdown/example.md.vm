@@ -1,0 +1,16 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+
+$h3 Examples
+
+$h5 Instrumentation via SPI
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/InstrumentationServiceProviderTest.java", "instrumentation-spi" ) 
+
+$h5 Dynamically Load an Agent Class 
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/DynamicAgentTest.java", "agent-class" ) 

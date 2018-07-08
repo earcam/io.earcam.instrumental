@@ -1,0 +1,22 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+Consists of static methods across four class:
+
+0. Methods
+  * **All** methods of class (inherited, overridden)
+  * Easily acquire a `MethodHandle` (works in Java 8, 9 and 10)
+0. Names
+  * Class names to/from binary, descriptor and resource
+0. Resources
+  * Get the bytecode for a class, 
+  * Find a class' location
+0. Types
+  * Methods typically overloaded to accept `java.lang.Class`, `java.lang.reflect.Type` and `java.lang.String`
+  * _isA_ methods for primitive, primitive-wrapper, interface and class
+  * Find all interfaces/supertypes
+  * Convert primitives to/from wrappers
+  * `requiresInterface`/`requiresClass` argument checkers
+

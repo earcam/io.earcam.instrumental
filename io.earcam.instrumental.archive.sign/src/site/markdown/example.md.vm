@@ -1,0 +1,27 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+
+$h3 Example
+
+The following creates a signed JAR on the filesystem:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/sign/WithSignatureTest.java", "method" ) 
+
+With static imports: 
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/sign/WithSignatureTest.java", "imports" ) 
+
+Related fields (note; the key and security stuff is from a test-helper module):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/sign/WithSignatureTest.java", "fields" ) 
+
+And additional maven dependencies: 
+
+#snippet ( "/pom.xml", "example" ) 
+
+
+View full [source](xref-test/io/earcam/instrumental/archive/sign/WithSignatureTest.html) of associated test.

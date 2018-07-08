@@ -1,0 +1,15 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+An annotation processor generating fluent APIs (using the `@Fluent` annotation).
+
+This is purely **experimental**, only for internal use ATM. 
+
+The ultimate goal is produce fluent builder patterns, those that necessarily limit choice; enforcing the setting 
+of mandatory parameters, lending to a sensible/coherent ordering of invocations and generally make construction 
+(with aid of IDE autocomplete) a joy to code.
+
+Priorities are the avoidance of _global_ generic static imports such as `of` and `from` and reduction of static 
+imports to a single type wildcard. 

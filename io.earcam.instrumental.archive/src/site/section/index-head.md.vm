@@ -1,0 +1,75 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+Code for handling [JAR][jar]s.
+
+* Construct archives using fluid builders
+* Read from the file-system or in-memory (with optional filtering)
+* Write to the file-system (zipped up or exploded to a directory), or in-memory (byte array, output stream, classloader, etc)
+
+Use with:
+
+| Integration Module           | Description |
+| ---------------------------- | ----------- |
+| [compile.glue][compile-glue] | archive output of programmatic compilation |
+| [archive.jpms][archive-jpms] | JPMS [modules][jigsaw] support |
+| [archive.osgi][archive-osgi] | [OSGi][osgi] [Bundles][wikipedia-osgi-bundles] support |
+| [archive.sign][archive-sign] | Digital signature (jar signing) |
+| [archive.glue][archive-glue] | use an in-memory archive as a dependency for compilation |
+
+
+
+$h3 Archive architecture - brief implementation notes
+
+To support the various extensions (e.g. sourcing in-memory/filesystem, signing, OSGi/JPMS meta) a simple plugin architecture is employed.
+
+
+
+$h4 Generalising towards Plugins
+
+A _plugin_ typically implements `ArchiveConfigurationPlugin` giving it double-dispatch powers wrt the archive builder, where it may register any of:
+
+* `ArchiveResourceSource` - proves content for the archive
+* `ArchiveResourceFilter` - modify or even exclude content
+* `ArchiveResourceListener` - observes content that is finally added to the archive
+* `ManifestProcessor` - permits mutation of the manifest in the final stages of construction
+
+
+
+$h4 Construction Lifecycle
+
+Once an archive is configured, it may be constructed.  A basic staged lifecycle is defined via an enumeration:
+
+* `INITIAL`
+* `PRE_MANIFEST`
+* `FINAL`
+
+Construction then proceeds as follows:
+
+0. `ArchiveResourceSource` sources are drained (INITIAL)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+0. `ArchiveResourceSource` sources are drained (PRE_MANIFEST)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+0. `ManifestProcessor` processors manipulate the manifest
+0. `ArchiveResourceSource` sources are drained (FINAL)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+
+As observed above, the subcycle for resources is; drain sources, filter and inform listeners.  The lifecycle staging is a rather simplistic approach, but sufficient for current approach.
+
+
+
+[compile-glue]: /compile/glue
+[archive-jpms]: /archive/jpms
+[archive-osgi]: /archive/osgi
+[archive-sign]: /archive/sign
+[archive-glue]: /archive/glue
+[osgi]: https://www.osgi.org
+[jar]: https://docs.oracle.com/javase/${version.java.platform}/docs/technotes/guides/jar/jarGuide.html
+[jigsaw]: http://openjdk.java.net/projects/jigsaw
+[jmod]: https://docs.oracle.com/javase/9/tools/jmod.htm#JSWOR-GUID-0A0BDFF6-BE34-461B-86EF-AAC9A555E2AE
+[wikipedia-osgi-bundles]: https://en.wikipedia.org/wiki/OSGi#Bundles

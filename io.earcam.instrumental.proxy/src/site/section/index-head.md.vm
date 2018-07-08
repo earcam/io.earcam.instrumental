@@ -1,0 +1,21 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+* A cleaner API `${project.artifactId}.Proxies` over `java.lang.reflect.Proxy`
+* A couple of `java.lang.reflect.InvocationHandler` implementations:
+    * AOP advice like; around invocation
+    * NOOP; provides _safe_ default return values and noopthing else. 
+    * Easy stub; any matching methods on a `PartialInvocationHandler` instance will be invoked, otherwise the delegate instance is called (can combine with the NOOP handler)
+
+
+Please note; `PartialInvocationHandler` contains some disgusting code for handling interface default methods and also suffers from [inner/anon class issues][kabutz-heinz-inner-class] - so don't try extending this as an anonymous class.. 
+
+
+To proxy classes, see [instrumental.proxy.concrete][instrumental-proxy-concrete].
+
+[instrumental-proxy-concrete]: /proxy/concrete
+
+[classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-
+
+[kabutz-heinz-inner-class]: http://www.javaspecialists.eu/archive/Issue117.html

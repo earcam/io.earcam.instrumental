@@ -1,0 +1,13 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Example
+
+The following creates an in-memory JPMS module with export predicate::
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.java", "export-predicate" )
+
+View full [source](xref-test/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.html) of associated test.

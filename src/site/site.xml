@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  io.earcam.maven.plugin.site.search.offline
+  %%
+  Copyright (C) 2018 earcam
+  %%
+  SPDX-License-Identifier: (BSD-3-Clause OR EPL-1.0 OR Apache-2.0 OR MIT)
+  
+  You <b>must</b> choose to accept, in full - any individual or combination of 
+  the following licenses:
+  <ul>
+  	<li><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></li>
+  	<li><a href="https://www.eclipse.org/legal/epl-v10.html">EPL-1.0</a></li>
+  	<li><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></li>
+  	<li><a href="https://opensource.org/licenses/MIT">MIT</a></li>
+  </ul>
+  #L%
+  -->
+<project name="Instrumental"
+  xmlns="http://maven.apache.org/DECORATION/1.7.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/DECORATION/1.7.0 http://maven.apache.org/xsd/decoration-1.7.0.xsd">
+
+	<skin>
+		<groupId>io.earcam.maven</groupId>
+		<artifactId>io.earcam.maven.site.skin</artifactId>
+		<version>2.2.0</version>
+	</skin>
+
+	<bannerLeft>
+		<name><![CDATA[
+      Instru<span class="color-highlight">me&#x266B;tal</span>
+      ]]>
+    </name>
+		<href>https://instrumental.earcam.io</href>
+	</bannerLeft>
+
+	<publishDate position="bottom" format="yyyy-MM-dd" />
+	<version position="bottom" />
+	<googleAnalyticsAccountId>UA-121413886-1</googleAnalyticsAccountId>
+
+	<custom>
+		<earcamSkin>
+			<protocolRelativeURLs>true</protocolRelativeURLs>
+			<smoothScroll>true</smoothScroll>
+			<theme>default</theme>
+			<highlightJs>true</highlightJs>
+			<highlightJsTheme>solarized-light</highlightJsTheme>
+			<absoluteResourceURL>https://instrumental.earcam.io</absoluteResourceURL>
+
+			<brand>
+				<name>
+					<![CDATA[
+          				Instru<span class="color-highlight">me&#x266B;tal</span>
+          			]]>
+          		</name>
+				<href>https://instrumental.earcam.io</href>
+			</brand>
+			<slogan>
+				<![CDATA[
+					Dynamic and in-memory tooling
+          		]]>				
+			</slogan>
+			
+			<searchBox>true</searchBox>
+			
+			<titleTemplate>%2$s | %1$s</titleTemplate>
+			<toc>sidebar</toc>
+			<tocTopMax>24</tocTopMax>
+			<topNav>Get|Documentation|About|Reports</topNav>
+			<bottomNav maxSpan="0"> <!-- no bottom nav -->
+				<column>PLEASE_DO_NOT_MATCH_ANYTHING_THANKS</column>
+			</bottomNav>
+			<bottomDescription>
+        <![CDATA[
+          Instru<span class="color-highlight">me&#x266B;tal</span> was built entirely using <abbr title="free and open-source software ☺">FOSS</abbr> <span class="color-highlight">☺</span>
+        ]]>
+			</bottomDescription>
+			<pages>
+				<index>
+					<!-- Override the title -->
+					<titleTemplate>Instrumental</titleTemplate>
+					<breadcrumbs>false</breadcrumbs>
+					<toc>false</toc>
+					<markPageHeader>false</markPageHeader>
+					<sections>
+						<body />
+						<sidebar />
+					</sections>
+				</index>
+				<contribute>
+					<breadcrumbs>false</breadcrumbs>
+				</contribute>
+				
+				<dependency>
+					<breadcrumbs>false</breadcrumbs>
+				</dependency>
+
+				<examples>
+					<breadcrumbs>false</breadcrumbs>
+				</examples>
+				
+				<about>
+					<breadcrumbs>false</breadcrumbs>
+				</about>
+				
+				<!-- Disable source highlighting for Maven reports -->
+				<source-repository>
+					<highlightJs>false</highlightJs>
+				</source-repository>
+				<issue-tracking>
+					<highlightJs>false</highlightJs>
+					<toc>false</toc>
+				</issue-tracking>
+				<licence>
+					<highlightJs>false</highlightJs>
+					<toc>false</toc>
+				</licence>
+				<!-- Disable ToC for some Maven reports -->
+				<project-info>
+					<toc>false</toc>
+				</project-info>
+				<dependencies>
+					<tocTopMax>4</tocTopMax>
+				</dependencies>
+			</pages>
+		</earcamSkin>
+	</custom>
+
+	<body>
+		<head><![CDATA[
+			<link rel="author" href="https://plus.google.com/+CasparMacRae"/>
+			<link rel="search" type="application/opensearchdescription+xml" title="Earcam Instrumental" href="/opensearch.xml">
+		]]></head>
+
+		<menu name="Reports" inherit="top" inheritAsRef="true" ref="reports" />
+
+		<menu name="About" inherit="top">
+			<item name="Licences" href="/licence.html" />
+			<item name="Roadmap" href="/about.html#Roadmap" />
+			<item name="Contribute" href="/contribute.html" />
+			<item name="Source" >
+				<item name="BitBucket" href="https://bitbucket.org/earcam/io.earcam.instrumental" />
+				<item name="GitHub" href="https://github.com/earcam/io.earcam.instrumental" />
+				<item name="Browse Xref" href="./xref/index.html"/>
+			</item>
+		</menu>
+		
+		<footer><![CDATA[
+			<script src="/js/instrumental.js"></script>
+		]]>
+		</footer>
+	</body>
+</project>

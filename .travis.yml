@@ -1,0 +1,36 @@
+language: java
+jdk: oraclejdk8
+sudo: false
+cache:
+  directories:
+  - "$HOME/.m2"
+  - "$HOME/apache-maven-3.5.4"
+  - ''
+addons:
+  apt:
+    packages:
+    - graphviz
+    - oracle-java8-installer
+  sonarcloud:
+    organization: "earcam-github"
+    token:
+      secure: "Cw5htR9F8jFRdji478EdRiod1DM+MzFiopu95N0Y7sVgtiOVjVes3iZWydb5yP0lefqdvG/yGjFDU1NaRrdkRZyPP0MyaMrAlZGQdYPY5MgnzCMN1Z+Q1/Moif3Ly9pg/ueXHv2drRPGi3iI5XmJ5jYaH59ThLshkAZyaB7IE1Hqw95k8sc2UqKW5eGwCWWtaY7GMu1qa4Fxi9d5uaDSvicGWHuZwmv0tIhkbuc6nidEOS7XFewoCoDGl6sWFy2F99fLcrXI4vE9tR8mHBYQjSyX3FV3thtPPh5JsHaisSXbecxdQFULZYQbEW7z4FQNwmtZV1wIoxeqSAKs02VLPFYxpnt0WgJq9Lqq7Vu4nc9puLWiMU1doN/OTEl+0GPnbYp3XnhUi75TkmvuFw/sp0kaBZMTYG2A4qn2X4H6jDW+5pGrY3roTvBKXC6UEXtGz4eMLqiLjrsrg51LMcflmjC00hw/N34yShFiWqCdRJeBueJR1ztV3DjA8rKuK68qb6g3UEyI0RW10IXZI9OsDxGvX/rRls6i8w7rvlY59UxaD1CGXrAz62APuI9XTB+U52iJ7qRsbdgt+mSnDKM5cFH6MwvnfDnMr6ILW+v0ekiS483O1KV+HH7XZPfZWjAglBE4I9e2SaeDQt7OrUoAGWT9KXRdGpkWvyJWT/xYXgc="  
+before_install:
+- sudo add-apt-repository ppa:linuxuprising/java -y
+- sudo apt-get update -q
+- sudo apt-get install oracle-java9-installer oracle-java10-installer -y
+- export JAVA_8_HOME=/usr/lib/jvm/java-8-oracle
+- export JAVA_HOME=${JAVA_8_HOME}
+- mkdir -p $HOME/.m2
+- export M2_HOME=$HOME/apache-maven-3.5.4
+- if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz | tar zxf - -C $HOME; fi
+- export PATH=$M2_HOME/bin:$PATH
+install:
+- chmod go-rwx -R $HOME/.m2
+before_script:
+- wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.toolchain/src/main/resources/toolchain/continuous-integration-hotspot-linux-debian-amd64.xml  -O  ~/.m2/toolchains.xml
+- wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.configuration/src/main/resources/settings.xml  -O $HOME/ci-settings.xml
+- mvn -v
+script:
+- mvn --settings $HOME/ci-settings.xml -U -P analyse,sonar  -Drevapi.skip=true
+

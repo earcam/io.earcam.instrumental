@@ -1,0 +1,88 @@
+*           Repetition of the previous element zero or
+            more times, e.g. ( ',' element )*
++           Repetition one or more times
+?           Previous element is optional
+( ... )     Grouping
+'...'       Literal
+|           Or
+[...]       Set (one of)
+..          list, e.g. 1..5 is the list 1 2 3 4 5
+<...>       Externally defined token
+~           Not
+The following terminals are pre defined and used throughout the specifications:
+ws              ::= <see Character.isWhitespace>
+digit           ::= [0..9]
+alpha           ::= [a..zA..Z]
+alphanum        ::= alpha | digit
+token           ::= ( alphanum | '_' | '-' )+
+number          ::= digit+
+jletter         ::= <see 
+[1] 
+Java Language Specification
+                     for JavaLetter>
+jletterordigit  ::= <see 
+[1] 
+Java Language Specification
+                     for JavaLetterOrDigit>
+qname           ::= <see 
+[1] 
+Java Language Specification
+                     for fully qualified class names>
+identifier      ::= jletter jletterordigit *
+extended        ::= ( alphanum | '_' | '-' | '.' )+
+quoted-string   ::= '"' ( ~["\#x0D#x0A#x00] | '\"' | '\\' )* '"'
+argument        ::= extended  | quoted-string
+parameter       ::= directive | attribute
+directive       ::= extended ':=' argument
+attribute       ::= extended '=' argument
+unique-name     ::= identifier ( '.' identifier )*
+symbolic-name   ::= token ( '.' token )*
+package-name    ::= unique-name
+path            ::= special-chars+ | quoted-string
+special-chars   ::= ~["\#x0D#x0A#x00:=;,<see 
+[1] 
+Java Language Specification
+
+
+
+
+
+
+
+
+Export-Package  ::= export ( ',' export)*
+export          ::= package-names ( ';' parameter )*
+package-names   ::= package-name                // See 1.3.2
+                        ( ';' package-name )*
+                        
+                        
+Export directives are:
+• uses
+• mandatory
+• include
+• exclude
+
+Attributes are:
+• version
+• specification-version
+• Additionally, arbitrary matching attributes may be specified. See Attribute Matching on page 63.
+
+
+
+
+
+
+Import-Package ::= import ( ',' import )*
+import ::= package-names ( ';' parameter )*
+package-names ::= package-name 
+                    ( ';' package-name )* // See 
+1.3.2
+
+Import package directives are:
+• resolution  (values; "mandatory" or "optional" 
+The developer can specify arbitrary matching attributes. See Attribute Matching
+
+following arbitrary matching attributes are predefined:
+• version
+• specification-version
+• bundle-symbolic-name

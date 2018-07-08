@@ -1,0 +1,15 @@
+# See https://confluence.atlassian.com/x/zd-5Mw for examples
+# See https://hub.docker.com/r/earcam/io.earcam.docker.ci/
+# -----
+# 
+image: earcam/io.earcam.docker.ci:latest
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - maven
+        script:
+          - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.toolchain/src/main/resources/toolchain/continuous-integration-hotspot-linux-debian-amd64.xml -O  ${HOME}/.m2/toolchains.xml
+          - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.configuration/src/main/resources/settings.xml -O ${HOME}/ci-settings.xml 
+          - mvn -s ${HOME}/ci-settings.xml -P '!strict' -B verify

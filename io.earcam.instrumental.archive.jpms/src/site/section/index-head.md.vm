@@ -1,0 +1,15 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+Programmatically read and write [JPMS][jpms] modules.
+
+
+**Auto-require** functionality will attempt to write all the necessary `requires` clauses in `module-info`, 
+this includes the standard JDK modules but also those available on the classpath (including automatic modules).
+
+For more elaborate examples see [archive.glue][archive-glue]. 
+
+[archive-glue]: /archive/glue
+[jpms]: http://openjdk.java.net/projects/jigsaw/

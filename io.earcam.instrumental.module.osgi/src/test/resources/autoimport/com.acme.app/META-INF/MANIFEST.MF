@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2222
+Import-Package: com.acme.api;version=0.42.0
+Bundle-SymbolicName: com.acme.app
+Arbitrary-Header: some.other.value
+

@@ -1,0 +1,22 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+Consists of:
+
+* A self-first `URLClassLoader`
+* An in-memory `ClassLoader`
+* The usual exposure of [defineClass()][classloader-defineclass]
+* Static utility to execute a `Runnable` within a thread's context `ClassLoader` 
+
+
+The `${project.artifactId}.InMemoryClassLoader`: 
+
+* Briefly employs the builder pattern to add class and resources
+* Loading strategy is self-first 
+* Load JARs from `byte` arrays and `InputStream`s
+* Works just fine as *the* `java.system.class.loader`
+* `URL`s returned will provide valid streams *but* the **instance** must be used, as it contains a unique `URLStreamHandler` (so cannot be converted to String and back to URL for example)
+
+[classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-

@@ -1,0 +1,17 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+Easily add a [Java Agent][java-agent] in a [JUnit][junit] test without any external configuration.
+
+Provides both JUnit 4 `Rule`s and JUnit 5 `Extension`s.
+
+
+Note: this module is built against `com.sun.tools.attach`, see [io.earcam.wrapped:com.sun.tools.attach][earcam-wrapped-attach] for more details.
+
+
+[earcam-wrapped-attach]: https://bitbucket.org/earcam/com.sun.tools.attach
+[maven-dependency-exclusions]: https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html#Dependency_Exclusions
+[junit]: http://junit.org
+[java-agent]: https://docs.oracle.com/javase/${version.java.platform}/docs/api/java/lang/instrument/package-summary.html

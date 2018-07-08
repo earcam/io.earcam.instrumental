@@ -1,0 +1,12 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Example
+
+Invoking `toString()` returns the sourcecode:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/jpms/DefaultModuleInfoTest.java", "to-string-is-source" )
+

@@ -1,0 +1,13 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+
+$h3 Example
+
+Parse a MANIFEST.MF to produce a Bundle model:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/osgi/DefaultBundleInfoTest.java", "parse" ) 
+

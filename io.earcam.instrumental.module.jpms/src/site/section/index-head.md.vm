@@ -1,0 +1,14 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+Programmatic support for JPMS module-info
+
+* Create and read `module-info.class`
+* Create and read `module-info.java`
+
+Used in [archive.jpms][archive-jpms]
+
+
+[archive-jpms]: /archive/jpms

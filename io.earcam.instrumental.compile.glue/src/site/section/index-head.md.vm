@@ -1,0 +1,13 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+
+* Provides a `CompilationTarget` from [io.earcam.instrumental.compile][instrumental-compile] for [io.earcam.instrumental.archive][instrumental-archive]
+* The output can loaded using [io.earcam.instrumental.lade][instrumental-lade]
+
+
+[instrumental-compile]: /compile
+[instrumental-archive]: /archive
+[instrumental-lade]: /lade

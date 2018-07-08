@@ -1,0 +1,8 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+Allows archives (produced by [instrumental.archive][instrumental-archive]) to be used as dependencies for [instrumental.compile][instrumental-compile]
+
+[instrumental-compile]: /compile
+[instrumental-archive]: /archive

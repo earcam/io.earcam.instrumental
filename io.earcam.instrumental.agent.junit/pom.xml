@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.earcam</groupId>
+		<artifactId>io.earcam.instrumental</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>io.earcam.instrumental</groupId>
+	<artifactId>io.earcam.instrumental.agent.junit</artifactId>
+	<packaging>jar</packaging>
+
+	<description>Use Java Agents in JUnit tests (${version.junit4} and ${version.junit5}) without any external configuration</description>
+
+	<distributionManagement>
+		<site>
+			<id>site</id>
+			<url>${site.url}${earcam.project.name.short}/</url>
+		</site>
+	</distributionManagement>
+
+	<properties>
+		<skip.execution.pitest>false</skip.execution.pitest>
+		<earcam.project.name.short>agent/junit</earcam.project.name.short>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.earcam</groupId>
+			<artifactId>io.earcam.unexceptional</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.agent</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.reflect</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.charstar</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.wrapped</groupId>
+			<artifactId>com.sun.tools.attach</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.archive</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-migrationsupport</artifactId>
+			<version>${version.junit5}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.opentest4j</groupId>
+			<artifactId>opentest4j</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-commons</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>java-hamcrest</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.revapi</groupId>
+				<artifactId>revapi-maven-plugin</artifactId>
+				<configuration>
+					<analysisConfiguration>
+						{
+							"revapi" : {
+								"ignore" : [
+									{
+									  "code": "java.missing.newClass",
+									  "new": "missing-class org.junit.jupiter.api.extension.ExtensionContext",
+									  "classSimpleName": "ExtensionContext",
+									  "package": "",
+									  "classQualifiedName": "org.junit.jupiter.api.extension.ExtensionContext",
+									  "elementKind": "class",
+									  "justification": "Necessarily exposed to JUnit packages"
+									},
+									{
+									  "code": "java.missing.newClass",
+									  "new": "missing-class org.junit.runner.Description",
+									  "classSimpleName": "Description",
+									  "package": "",
+									  "classQualifiedName": "org.junit.runner.Description",
+									  "elementKind": "class",
+									  "justification": "Necessarily exposed to JUnit packages"
+									},
+									{
+									  "code": "java.missing.newClass",
+									  "new": "missing-class org.junit.runners.model.Statement",
+									  "classSimpleName": "Statement",
+									  "package": "",
+									  "classQualifiedName": "org.junit.runners.model.Statement",
+									  "elementKind": "class",
+									  "justification": "Necessarily exposed to JUnit packages"
+									}
+								]
+							}
+						}
+					</analysisConfiguration>
+				</configuration>
+			</plugin>
+				
+				
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>${version.junit.platform}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>${version.junit5}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.junit.vintage</groupId>
+						<artifactId>junit-vintage-engine</artifactId>
+						<version>${version.junit5}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
