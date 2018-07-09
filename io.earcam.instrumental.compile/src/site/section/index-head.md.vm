@@ -21,6 +21,6 @@ output is added to the archive
 
 
 [instrumental-archive]: /archive
-[instrumental-compile-glue]: /compile/glue
-[instrumental-archive-glue]: /archive/glue
+[instrumental-compile-glue]: /compile.glue
+[instrumental-archive-glue]: /archive.glue
 [annotation-processor]: https://docs.oracle.com/javase/${version.java.platform}/docs/api/javax/annotation/processing/Processor.html

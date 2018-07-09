@@ -14,7 +14,7 @@ Please note; `PartialInvocationHandler` contains some disgusting code for handli
 
 To proxy classes, see [instrumental.proxy.concrete][instrumental-proxy-concrete].
 
-[instrumental-proxy-concrete]: /proxy/concrete
+[instrumental-proxy-concrete]: /proxy.concrete
 
 [classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-
 

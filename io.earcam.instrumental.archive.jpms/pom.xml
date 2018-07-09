@@ -23,7 +23,7 @@
 
 	<properties>
 		<skip.execution.pitest>false</skip.execution.pitest>
-		<earcam.project.name.short>archive/jpms</earcam.project.name.short>
+		<earcam.project.name.short>archive.jpms</earcam.project.name.short>
 	</properties>
 
 	<dependencies>

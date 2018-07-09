@@ -11,5 +11,5 @@ this includes the standard JDK modules but also those available on the classpath
 
 For more elaborate examples see [archive.glue][archive-glue]. 
 
-[archive-glue]: /archive/glue
+[archive-glue]: /archive.glue
 [jpms]: http://openjdk.java.net/projects/jigsaw/

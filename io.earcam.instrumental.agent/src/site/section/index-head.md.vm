@@ -6,7 +6,7 @@
 
 For use in [JUnit][junit] tests, please see the other module [instrumental.agent.junit][instrumental-agent-junit] which already has JUnit 4 `Rule`s and JUnit 5 `Extension`s.
 
-[instrumental-agent-junit]: /agent/junit
+[instrumental-agent-junit]: /agent.junit
 [earcam-wrapped-attach]: https://bitbucket.org/earcam/com.sun.tools.attach
 [junit]: http://junit.org
 [java-agent]: https://docs.oracle.com/javase/${version.java.platform}/docs/api/java/lang/instrument/package-summary.html

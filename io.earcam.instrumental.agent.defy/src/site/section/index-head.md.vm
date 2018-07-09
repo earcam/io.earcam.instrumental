@@ -14,7 +14,7 @@ Use:
 
 
 [instrumental-agent]: /agent
-[instrumental-agent-junit]: /agent/junit
+[instrumental-agent-junit]: /agent.junit
 
 [asm]: http://asm.ow2.org
 [junit]: http://junit.org

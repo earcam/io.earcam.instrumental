@@ -63,11 +63,11 @@ As observed above, the subcycle for resources is; drain sources, filter and info
 
 
 
-[compile-glue]: /compile/glue
-[archive-jpms]: /archive/jpms
-[archive-osgi]: /archive/osgi
-[archive-sign]: /archive/sign
-[archive-glue]: /archive/glue
+[compile-glue]: /compile.glue
+[archive-jpms]: /archive.jpms
+[archive-osgi]: /archive.osgi
+[archive-sign]: /archive.sign
+[archive-glue]: /archive.glue
 [osgi]: https://www.osgi.org
 [jar]: https://docs.oracle.com/javase/${version.java.platform}/docs/technotes/guides/jar/jarGuide.html
 [jigsaw]: http://openjdk.java.net/projects/jigsaw

@@ -22,7 +22,7 @@
 	</distributionManagement>
 
 	<properties>
-		<earcam.project.name.short>agent/defy</earcam.project.name.short>
+		<earcam.project.name.short>agent.defy</earcam.project.name.short>
 	</properties>
 
 	<dependencies>
