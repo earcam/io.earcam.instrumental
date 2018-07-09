@@ -1,3 +1,9 @@
+#
+#  Add SonarCloud token with (where xxxxxxxxx is the raw token from Sonar - with no variable assignment):
+#
+#  travis encrypt xxxxxxxxx    -r GITHUB_USERNAME/GITHUB_PROJECT_NAME
+#
+#
 language: java
 jdk: oraclejdk8
 sudo: false
@@ -14,7 +20,7 @@ addons:
   sonarcloud:
     organization: "earcam-github"
     token:
-      secure: "MEGTsauwcIDAzeYikKsG15biMdeUrXpoywRlIeMNborhwrJPdjOdE3wYZ67aRI93vX3G1WW+lAnqMpNFkiuuOPJaLro2Fdy4AelIpKjTeeeiLbGqiWY9nYSYpsXDNLua6olrFElqbdSi4LBWOxNNd4YfBw9gV4suwiyYZEyAI9DNILR11Rt2qwo/Y3FOj4LUNlSSU17pUkv/Io3GCZEe0/Vh7bWVB/MMrb5eobnwBCl72jXdP70EoLaTy22zOzhOb00ueNa+/U2q4Mxuyyv69k/+hYjdghP+7bULZTenyPEyYUnlsJlDaEM4pr6iu/0GvdSE7fL773SQ7V6dbc20o5WbMCHwYFQ49Ys3QTeubujcjYF+I4pGLzgKgjFN1ciU7ydgMICw64atDCsS59QS72A4/dWO4Agjty09RsG1SgJi6nZRKGNwqnc8QOwiEYDH5MgJresAqczLN6ckga3qt2v0tj6X3FVgAOFO0xD/ZgAbI8/Y8RvhqPaSNi5uOpmVXk5m0exRZNGosd2Y9AC17ksjAbnSGkAFK+0xbmFj4mlOhdHWsuv6CeVQW+RCVpnqjYXihCv0+4fwBDfW6IX44WtZ8GoSSA6ks8IXhfEtCsDvNg2Y9zfm4RyVM/LQmiohB2+EheV+Cd5DMsMxE92qZgH+h2sV3xHf8YVvlCmXKO0="
+      secure: "RqaojDK2dxZ2CTTeNdL+6U8SO8qOvcvQb09xnt+Jcvw5j2+SQCLx3RoKckPOMdV90Hkx/raO9dACqCY2YJpGTpJersoz02DuphrvkkqBAxasJg29P/Rxw+Rc0z5fpErcj2uxIceRum50iPz+RqwezxGaNNz7MSDxDWx9WZsjus9fEsflk2aGWNr6k8lMtKuBjYV//iZcLYZEv5UTw4TtQnAU2rPxU5tqr3oxuO+Oj+ziM1bgPIQzPE3ipejuPCRBsm9+DFNKiTI+n7AIp6/aabfGP+bQRPuc1joFusLvMBoDducLZ+LRdQ7vllqPXtqDpA2AofJFXPSu3IhgoaSSRw9N2pN71j9lhosf08m+6lkeqEZsNH61PXSCxW+EZLzY2XMzGdaBi9KGlekfTpBymgirvjKOxVtTgL1bNT3nsh4fuM79m9Mr4ZC3gjgN8hMeZKDypEjVf0/jDecc6s8yPfBttkGqNgdKMoLm3jy4IiNK7XTu2ZxotUs2WVaBPdlK3/KIEI7COUkQFhWFSknk6tb6lIdpDRUdW+inNJ/VQNXkkptbrXDKXMGTTi+RD2Ulm+z4Mgo/xVWJmndS+XOk0tMdCAXSaZynv8hf1Xp0OyVhtORRrhTWlFhXicvJdgahBIh+QbraIbP3H2TzZmQskPSxevhF1xZ5I4ZrYw7YbO4="
 before_install:
 - sudo add-apt-repository ppa:linuxuprising/java -y
 - sudo apt-get update -q
