@@ -16,7 +16,7 @@
  * </ul>
  * #L%
  */
-package io.earcam.instrumental.archive.jpms;
+package io.earcam.instrumental.archive.jpms.auto;
 
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.jpms.AsJpmsModule.asJpmsModule;

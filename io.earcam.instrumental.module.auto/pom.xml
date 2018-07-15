@@ -22,6 +22,7 @@
 
 	<properties>
 		<skip.execution.pitest>false</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>module.auto</earcam.project.name.short>
 	</properties>
 

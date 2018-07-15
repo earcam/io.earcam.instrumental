@@ -23,6 +23,7 @@
 
 	<properties>
 		<skip.execution.pitest>false</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>proxy</earcam.project.name.short>
 	</properties>
 
@@ -76,6 +77,16 @@
 		<dependency>
 			<groupId>io.earcam.utilitarian</groupId>
 			<artifactId>io.earcam.utilitarian.log.slf4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
 

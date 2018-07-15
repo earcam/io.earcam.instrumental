@@ -271,4 +271,16 @@ public class ArchiveResource {
 		int end = name.lastIndexOf('/');
 		return ((end == -1) ? "" : name.substring(0, end)).replace('/', '.');
 	}
+
+
+	public boolean isQualifiedClass()
+	{
+		return isClass() && !"".equals(pkg());
+	}
+
+
+	public boolean isClass()
+	{
+		return ".class".equals(extension());
+	}
 }

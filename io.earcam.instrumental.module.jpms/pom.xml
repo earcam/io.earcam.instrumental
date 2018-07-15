@@ -22,7 +22,9 @@
 	</distributionManagement>
 
 	<properties>
-		<skip.execution.pitest>true</skip.execution.pitest> <!-- FIXME shrink the generated grammar first, otherwise Pitest takes years -->
+		<!-- FIXME shrink the generated grammar first, otherwise Pitest takes years -->
+		<skip.execution.pitest>true</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>module.jpms</earcam.project.name.short>
 	</properties>
 

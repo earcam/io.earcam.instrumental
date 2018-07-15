@@ -24,6 +24,7 @@
 	
 	
 		<skip.execution.pitest>true</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>OH_NOES-SHOULD_NOT_BE_DEPLOYED</earcam.project.name.short>
 	</properties>
 	

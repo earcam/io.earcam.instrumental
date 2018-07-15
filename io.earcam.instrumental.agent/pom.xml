@@ -22,10 +22,10 @@
 	</distributionManagement>
 
 	<properties>
-		<!-- SonarQube breaks as Jacoco freaks out due to multi-release JAR - see https://github.com/jacoco/jacoco/issues/407 
-		<jacoco.skip>true</jacoco.skip>
-		-->
+		<!-- SonarQube breaks as Jacoco freaks out due to multi-release JAR - see 
+			https://github.com/jacoco/jacoco/issues/407 <jacoco.skip>true</jacoco.skip> -->
 		<sonar.coverage.exclusions>**/InstrumentationWrapper.*</sonar.coverage.exclusions>
+		<tidy.skip>false</tidy.skip>
 
 		<earcam.project.name.short>agent</earcam.project.name.short>
 
@@ -114,7 +114,7 @@
 			<artifactId>asm</artifactId>
 			<scope>test</scope>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.apache.maven.surefire</groupId>
 			<artifactId>surefire-logger-api</artifactId>
@@ -133,13 +133,12 @@
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<configuration>
 						<excludes>
-							<exclude>**/InstrumentationWrapper.*</exclude><!-- multi-release JARs suck -->
+							<exclude>**/InstrumentationWrapper.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -160,8 +159,10 @@
 						<configuration>
 							<exportAntProperties>true</exportAntProperties>
 							<target>
-								<property name="maven.classpath.compile" refid="maven.compile.classpath" />
-								<property name="maven.classpath.runtime" refid="maven.runtime.classpath" />
+								<property name="maven.classpath.compile"
+									refid="maven.compile.classpath" />
+								<property name="maven.classpath.runtime"
+									refid="maven.runtime.classpath" />
 							</target>
 						</configuration>
 					</execution>
@@ -187,7 +188,7 @@
 								<argument>${java.9.sourceDirectory}</argument>
 								<argument>-d</argument>
 								<argument>${java.9.build.outputDirectory}</argument>
-								<argument>${java.9.sourceDirectory}/io/earcam/instrumental/agent/InstrumentationWrapper.java</argument> <!-- shoot me -->
+								<argument>${java.9.sourceDirectory}/io/earcam/instrumental/agent/InstrumentationWrapper.java</argument>
 							</arguments>
 							<successCodes>
 								<successCode>0</successCode>
@@ -236,4 +237,55 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>strict</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>de.thetaphi</groupId>
+						<artifactId>forbiddenapis</artifactId>
+						<executions>
+							<execution>
+								<id>check</id>
+								<goals>
+									<goal>check</goal>
+								</goals>
+								<configuration>
+									<bundledSignatures>
+										<bundledSignature>jdk-unsafe</bundledSignature>
+										<bundledSignature>jdk-deprecated</bundledSignature>
+										<!-- <bundledSignature>jdk-non-portable</bundledSignature> -->
+										<bundledSignature>jdk-system-out</bundledSignature>
+										<bundledSignature>jdk-reflection</bundledSignature>
+									</bundledSignatures>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>test-check</id>
+								<goals>
+									<goal>testCheck</goal>
+								</goals>
+								<configuration>
+									<bundledSignatures>
+										<bundledSignature>jdk-unsafe</bundledSignature>
+										<bundledSignature>jdk-deprecated</bundledSignature>
+										<!-- <bundledSignature>jdk-non-portable</bundledSignature> -->
+										<bundledSignature>jdk-system-out</bundledSignature>
+										<bundledSignature>jdk-reflection</bundledSignature>
+									</bundledSignatures>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -23,6 +23,7 @@
 
 	<properties>
 		<skip.execution.pitest>false</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>compile</earcam.project.name.short>
 	</properties>
 
@@ -71,11 +72,11 @@
 		</dependency>
 
 		<dependency>
-    		<groupId>io.earcam.wrapped</groupId>
-		    <artifactId>jdk.compiler</artifactId>
-    		<version>1.8.132</version>
-	    	<scope>test</scope>
-	    	<optional>true</optional>
+			<groupId>io.earcam.wrapped</groupId>
+			<artifactId>jdk.compiler</artifactId>
+			<version>1.8.132</version>
+			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -89,8 +90,8 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-api</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<version>${version.junit5}</version>
 			<classifier>sources</classifier>
 			<scope>test</scope>
@@ -105,7 +106,7 @@
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -126,7 +127,6 @@
 				</excludes>
 			</testResource>
 		</testResources>
-	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -141,7 +141,9 @@
 				<artifactId>maven-bundle-plugin</artifactId>
 				<inherited>true</inherited>
 				<configuration>
-					<Import-Package>javax.annotation.*;resolution:=optional,javax.tools.*;resolution:=optional,*</Import-Package>
+					<Import-Package>
+						javax.annotation.*;resolution:=optional,javax.tools.*;resolution:=optional,*
+					</Import-Package>
 				</configuration>
 			</plugin>
 

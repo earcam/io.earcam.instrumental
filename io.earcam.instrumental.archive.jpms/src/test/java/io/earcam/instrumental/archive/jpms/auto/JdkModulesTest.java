@@ -60,22 +60,22 @@ public class JdkModulesTest {
 
 		ModuleInfo jdeps = ModuleInfo.moduleInfo().named("jdk.jdeps")
 				.versioned(jdkVersion)
-				.requiring("jdk.compiler", 0, null)
 				.requiring("java.base", 32768, null)
 				.requiring("java.compiler", 0, null)
-				.exporting("com.sun.tools.jdeps", 0, "jdk.packager")
+				.requiring("jdk.compiler", 0, null)
+
 				.exporting("com.sun.tools.classfile", 0, "jdk.jlink")
 				.providing("java.util.spi.ToolProvider", "com.sun.tools.javap.Main$JavapToolProvider", "com.sun.tools.jdeps.Main$JDepsToolProvider")
 				.packaging(
 						new TreeSet<>(Arrays.asList(
 								"com.sun.tools.classfile",
-								"com.sun.tools.jdeprscan",
 								"com.sun.tools.jdeps",
 								"com.sun.tools.jdeps.resources",
+								"com.sun.tools.jdeprscan",
 								"com.sun.tools.jdeprscan.scan",
 								"com.sun.tools.jdeprscan.resources",
-								"com.sun.tools.javap.resources",
-								"com.sun.tools.javap")))
+								"com.sun.tools.javap",
+								"com.sun.tools.javap.resources")))
 				.construct();
 
 		assertThat(modules, hasItem(equalTo(jdeps)));

@@ -98,7 +98,7 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 	@Override
 	public ArchiveConstruction filteredBy(ArchiveResourceFilter filter)
 	{
-		filters.add(filter);
+		registerResourceFilter(filter);
 		return this;
 	}
 

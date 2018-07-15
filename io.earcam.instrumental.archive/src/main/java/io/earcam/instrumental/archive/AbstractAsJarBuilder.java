@@ -46,9 +46,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import io.earcam.instrumental.reflect.Types;
 import io.earcam.unexceptional.Exceptional;
 
-// TODO 1) Should have an interface for AsJar.launching(Main.class) etc, to hide plugin 
-// public methods and 2) should just use a java.util.jar.Manifest instance replacing #manifestHeaders.
-
+// TODO should just use a java.util.jar.Manifest instance replacing #manifestHeaders.
 /**
  * AsJar, configures an {@link Archive} as a JAR.
  */

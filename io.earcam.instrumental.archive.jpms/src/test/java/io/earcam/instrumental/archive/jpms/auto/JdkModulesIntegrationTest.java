@@ -42,6 +42,13 @@ import io.earcam.instrumental.module.jpms.ModuleInfo;
  * Cache must be built - either by running main method of {@link JdkModules} directly
  * running this test, or via the maven build (which ensures cache populated regardless of
  * running the integration-test phase).
+ * 
+ * 
+ * Tests below may fail when Java version they're run against changes.. View JDK jmods with:
+ * 
+ * for filename in `ls $JAVA_10_HOME/jmods/*.jmod`; do $JAVA_10_HOME/bin/jmod describe $filename; echo; echo; done |
+ * less
+ * 
  */
 public class JdkModulesIntegrationTest {
 
@@ -160,15 +167,14 @@ public class JdkModulesIntegrationTest {
 		String nonJdkModule = "com.acme.not.in.jdk";
 		Set<String> packages = new HashSet<>();
 		packages.add(nonJdkModule);
-		packages.add("com.sun.java.swing.plaf.windows");
-		packages.add("javax.swing.plaf.basic");
+		packages.add("com.sun.xml.internal.bind.v2.model.nav");
 
-		Set<String> modules = mapper.moduleOpenedFor("jdk.jconsole", packages.iterator())
+		Set<String> modules = mapper.moduleOpenedFor("java.xml.ws", packages.iterator())
 				.stream()
 				.map(ModuleInfo::name)
 				.collect(toSet());
 
-		assertThat(modules, contains("java.desktop"));
+		assertThat(modules, contains("java.xml.bind"));
 		assertThat(packages, contains(nonJdkModule));
 	}
 
@@ -180,8 +186,8 @@ public class JdkModulesIntegrationTest {
 		String nonJdkModule = "com.acme.not.in.jdk";
 		Set<String> packages = new HashSet<>();
 		packages.add(nonJdkModule);
-		packages.add("com.sun.java.swing.plaf.windows");
-		packages.add("javax.swing.plaf.basic");
+		packages.add("com.sun.xml.internal.ws.addressing");
+		packages.add("com.sun.xml.internal.bind.v2.model.nav");
 
 		Set<String> modules = mapper.moduleOpenedFor("com.acme.unqalified", packages.iterator())
 				.stream()

@@ -150,16 +150,10 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 		}
 
 		for(ExportMatcher matcher : exportMatchers) {
-			if(isQualifiedClass(resource)) {
+			if(resource.isQualifiedClass()) {
 				matcher.test(resource);
 			}
 		}
-	}
-
-
-	private boolean isQualifiedClass(ArchiveResource resource)
-	{
-		return ".class".equals(resource.extension()) && !"".equals(resource.pkg());
 	}
 
 
@@ -174,9 +168,6 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 
 	private void resolveAutoImports()
 	{
-		// the OSGi equivalent should map to bundles in order to extract the version number... and optionally turn into
-		// a
-		// version-range
 		if(autoImporting == null) {
 			return;
 		}

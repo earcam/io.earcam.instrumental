@@ -24,85 +24,147 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class ArchiveResourceTest {
 
-	@Test
-	void equalByNameAlone()
-	{
-		ArchiveResource a = new ArchiveResource("name", new ByteArrayInputStream(new byte[0]));
-		ArchiveResource b = new ArchiveResource("name", new byte[] { 0, 1, 2, 3 });
+	@Nested
+	class Equality {
 
-		assertThat(a, is(equalTo(b)));
-		assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+		@Test
+		void equalByNameAlone()
+		{
+			ArchiveResource a = new ArchiveResource("name", new ByteArrayInputStream(new byte[0]));
+			ArchiveResource b = new ArchiveResource("name", new byte[] { 0, 1, 2, 3 });
 
+			assertThat(a, is(equalTo(b)));
+			assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+
+		}
+
+
+		@Test
+		void notEqualByNameAlone()
+		{
+			byte[] contents = new byte[] { 0, 1, 2, 3 };
+			ArchiveResource a = new ArchiveResource("eman", contents);
+			ArchiveResource b = new ArchiveResource("name", contents);
+
+			assertThat(a, is(not(equalTo(b))));
+		}
+
+
+		@Test
+		void notEqualToNull()
+		{
+			ArchiveResource a = new ArchiveResource("name", new byte[0]);
+			ArchiveResource b = null;
+
+			assertFalse(a.equals(b));
+		}
+
+
+		@Test
+		void notEqualToNullObject()
+		{
+			ArchiveResource a = new ArchiveResource("name", new byte[0]);
+			Object b = null;
+
+			assertFalse(a.equals(b));
+		}
 	}
 
+	@Nested
+	class Naming {
 
-	@Test
-	void notEqualByNameAlone()
-	{
-		byte[] contents = new byte[] { 0, 1, 2, 3 };
-		ArchiveResource a = new ArchiveResource("eman", contents);
-		ArchiveResource b = new ArchiveResource("name", contents);
+		@Test
+		void extensionPresentGivenPathIsNonExistent()
+		{
+			ArchiveResource a = new ArchiveResource("name.ext", new byte[0]);
 
-		assertThat(a, is(not(equalTo(b))));
-	}
-
-
-	@Test
-	void notEqualToNull()
-	{
-		ArchiveResource a = new ArchiveResource("name", new byte[0]);
-		ArchiveResource b = null;
-
-		assertFalse(a.equals(b));
-	}
+			assertThat(a.extension(), is(equalTo(".ext")));
+		}
 
 
-	@Test
-	void notEqualToNullObject()
-	{
-		ArchiveResource a = new ArchiveResource("name", new byte[0]);
-		Object b = null;
+		@Test
+		void extensionPresentGivenPathIsPresent()
+		{
+			ArchiveResource a = new ArchiveResource("/some/path/to/name.yay", new byte[0]);
 
-		assertFalse(a.equals(b));
-	}
-
-
-	@Test
-	void extensionPresentGivenPathIsNonExistent()
-	{
-		ArchiveResource a = new ArchiveResource("name.ext", new byte[0]);
-
-		assertThat(a.extension(), is(equalTo(".ext")));
-	}
+			assertThat(a.extension(), is(equalTo(".yay")));
+		}
 
 
-	@Test
-	void extensionPresentGivenPathIsPresent()
-	{
-		ArchiveResource a = new ArchiveResource("/some/path/to/name.yay", new byte[0]);
+		@Test
+		void extensionNotPresentGivenPathIsNonExistent()
+		{
+			ArchiveResource a = new ArchiveResource("name", new byte[0]);
 
-		assertThat(a.extension(), is(equalTo(".yay")));
-	}
-
-
-	@Test
-	void extensionNotPresentGivenPathIsNonExistent()
-	{
-		ArchiveResource a = new ArchiveResource("name", new byte[0]);
-
-		assertThat(a.extension(), is(emptyString()));
-	}
+			assertThat(a.extension(), is(emptyString()));
+		}
 
 
-	@Test
-	void extensionNotPresentGivenPathIsPresent()
-	{
-		ArchiveResource a = new ArchiveResource("/some/path/to/no-extension", new byte[0]);
+		@Test
+		void extensionNotPresentGivenPathIsPresent()
+		{
+			ArchiveResource a = new ArchiveResource("/some/path/to/no-extension", new byte[0]);
 
-		assertThat(a.extension(), is(emptyString()));
+			assertThat(a.extension(), is(emptyString()));
+		}
+
+
+		@Test
+		void isClassThatIsNotQualfied()
+		{
+			ArchiveResource a = new ArchiveResource("Poor.class", new byte[0]);
+
+			assertThat(a.isClass(), is(true));
+		}
+
+
+		@Test
+		void isNotClassButIsQualified()
+		{
+			ArchiveResource a = new ArchiveResource("/something/probably/a/resource", new byte[0]);
+
+			assertThat(a.isClass(), is(false));
+		}
+
+
+		@Test
+		void isClassThatIsQualfied()
+		{
+			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new byte[0]);
+
+			assertThat(a.isClass(), is(true));
+		}
+
+
+		@Test
+		void isQualfiedClass()
+		{
+			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new byte[0]);
+
+			assertThat(a.isQualifiedClass(), is(true));
+		}
+
+
+		@Test
+		void isNotQualfiedClassButIsQualified()
+		{
+			ArchiveResource a = new ArchiveResource("/something/probably/a/resource", new byte[0]);
+
+			assertThat(a.isQualifiedClass(), is(false));
+		}
+
+
+		@Test
+		void isNotQualfiedClassButIsClass()
+		{
+			ArchiveResource a = new ArchiveResource("Poor.class", new byte[0]);
+
+			assertThat(a.isQualifiedClass(), is(false));
+		}
 	}
 }

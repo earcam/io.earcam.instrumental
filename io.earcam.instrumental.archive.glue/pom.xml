@@ -23,6 +23,7 @@
 
 	<properties>
 		<skip.execution.pitest>true</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>archive.glue</earcam.project.name.short>
 	</properties>
 

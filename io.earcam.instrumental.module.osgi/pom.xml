@@ -11,7 +11,7 @@
 	<groupId>io.earcam.instrumental</groupId>
 	<artifactId>io.earcam.instrumental.module.osgi</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<description>OSGi module tooling; read/write bundle manifests</description>
 
 	<distributionManagement>
@@ -23,6 +23,7 @@
 
 	<properties>
 		<skip.execution.pitest>false</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>module.osgi</earcam.project.name.short>
 	</properties>
 
@@ -54,7 +55,7 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.earcam</groupId>
 			<artifactId>io.earcam.unexceptional</artifactId>
@@ -87,7 +88,7 @@
 			<artifactId>junit-platform-launcher</artifactId>
 			<scope>test</scope>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -130,7 +131,7 @@
 					</sources>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

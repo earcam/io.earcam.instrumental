@@ -10,4 +10,11 @@ The following creates an in-memory JPMS module with export predicate::
 
 #snippet ( "/src/test/java/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.java", "export-predicate" )
 
-View full [source](xref-test/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.html) of associated test.
+([source](xref-test/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.html)).
+
+
+The following finds the JAR for a given class and "wraps it", (scans classes to determine *requires*) producing a JPMS compliant module:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/jpms/AsJpmsModuleIntegrationTest.java", "add-to-jar" )
+
+([source](xref-test/io/earcam/instrumental/archive/jpms/AsJpmsModuleIntegrationTest.java))

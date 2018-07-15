@@ -22,7 +22,6 @@ import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourc
 import static io.earcam.instrumental.module.auto.Reader.reader;
 import static io.earcam.instrumental.module.jpms.RequireModifier.MANDATED;
 import static java.util.stream.Collectors.toSet;
-import static javax.tools.JavaFileObject.Kind.CLASS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,9 +88,7 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 
 		void process(ArchiveResource resource)
 		{
-			if(CLASS.extension.equals(resource.extension())) {
-				reader.processClass(resource.bytes());
-			}
+			reader.processClass(resource.bytes());
 		}
 
 
@@ -124,7 +121,6 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void added(ArchiveResource resource)
 	{
@@ -132,16 +128,17 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 		if(listingPackages) {
 			builder.packaging(resource.pkg());
 		}
-		if(autoRequiring != null) {
-			autoRequiring.process(resource);
-		}
-		for(ExportMatcher matcher : exportMatchers) {
-			matcher.test(resource);
+		if(resource.isQualifiedClass()) {
+			if(autoRequiring != null) {
+				autoRequiring.process(resource);
+			}
+			for(ExportMatcher matcher : exportMatchers) {
+				matcher.test(resource);
+			}
 		}
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Stream<ArchiveResource> drain(ResourceSourceLifecycle stage)
 	{
@@ -175,7 +172,6 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void attach(ArchiveRegistrar core)
 	{
@@ -184,7 +180,6 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public DefaultAsJpmsModule launching(Class<?> mainClass)
 	{
@@ -208,7 +203,6 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public AsJpmsModule providing(Class<?> service, List<Class<?>> implementations)
 	{

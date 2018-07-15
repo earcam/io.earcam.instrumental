@@ -44,20 +44,18 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 
 	private static final String META_INF = "META-INF";
 
-	/** Constant <code>CACHE_FILENAME="jpms.cache"</code> */
 	public static final String CACHE_FILENAME = "jpms.cache";
 
-	/** Constant <code>PROPERTY_JDK9_HOME="jdk9.home"</code> */
-	public static final String PROPERTY_JDK9_HOME = "jdk9.home";
+	public static final String PROPERTY_JDK_HOME = "instrumental.jdk.home";
 
 	static final Path DEFAULT_DIRECTORY = Paths.get("target", "classes", META_INF);
-	static final String JDK9_HOME = "/usr/lib/jvm/java-9-oracle/";
+	static final String JDK_HOME = "/usr/lib/jvm/java-10-oracle/";
 
 	private static volatile List<ModuleInfo> modules;
 
 
 	/**
-	 * Note: JDK9 home may be set via system property, see {@link #PROPERTY_JDK9_HOME}
+	 * Note: JDK 9+ home may be set via system property, see {@link #PROPERTY_JDK_HOME}
 	 *
 	 * @param args single optional argument; the output directory
 	 * @throws java.io.IOException
@@ -88,7 +86,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 
 	private static Path jdk9Home()
 	{
-		return Paths.get(System.getProperty(PROPERTY_JDK9_HOME, JDK9_HOME));
+		return Paths.get(System.getProperty(PROPERTY_JDK_HOME, JDK_HOME));
 	}
 
 

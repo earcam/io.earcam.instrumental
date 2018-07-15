@@ -23,6 +23,7 @@
 
 	<properties>
 		<earcam.project.name.short>agent.defy</earcam.project.name.short>
+		<tidy.skip>false</tidy.skip>
 	</properties>
 
 	<dependencies>
