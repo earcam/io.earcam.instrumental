@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.archive
+ * io.earcam.instrumental.archive.osgi
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,25 +16,14 @@
  * </ul>
  * #L%
  */
-package io.earcam.instrumental.archive;
+package io.earcam.acme.auto;
 
-import io.earcam.instrumental.fluent.Fluent;
+import io.earcam.unexceptional.Exceptional;
 
-/**
- * AsJar, configures an {@link Archive} as a JAR.
- */
-public interface AsJar extends AsJarBuilder<AsJar> {
+public class ImportsUnexceptional {
 
-	/**
-	 * <p>
-	 * asJar.
-	 * </p>
-	 *
-	 * @return an {@link AsJar} instance.
-	 */
-	@Fluent
-	public static AsJar asJar()
+	public static void main(String[] args)
 	{
-		return new DefaultAsJar();
+		Exceptional.run(() -> {});
 	}
 }

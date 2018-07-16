@@ -4,29 +4,41 @@
 #set($h5 = '#####')
 
 
+$h3 Examples and Documentation
 
-$h3 In lieu of decent documentation, a ridiculous "Hello World" example is presented 
+Some modules are better documented that others - the aim at this initial stage is to prove minimal documentation 
+through examples extracted from tests.  Currently some modules have no documentation; these are typically of limited
+value to the end user.
+
+A good starting place is probably [instrumental.archive(/archive), which lists the various extension modules, each of
+which has a brief example.
+
+Alternatively, in lieu of decent documentation, a ridiculous "Hello, World" example is presented below (to be taken 
+as an example of what *can*, not what *should* be done). 
+
+
+$h4 Ridiculous "Hello, World" Example
 
 The following compiles, from String source, to 3 archives (API, Imp and App), complete with OSGi and 
 JMPS meta. The archives are then run in various contexts (vanilla Java, JPMS Jigsaw and OSGi).
 
 
-$h4 API JAR
+$h5 API JAR
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "api-jar" ) 
 
-$h4 Imp JAR
+$h5 Imp JAR
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "imp-jar" )
 
 (Programmatic OSGi above, swapped for declaratively annotated component below) 
 
-$h4 App JAR
+$h5 App JAR
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "app-jar" ) 
 
 
-$h4 Running as vanilla Java
+$h5 Running as vanilla Java
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-vanilla" ) 
 
@@ -35,12 +47,12 @@ The output is something like:
 		unnamed module @3a60c416: Hello World
 		
 
-$h4 Onto filesystem for next runs (won't be necessary in the future)
+$h5 Onto filesystem for next runs (won't be necessary in the future)
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "filesystem" ) 
 
 
-$h4 Running as JPMS
+$h5 Running as JPMS
 
 #snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-jpms" ) 
 
@@ -51,7 +63,7 @@ The output is:
 
 
 
-$h4 Running as OSGi
+$h5 Running as OSGi
 
 Using felix.connect (aka PojoSR, the phoenix has risen).
 

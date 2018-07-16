@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.proxy.concrete</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Proxy classes using standard `java.lang.reflect.InvocationHandler`</description>
+	<description>Proxy classes using standard java.lang.reflect.InvocationHandler</description>
 
 	<distributionManagement>
 		<site>

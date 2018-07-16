@@ -28,7 +28,7 @@ import static io.earcam.instrumental.module.osgi.ClauseParameters.ClauseParamete
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,13 +37,14 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import io.earcam.acme.DummyInterface;
 import io.earcam.acme.TakesExt;
+import io.earcam.acme.auto.ImportsUnexceptional;
 import io.earcam.acme.ext.Ext;
 import io.earcam.acme.internal.DummyActivator;
 import io.earcam.instrumental.archive.Archive;
@@ -57,17 +58,37 @@ import io.earcam.unexceptional.Exceptional;
 
 public class AsOsgiBundleTest {
 
-	@Test
-	void emptyBundle()
-	{
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("foo"))
-				.toObjectModel();
+	@Nested
+	public class SymbolicNames {
 
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
+		@Test
+		public void emptyBundle()
+		{
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("foo"))
+					.toObjectModel();
 
-		assertThat(bundleInfo.symbolicName(), is(equalTo(clause("foo"))));
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.symbolicName(), is(equalTo(clause("foo"))));
+		}
+
+
+		@Test
+		public void parameterizedSymbolicName()
+		{
+			ClauseParameters parameters = attribute("attri", "bute").directive("direct", "ive");
+
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("sym.nom", parameters))
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.symbolicName(), is(equalTo(clause("sym.nom", parameters))));
+		}
 	}
 
 
@@ -81,132 +102,9 @@ public class AsOsgiBundleTest {
 	}
 
 
-	@Test
-	void parameterizedSymbolicName()
-	{
-		ClauseParameters parameters = attribute("attri", "bute").directive("direct", "ive");
-
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("sym.nom", parameters))
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.symbolicName(), is(equalTo(clause("sym.nom", parameters))));
-	}
-
-
-	@Test
-	void singleExportedClassWithNoParameters()
-	{
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("mandatory.value")
-						.exporting(DummyInterface.class))
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
-		assertThat(archive.content(Names.typeToResourceName(DummyInterface.class)), is(not(nullValue())));
-	}
-
-
-	private String pkg(Class<?> type)
+	private static String pkg(Class<?> type)
 	{
 		return type.getPackage().getName();
-	}
-
-
-	@Test
-	void exportPatternWithParameters()
-	{
-		Predicate<String> matcher = Predicate.isEqual(pkg(DummyInterface.class));
-		ClauseParameters parameters = ClauseParameter.attribute("attr", "ibute");
-
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("mandatory.value")
-						.exporting(matcher, parameters))
-				.with(DummyInterface.class)
-				.with(DummyActivator.class)
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class), parameters)));
-	}
-
-
-	@Test
-	void validActivator()
-	{
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("mandatory.value")
-						.withActivator(DummyActivator.class))
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.activator(), is(equalTo(cn(DummyActivator.class))));
-	}
-
-
-	private String cn(Class<?> type)
-	{
-		return type.getCanonicalName();
-	}
-
-
-	@Test
-	void invalidActivator()
-	{
-		try {
-			asOsgiBundle()
-					.named("mandatory.value")
-					.withActivator(DummyInterface.class);
-			fail();
-		} catch(IllegalArgumentException e) {
-
-		}
-	}
-
-
-	@Test
-	void importWithParameters()
-	{
-		String paquet = "com.acme.core.of.cores.root.of.all.apis";
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("mandatory.value")
-						.importing(paquet))
-				.with(DummyInterface.class)
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.importPackage(), contains(clause(paquet)));
-	}
-
-
-	@Test
-	void exportPatternDoesNotExportResourcePaths() throws ReflectiveOperationException
-	{
-
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("syn.nom")
-						.exporting(s -> true, EMPTY_PARAMETERS))
-				.with(DummyInterface.class)
-				.with("some/resource/path/config.properties", bytes("key1=valueA\nkey2=valueB"))
-				.with("/some/other/path/legal.md", bytes("IANAL Sorry"))
-				.toObjectModel();
-
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
-
-		assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
 	}
 
 
@@ -215,31 +113,171 @@ public class AsOsgiBundleTest {
 		return text.getBytes(UTF_8);
 	}
 
+	@Nested
+	public class Exports {
 
-	@Test
-	void exportPatternDoesNotExportTheDefaultPackage() throws ReflectiveOperationException
-	{
+		@Test
+		public void singleExportedClassWithNoParameters()
+		{
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("mandatory.value")
+							.exporting(DummyInterface.class))
+					.toObjectModel();
 
-		Class<?> noPackage = getClass().getClassLoader().loadClass("NoPackage");
-		assertThat(noPackage, is(not(nullValue())));
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
 
-		Archive archive = archive()
-				.configured(asOsgiBundle()
-						.named("syn.nom")
-						.exporting(s -> true, EMPTY_PARAMETERS))
-				.with(DummyInterface.class)
-				.with(noPackage)
-				.toObjectModel();
+			assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
+			assertThat(archive.content(Names.typeToResourceName(DummyInterface.class)), is(not(nullValue())));
+		}
 
-		BundleInfo bundleInfo = bundleInfoFrom(archive);
 
-		assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
+		@Test
+		public void exportPatternWithParameters()
+		{
+			Predicate<String> matcher = Predicate.isEqual(pkg(DummyInterface.class));
+			ClauseParameters parameters = ClauseParameter.attribute("attr", "ibute");
+
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("mandatory.value")
+							.exporting(matcher, parameters))
+					.with(DummyInterface.class)
+					.with(DummyActivator.class)
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class), parameters)));
+		}
+
+
+		@DisplayName("Given multiple export patterns, When multiple potential matches occur, Then only first pattern applied")
+		@Test
+		public void givenMultipleExportPatternsWhenMultiplePotentialMatchesOccurThenOnlyFirstPatternApplied()
+		{
+			Predicate<String> matcher = Predicate.isEqual(pkg(DummyInterface.class));
+			ClauseParameters parameters1 = ClauseParameter.attribute("matcher", "1").directive("matcherNum", "one");
+			ClauseParameters parameters2 = ClauseParameter.attribute("matcher", "2");
+
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("mandatory.sym.nom")
+							.exporting(matcher, parameters1)
+							.exporting(matcher, parameters2))
+					.with(DummyInterface.class)
+					.with(DummyActivator.class)
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class), parameters1)));
+		}
+
+
+		@Test
+		public void exportPatternDoesNotExportResourcePaths() throws ReflectiveOperationException
+		{
+
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("syn.nom")
+							.exporting(s -> true, EMPTY_PARAMETERS))
+					.with(DummyInterface.class)
+					.with("some/resource/path/config.properties", bytes("key1=valueA\nkey2=valueB"))
+					.with("/some/other/path/legal.md", bytes("IANAL Sorry"))
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
+		}
+
+
+		@Test
+		public void exportPatternDoesNotExportTheDefaultPackage() throws ReflectiveOperationException
+		{
+
+			Class<?> noPackage = getClass().getClassLoader().loadClass("NoPackage");
+			assertThat(noPackage, is(not(nullValue())));
+
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("syn.nom")
+							.exporting(s -> true, EMPTY_PARAMETERS))
+					.with(DummyInterface.class)
+					.with(noPackage)
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.exportPackage(), contains(clause(pkg(DummyInterface.class))));
+		}
 	}
 
 	@Nested
-	class AutoImport {
+	public class Activators {
 
-		@Disabled // FIXME
+		@Test
+		public void validActivator()
+		{
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("mandatory.value")
+							.withActivator(DummyActivator.class))
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.activator(), is(equalTo(cn(DummyActivator.class))));
+		}
+
+
+		private String cn(Class<?> type)
+		{
+			return type.getCanonicalName();
+		}
+
+
+		@Test
+		public void invalidActivator()
+		{
+			try {
+				asOsgiBundle()
+						.named("mandatory.value")
+						.withActivator(DummyInterface.class);
+				fail();
+			} catch(IllegalArgumentException e) {
+
+			}
+		}
+	}
+
+	@Nested
+	public class PatternImports {
+
+		@Test
+		public void importWithParameters()
+		{
+			String paquet = "com.acme.core.of.cores.root.of.all.apis";
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.named("mandatory.value")
+							.importing(paquet))
+					.with(DummyInterface.class)
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.importPackage(), contains(clause(paquet)));
+		}
+
+	}
+
+	@Nested
+	public class AutoImports {
+
+		@Disabled  // breaking in PiTest (despite 3 previous runs with different JDKs)
 		@Test
 		void autoImportsViaDefaultClasspathBundleMapper()
 		{
@@ -247,12 +285,12 @@ public class AsOsgiBundleTest {
 					.configured(asOsgiBundle()
 							.named("dependee")
 							.autoImporting())
-					.with(Assertions.class)
+					.with(ImportsUnexceptional.class)
 					.toObjectModel();
 
 			String value = built.manifest().get().getMainAttributes().getValue(IMPORT_PACKAGE.header());
 
-			assertThat(value, containsString("apiguardian"));
+			assertThat(value, containsString(Exceptional.class.getPackage().getName()));
 		}
 
 

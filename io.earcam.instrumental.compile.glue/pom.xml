@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.compile.glue</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Glues instrumental.compile to instrumental.archive, providing a CompilationTarget for Archive</description>
+	<description>Glues instrumental.compile to instrumental.archive, compile to JAR entirely in-memory</description>
 
 	<distributionManagement>
 		<site>

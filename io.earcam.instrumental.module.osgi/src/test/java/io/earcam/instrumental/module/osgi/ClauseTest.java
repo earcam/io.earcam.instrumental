@@ -26,15 +26,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.junit.jupiter.api.Test;
 
+import io.earcam.instrumental.module.osgi.ClauseParameters.ClauseParameter;
+
 public class ClauseTest {
 
 	@Test
-	void equal()
+	public void equal()
 	{
 		Clause a = new Clause("com.acme.santa", attribute("key", "value"));
 
@@ -48,7 +52,7 @@ public class ClauseTest {
 
 
 	@Test
-	void notEqualWhenNamesDiffer()
+	public void notEqualWhenNamesDiffer()
 	{
 		Clause a = new Clause("com.acme.santa", attribute("key", "value"));
 		Clause b = new Clause("com.acme.teeth.sharp", attribute("key", "value"));
@@ -58,7 +62,7 @@ public class ClauseTest {
 
 
 	@Test
-	void notEqualWhenParametersDiffer()
+	public void notEqualWhenParametersDiffer()
 	{
 		Clause a = new Clause("com.acme.santa", attribute("key", "value"));
 		Clause b = new Clause("com.acme.santa", EMPTY_PARAMETERS);
@@ -68,17 +72,21 @@ public class ClauseTest {
 
 
 	@Test
-	void notEqualWithAdditionalUniqueNames()
+	public void notEqualWithAdditionalUniqueNames()
 	{
+		SortedSet<String> pkg = new ConcurrentSkipListSet<>();
+		pkg.add("com.acme.santa");
+		pkg.add("com.acme.christmas.father");
+
 		Clause a = new Clause("com.acme.santa", EMPTY_PARAMETERS);
-		Clause b = new Clause("com.acme.santa,com.acme.christmas.father", EMPTY_PARAMETERS);
+		Clause b = new Clause(pkg, EMPTY_PARAMETERS);
 
 		assertThat(a, is(not(equalTo(b))));
 	}
 
 
 	@Test
-	void notEqualToNullInstance()
+	public void notEqualToNullInstance()
 	{
 		Clause a = new Clause("com.acme.santa", attribute("key", "value"));
 		Clause b = null;
@@ -88,11 +96,25 @@ public class ClauseTest {
 
 
 	@Test
-	void notEqualToNullObject()
+	public void notEqualToNullObject()
 	{
 		Clause a = new Clause("com.acme.santa", attribute("key", "value"));
 		Object b = null;
 
 		assertFalse(a.equals(b));
+	}
+
+
+	@Test
+	public void allToString()
+	{
+		List<Clause> clauses = Arrays.asList(
+				new Clause(Clause.sortedSet("x.a", "x.b", "x.c"), ClauseParameter.attribute("at", "rib").directive("dire", "ct")),
+				new Clause(Clause.sortedSet("y.a"), ClauseParameter.attribute("why", "rib").directive("why", "ct")),
+				new Clause(Clause.sortedSet("z.a", "z.b", "z.c"), ClauseParameter.attribute("zzz", "well").directive("zzz", "nightynight")));
+
+		String all = Clause.allToString(clauses);
+
+		assertThat(all, is(equalTo("x.a;x.b;x.c;at=rib;dire:=ct,y.a;why=rib;why:=ct,z.a;z.b;z.c;zzz=well;zzz:=nightynight")));
 	}
 }

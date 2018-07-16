@@ -39,7 +39,7 @@ public class DuplicateAgentJarTest extends AbstractAgentJarTest {
 
 	@AgentJar(value = AbstractAgentJarTest.JAR_NAME, arguments = AGENT_ARGUMENTS)
 	@Test
-	public void sameAgentIsOnlyProcessedOnce() // TODO is this correct? Can I not launch same agent with different args?
+	public void sameAgentIsOnlyProcessedOnce() // @see DuplicateAgentClassTest
 	{
 		assertThat(StubAgentState.agentMainInvocations(), is(1));
 		assertThat(StubAgentState.isPreMainInvoked(), is(false));

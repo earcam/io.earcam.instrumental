@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.proxy</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Smoother API than `java.lang.reflect.Proxy` with various `InvocationHandler`s</description>
+	<description>Smoother API than java.lang.reflect.Proxy with various InvocationHandler implementations</description>
 
 	<distributionManagement>
 		<site>

@@ -16,6 +16,4 @@ To proxy classes, see [instrumental.proxy.concrete][instrumental-proxy-concrete]
 
 [instrumental-proxy-concrete]: /proxy.concrete
 
-[classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-
-
 [kabutz-heinz-inner-class]: http://www.javaspecialists.eu/archive/Issue117.html

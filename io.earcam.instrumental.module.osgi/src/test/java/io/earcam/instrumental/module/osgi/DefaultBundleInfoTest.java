@@ -208,7 +208,7 @@ public class DefaultBundleInfoTest {
 				.toManifest();
 
 		Attributes attributes = manifest.getMainAttributes();
-		assertThat(attributes.getValue("Export-Package"), equalTo("com.acme.a;com.acme.b;hoo:=har;com.acme.c;fee=fi"));
+		assertThat(attributes.getValue("Export-Package"), equalTo("com.acme.a;com.acme.b;hoo:=har,com.acme.c;fee=fi"));
 	}
 
 

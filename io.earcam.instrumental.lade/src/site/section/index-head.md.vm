@@ -16,7 +16,7 @@ The `${project.artifactId}.InMemoryClassLoader`:
 * Briefly employs the builder pattern to add class and resources
 * Loading strategy is self-first 
 * Load JARs from `byte` arrays and `InputStream`s
-* Works just fine as *the* `java.system.class.loader`
-* `URL`s returned will provide valid streams *but* the **instance** must be used, as it contains a unique `URLStreamHandler` (so cannot be converted to String and back to URL for example)
+* Works just fine as *the* System `ClassLoader`
+* `URL`s returned will provide valid streams but the instance *must* be used, as it contains a unique `URLStreamHandler` (so cannot be converted to String and back to URL for example)
 
-[classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-
+[classloader-defineclass]: https://docs.oracle.com/javase/10/docs/api/java/lang/ClassLoader.html#defineClass(byte[],int,int)

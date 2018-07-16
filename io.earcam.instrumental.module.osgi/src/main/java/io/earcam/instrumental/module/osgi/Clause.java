@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -204,5 +205,18 @@ public class Clause {
 	{
 		appendix.append(uniqueNames().stream().collect(joining(";")));
 		return parameters.appendTo(appendix);
+	}
+
+
+	public static String allToString(List<Clause> clauses)
+	{
+		StringBuilder santa = new StringBuilder();
+		for(int i = 0; i < clauses.size(); i++) {
+			Exceptional.accept(clauses.get(i)::appendTo, santa);
+			if(i < clauses.size() - 1) {
+				santa.append(',');
+			}
+		}
+		return santa.toString();
 	}
 }

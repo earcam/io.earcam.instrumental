@@ -1,8 +1,5 @@
-#set($h1 = '#')
-#set($h2 = '##')
-#set($h3 = '###')
-
 
 Programmatically read and write [OSGi][osgi] bundles 
 
 [osgi]: https://www.osgi.org/
+

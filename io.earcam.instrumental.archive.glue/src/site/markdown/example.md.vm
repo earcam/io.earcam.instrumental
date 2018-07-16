@@ -6,7 +6,7 @@
 
 $h3 Example
 
-Use an in-memory archive as dependency when compiling:
+Use an in-memory archive as dependency when compiling, first compile **api** then compile **imp**:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/archive/glue/ArchiveFileObjectProviderTest.java", "with-dependency" )
 

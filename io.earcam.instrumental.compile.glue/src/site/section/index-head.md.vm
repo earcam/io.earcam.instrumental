@@ -4,8 +4,8 @@
 
 
 
-* Provides a `CompilationTarget` from [io.earcam.instrumental.compile][instrumental-compile] for [io.earcam.instrumental.archive][instrumental-archive]
-* The output can loaded using [io.earcam.instrumental.lade][instrumental-lade]
+* Provides a `CompilationTarget` from [instrumental.compile][instrumental-compile] for [instrumental.archive][instrumental-archive]
+* The output can loaded using [instrumental.lade][instrumental-lade]
 
 
 [instrumental-compile]: /compile

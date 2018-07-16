@@ -62,7 +62,6 @@ public abstract class AbstractPackageBundleMapper implements PackageBundleMapper
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public List<Clause> importsFor(Iterator<String> requiredPackages)
 	{
@@ -80,10 +79,11 @@ public abstract class AbstractPackageBundleMapper implements PackageBundleMapper
 			for(Clause export : availableExports) {
 
 				if(export.uniqueNames().contains(requiredPackage)) {
-					requiredPackages.remove();
 					// TODO version-range... optionally
 					String version = export.parameters().attributeOrDefault("version", "0.0.0");
 					matchedExports.add(new Clause(requiredPackage, ClauseParameter.attribute("version", version)));
+					requiredPackages.remove();
+					break;
 				}
 			}
 		}

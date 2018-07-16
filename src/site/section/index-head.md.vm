@@ -1,3 +1,9 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+#set($h6 = '######')
 
 Instrumentation and dynamic programming tools, supporting JDK 8, 9 and 10.
 
@@ -8,5 +14,6 @@ See the module list and examples for more.
 These modules are not quite ready for prime-time, until such time, SNAPSHOT artifacts will only be available (in Sontatype OSS repo). 
 
 Due to various pains regarding multi-release JARs (Maven/Jacoco/Sonar lack of support), and no well-defined 
-way to run tests against different JDKs in Maven - the build is currently dependent on JDK paths.
-
+way to run tests against different JDKs in Maven (i.e. toolchains per plugin execution) - the build is currently 
+dependent on JDK paths.  And while the modules and tests run against Java 8, 9 and 10 - the build itself must 
+be launched with Java 8.

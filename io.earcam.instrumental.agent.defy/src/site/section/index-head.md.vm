@@ -3,7 +3,7 @@
 #set($h3 = '###')
 
 
-A very simple [Java Agent][java-agent] to defi<span class="color-highlight">nalize</span>.
+A very simple [Java Agent][java-agent] to <span class="color-highlight">defy</span>nalize.
 
 Leverages [ASM][asm] to strip `final` modifiers from classes, methods and fields. 
 

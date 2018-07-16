@@ -43,29 +43,30 @@ public class CompileToArchiveTest {
 		ArchiveResource compiled = 
 		// EARCAM_SNIPPET_BEGIN: to-archive
 		compiler.versionAt(RELEASE_8)
-				.source(from(
-						"package com.acme;                      \r\n" +
+			.source(from(
+				"package com.acme;                      \n" +
 
-						"public class FooBar {                  \r\n" +
+				"public class FooBar {                  \n" +
 
-						"   private String field;               \r\n" +
+				"   private String field;               \n" +
 
-						"   public String get()                 \r\n" +
-						"   {                                   \r\n" +
-						"      return field;                    \r\n" +
-						"   }                                   \r\n" +
+				"   public String get()                 \n" +
+				"   {                                   \n" +
+				"      return field;                    \n" +
+				"   }                                   \n" +
 
-						"   public void set(String field)       \r\n" +
-						"   {                                   \r\n" +
-						"      this.field = field;              \r\n" +
-						"   }                                   \r\n" +
+				"   public void set(String field)       \n" +
+				"   {                                   \n" +
+				"      this.field = field;              \n" +
+				"   }                                   \n" +
 
-						"}                                      \r\n"))
-				.compile(toArchive())
-				// EARCAM_SNIPPET_END: to-archive
-				.toObjectModel()
-				.content("/com/acme/FooBar.class")
-				.orElseThrow(NullPointerException::new);
+				"}                                      \n")
+			)
+			.compile(toArchive())
+			// EARCAM_SNIPPET_END: to-archive
+			.toObjectModel()
+			.content("/com/acme/FooBar.class")
+			.orElseThrow(NullPointerException::new);
 		//@formatter:on
 		Class<?> loaded = ClassLoaders.load(compiled.bytes());
 

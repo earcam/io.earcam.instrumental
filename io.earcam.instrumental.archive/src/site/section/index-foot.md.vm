@@ -1,3 +1,52 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h3 Archive architecture - brief implementation notes
+
+To support the various extensions (e.g. sourcing in-memory/filesystem, signing, OSGi/JPMS meta) a simple plugin architecture is employed.
+
+
+
+$h4 Generalising towards Plugins
+
+A _plugin_ typically implements `ArchiveConfigurationPlugin` giving it double-dispatch powers wrt the archive builder, where it may register any of:
+
+* `ArchiveResourceSource` - proves content for the archive
+* `ArchiveResourceFilter` - modify or even exclude content
+* `ArchiveResourceListener` - observes content that is finally added to the archive
+* `ManifestProcessor` - permits mutation of the manifest in the final stages of construction
+
+
+
+$h4 Construction Lifecycle
+
+Once an archive is configured, it may be constructed.  A basic staged lifecycle is defined via an enumeration:
+
+* `INITIAL`
+* `PRE_MANIFEST`
+* `FINAL`
+
+Construction then proceeds as follows:
+
+0. `ArchiveResourceSource` sources are drained (INITIAL)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+0. `ArchiveResourceSource` sources are drained (PRE_MANIFEST)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+0. `ManifestProcessor` processors manipulate the manifest
+0. `ArchiveResourceSource` sources are drained (FINAL)
+0. `ArchiveResourceFilter` drained resources are filtered
+0. `ArchiveResourceListener` listeners are informed of new resources
+
+As observed above, the subcycle for resources is; drain sources, filter and inform listeners.  The lifecycle staging is a rather simplistic approach, but sufficient for current approach.
+
+
+<br/>
+
 <div class="well">
 	<ul class="nav nav-list">
 		<li class="nav-header">archive</li>

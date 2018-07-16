@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.earcam.maven</groupId>
 		<artifactId>io.earcam.maven.pom</artifactId>
-		<version>2.2.1</version>
+		<version>2.2.2-SNAPSHOT</version>
 	</parent>
 
 	<groupId>io.earcam</groupId>
@@ -347,7 +347,6 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -395,7 +394,7 @@
 									</pluginExecutionFilter>
 									<action>
 										<execute>
-											<runOnConfiguration>true</runOnConfiguration>
+											<runOnConfiguration>false</runOnConfiguration>
 											<runOnIncremental>true</runOnIncremental>
 										</execute>
 									</action>
@@ -479,7 +478,7 @@
 							<Bundle-Version>${project.version}</Bundle-Version>
 
 							<Import-Package>!javax.annotation,*</Import-Package>
-							<Export-Package>*</Export-Package>
+							<Export-Package>${project.artifactId}*</Export-Package>
 						</instructions>
 					</configuration>
 					<executions>

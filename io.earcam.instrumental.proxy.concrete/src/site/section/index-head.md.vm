@@ -4,18 +4,16 @@
 
 
 `${project.artifactId}.Proxy`:
+
 * Uses [CGLib][cglib] to allow proxying of classes
 * Uses [Objenesis][objenesis] to circumvent constructor issues 
 * Accepts standard `java.lang.reflect.InvocationHandler`
 
-If everyone applied Interface Segregation Principle ([ISP][isp]) correctly, then stubbing functional interfaces in Java 8 would be the _norm_ in tests.  Alas, codebases are _mocked_.
+A comprehensive (though not super-performant) proxy capable of proxying just about anything when couple with [instrumental.agent.defy][instrumental-agent-defy].
 
-Anyway, this should be a comprehensive (though not super-performant) proxy capable of proxying just about anything when couple with **defy**.
-
-See also invocation handlers and proxying for interfaces in [io.earcam.instrumental.proxy][instrumental-proxy].
+See also invocation handlers and proxying for interfaces in [instrumental.proxy][instrumental-proxy].
 
 [instrumental-proxy]: /proxy
-[classloader-defineclass]: https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#defineClass-java.lang.String-byte:A-int-int-
+[instrumental-agent-defy]: /agent.defy
 [objenesis]: http://objenesis.org
 [cglib]: https://github.com/cglib/cglib/wiki
-[isp]: https://en.wikipedia.org/wiki/Interface_segregation_principle

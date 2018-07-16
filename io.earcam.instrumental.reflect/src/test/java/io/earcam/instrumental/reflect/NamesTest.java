@@ -146,9 +146,6 @@ public class NamesTest {
 	{
 		String binaryName = Names.binaryToTypeName("Ljava/lang/String;");
 
-		System.out.println(binaryName);
-		System.out.println(Names.descriptorToTypeName("Ljava/lang/String;"));
-
 		assertThat(binaryName, is(not(equalTo("java.lang.String"))));
 	}
 

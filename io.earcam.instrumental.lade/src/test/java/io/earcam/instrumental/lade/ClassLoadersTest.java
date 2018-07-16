@@ -42,7 +42,6 @@ public class ClassLoadersTest {
 		try(URLClassLoader selfFirst = ClassLoaders.selfFirstClassLoader(junitApiJar)) {
 
 			Class<?> loaded = selfFirst.loadClass(Test.class.getCanonicalName());
-
 			assertThat(loaded, is(not(equalTo(Test.class))));
 		}
 	}

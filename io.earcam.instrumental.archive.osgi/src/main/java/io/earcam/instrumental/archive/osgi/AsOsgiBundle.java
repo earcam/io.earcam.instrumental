@@ -65,9 +65,30 @@ public interface AsOsgiBundle extends AsJarBuilder<AsOsgiBundle> {
 	public abstract AsOsgiBundle withActivator(String canonicalName);
 
 
+	/**
+	 * <p>
+	 * <code>Export-Package</code> using a predicate string matching.
+	 * </p>
+	 * <p>
+	 * The matchers are applied in order - after the first successful match,
+	 * no other matchers are tested.
+	 * </p>
+	 *
+	 * @param exportMatcher a {@link java.util.function.Predicate} object.
+	 * @param parameters a {@link io.earcam.instrumental.module.osgi.ClauseParameters} object.
+	 * @return a {@link io.earcam.instrumental.archive.osgi.DefaultAsOsgiBundle} object.
+	 */
 	public abstract AsOsgiBundle exporting(Predicate<String> exportMatcher, ClauseParameters parameters);
 
 
+	/**
+	 * <p>
+	 * <code>Export-Package</code> without attributes or directives
+	 * </p>
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public default AsOsgiBundle exporting(Class<?> type)
 	{
 		return exporting(type, EMPTY_PARAMETERS);

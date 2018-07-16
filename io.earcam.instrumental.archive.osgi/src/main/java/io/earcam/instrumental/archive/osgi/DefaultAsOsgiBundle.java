@@ -19,11 +19,12 @@
 package io.earcam.instrumental.archive.osgi;
 
 import static io.earcam.instrumental.module.auto.Reader.reader;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toCollection;
 import static javax.tools.JavaFileObject.Kind.CLASS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,12 +66,14 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 		}
 
 
-		public void test(ArchiveResource resource)
+		public boolean test(ArchiveResource resource)
 		{
 			String pkg = resource.pkg();
 			if(matcher.test(pkg)) {
 				builder.exportPackages(pkg, parameters);
+				return true;
 			}
+			return false;
 		}
 	}
 
@@ -95,7 +98,7 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 			return imports.values().stream()
 					.flatMap(Set::stream)
 					.filter(ownPackages.negate())
-					.collect(toSet());
+					.collect(toCollection(HashSet::new));
 		}
 
 	}
@@ -152,6 +155,9 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 		for(ExportMatcher matcher : exportMatchers) {
 			if(resource.isQualifiedClass()) {
 				matcher.test(resource);
+				if(matcher.test(resource)) {
+					break;
+				}
 			}
 		}
 	}
@@ -217,19 +223,9 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 	}
 
 
-	/**
-	 * <p>
-	 * exporting.
-	 * </p>
-	 *
-	 * @param exportMatcher a {@link java.util.function.Predicate} object.
-	 * @param parameters a {@link io.earcam.instrumental.module.osgi.ClauseParameters} object.
-	 * @return a {@link io.earcam.instrumental.archive.osgi.DefaultAsOsgiBundle} object.
-	 */
 	@Override
 	public AsOsgiBundle exporting(Predicate<String> exportMatcher, ClauseParameters parameters)
 	{
-		// TODO need to ensure the same package isn't exported more than once due to different parameters
 		exportMatchers.add(new ExportMatcher(exportMatcher, parameters));
 		return this;
 	}

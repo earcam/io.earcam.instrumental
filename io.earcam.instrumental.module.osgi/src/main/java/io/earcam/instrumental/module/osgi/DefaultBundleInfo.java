@@ -30,7 +30,6 @@ import java.util.jar.Attributes.Name;
 import java.util.Map.Entry;
 
 import io.earcam.instrumental.module.manifest.AbstractManifestBuilder;
-import io.earcam.unexceptional.Exceptional;
 
 class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> implements BundleInfo, BundleInfoBuilder {
 
@@ -38,7 +37,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	private final Map<Name, List<Clause>> clauses = new HashMap<>();
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -46,7 +44,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(AbstractManifestBuilder<?> that)
 	{
@@ -56,7 +53,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
@@ -64,7 +60,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public BundleInfoBuilder headerClause(Name header, Clause clause)
 	{
@@ -73,7 +68,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	protected DefaultBundleInfo self()
 	{
@@ -81,30 +75,18 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	protected void preBuildHook()
 	{
 		if(!mainAttributes.containsKey(BUNDLE_MANIFESTVERSION.header())) {
 			bundleManifestVersion(BUNDLE_MANIFESTVERSION_RELEASE_4);
 		}
-
 		for(Entry<Name, List<Clause>> e : clauses.entrySet()) {
-			StringBuilder santa = new StringBuilder();
-			List<Clause> claus = e.getValue();
-			for(int i = 0; i < claus.size(); i++) {
-				Exceptional.accept(claus.get(i)::appendTo, santa);
-				if(i < claus.size() - 1) {
-					santa.append(';');
-				}
-			}
-
-			manifestMain(attribute(e.getKey(), santa.toString()));
+			manifestMain(attribute(e.getKey(), Clause.allToString(e.getValue())));
 		}
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public BundleInfo construct()
 	{
@@ -113,7 +95,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public BundleInfoBuilder deconstruct()
 	{
@@ -122,7 +103,6 @@ class DefaultBundleInfo extends AbstractManifestBuilder<BundleInfoBuilder> imple
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Map<Name, List<Clause>> allHeaderClauses()
 	{

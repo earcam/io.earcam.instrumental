@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.agent</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Dynamically load a Java Agent without prerequisite JAR file or JVM arguments. Or acquire java.lang.instrument.Instrumentation via SPI</description>
+	<description>Dynamically load a Java Agent or acquire java.lang.instrument.Instrumentation via SPI</description>
 
 	<distributionManagement>
 		<site>

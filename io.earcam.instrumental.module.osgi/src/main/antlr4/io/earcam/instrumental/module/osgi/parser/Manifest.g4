@@ -114,7 +114,7 @@ Extended : ( AlphaNum | '_' | '-' | '.' )+ ;
 
 
 QuotedString : '"' ~[\u000D\u000A\u0000"\\]* '"';
-argument: Extended | QuotedString;
+argument: Extended | QuotedString | AlphaNum;
 
 
 NL
@@ -169,12 +169,17 @@ anything
 	| UniqueName
 	| Identifier
 	| WS
+	| '*'
+	| '@'
 	| ','
 	| ';'
 	| ':'
 	| '&'
 	| '('
 	| ')'
+	| '!'
+	| '~'
+	| '+'
 	| '$'
 	| '='
 	| ':='

@@ -84,8 +84,6 @@ public class ReaderTest {
 
 			assertThat(imports, is(aMapWithSize(1)));
 
-			System.out.println(imports);
-
 			assertThat(imports, hasEntry(equalTo(cn(Annotated.class)), containsInAnyOrder(
 					cn(Object.class),
 					cn(Comparable.class),
@@ -120,8 +118,6 @@ public class ReaderTest {
 					.processClass(Resources.classAsBytes(Annotated.class));
 
 			assertThat(imports, is(aMapWithSize(1)));
-
-			System.out.println(imports);
 
 			assertThat(imports, hasEntry(equalTo(cn(Annotated.class)), containsInAnyOrder(
 					cn(Object.class),

@@ -37,7 +37,28 @@
 	*##parse( $indexHeadFile )#*
 *##end#*
 
+*#
 <br/>
+#*
+
+
+*##if( $hasModules )#*
+*#
+<h3>Module Graph</h3>
+<a href="img/module-graph.png" title="Module Graph (click to view)"><img src="img/module-graph.png" alt="Module Graph" /></a>
+
+#else#*
+*#
+<h3>Dependency Graph</h3>
+<a href="img/dependency-graph.png" title="Dependency Graph (click to view)"><img src="img/dependency-graph.png" alt="Module Dependency" /></a>
+
+#end#*
+
+
+*#
+<br/>
+<br/>
+#*
 
 
 *##if( $FileUtils.fileExists( $exampleFile ) )#*

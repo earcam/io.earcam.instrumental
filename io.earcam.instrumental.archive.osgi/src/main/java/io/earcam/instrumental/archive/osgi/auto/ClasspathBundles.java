@@ -42,7 +42,6 @@ import io.earcam.utilitarian.io.ExplodedJarInputStream;
  */
 public class ClasspathBundles extends AbstractPackageBundleMapper {
 
-	/** {@inheritDoc} */
 	@Override
 	protected List<BundleInfo> bundles()
 	{

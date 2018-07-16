@@ -4,11 +4,11 @@
 
 `${project.artifactId}.Compiler`
 
-* Convenience functionality on top of `javax.tools.JavaCompiler` (Can therefore use OpenJDK/Oracle/Azul/OpenJ9 and Eclipse compilers)  
+* Convenience functionality on top of `javax.tools.JavaCompiler`  
 * Compile to/from the file-system, or entirely in-memory (e.g. from source as `String` to class as `byte` array)  
 * Fluid builder with specific support for [annotation processors][annotation-processor]
 * Create native headers
-* Helper methods to find sourcecode for classes within maven project or maven dependencies (on proviso that source jar has been downloaded)
+* Find sourcecode for classes within maven module or it's dependencies (on proviso that source jar has been downloaded)
 
 Provides a complete in-memory _experience_:
 

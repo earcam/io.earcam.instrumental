@@ -46,7 +46,9 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import io.earcam.instrumental.reflect.Types;
 import io.earcam.unexceptional.Exceptional;
 
-// TODO should just use a java.util.jar.Manifest instance replacing #manifestHeaders.
+// TODO 
+// 1. Should just use a java.util.jar.Manifest instance replacing #manifestHeaders
+// 2. Should apply checks at build time to allow e.g. ..compiler integration (this could also make validation optional... for better or worse, allows testing with "bad" jars).
 /**
  * AsJar, configures an {@link Archive} as a JAR.
  */
@@ -152,8 +154,6 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public T launching(Class<?> mainClass)
 	{
-		// TODO we should apply checks at build time to allow e.g. ..compiler integration
-		// (this could also make validation optional... for better or worse, allows testing with "bad" jars).
 		Exceptional.accept(AbstractAsJarBuilder::requireMainMethod, mainClass);
 		source.with(mainClass);
 		return launching(mainClass.getCanonicalName());
