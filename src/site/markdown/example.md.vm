@@ -10,7 +10,7 @@ Some modules are better documented that others - the aim at this initial stage i
 through examples extracted from tests.  Currently some modules have no documentation; these are typically of limited
 value to the end user.
 
-A good starting place is probably [instrumental.archive(/archive), which lists the various extension modules, each of
+A good starting place is probably [instrumental.archive](/archive), which lists the various extension modules, each of
 which has a brief example.
 
 Alternatively, in lieu of decent documentation, a ridiculous "Hello, World" example is presented below (to be taken 

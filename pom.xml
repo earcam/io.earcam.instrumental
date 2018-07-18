@@ -73,7 +73,7 @@
 		<version.earcam.unexceptional>0.5.2-SNAPSHOT</version.earcam.unexceptional>
 		<version.earcam.maven.plugin>0.0.3-SNAPSHOT</version.earcam.maven.plugin>
 
-		<version.cglib>3.2.6</version.cglib>
+		<version.cglib>3.2.7</version.cglib>
 		<version.objenesis>2.6</version.objenesis>
 		<version.asm>6.2</version.asm>
 		<version.antlr>4.7.1</version.antlr>

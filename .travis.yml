@@ -16,7 +16,6 @@ addons:
   apt:
     packages:
     - graphviz
-    - oracle-java8-installer
   sonarcloud:
     organization: "earcam-github"
     token:
@@ -38,7 +37,7 @@ before_script:
 - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.configuration/src/main/resources/settings.xml  -O $HOME/ci-settings.xml
 - mvn -v
 script:
-- mvn --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true
+- mvn --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true  -Dforbiddenapis.skip=true
 - #mvn --settings $HOME/ci-settings.xml org.eluder.coveralls:coveralls-maven-plugin:report
 - #mvn --settings $HOME/ci-settings.xml org.jacoco:jacoco-maven-plugin:report-aggregate -Djacoco.excludes=**/InstrumentationWrapper.*
 after_success: bash <(curl -s https://codecov.io/bash)
