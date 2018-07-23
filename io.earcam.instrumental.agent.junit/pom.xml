@@ -40,22 +40,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.earcam.instrumental</groupId>
-			<artifactId>io.earcam.instrumental.reflect</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.earcam.utilitarian</groupId>
-			<artifactId>io.earcam.utilitarian.charstar</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.earcam.utilitarian</groupId>
-			<artifactId>io.earcam.utilitarian.io</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>io.earcam.wrapped</groupId>
 			<artifactId>com.sun.tools.attach</artifactId>
 			<scope>runtime</scope>
@@ -91,18 +75,6 @@
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>compile</scope>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.opentest4j</groupId>
-			<artifactId>opentest4j</artifactId>
-			<version>1.1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-commons</artifactId>
-			<version>1.2.0</version>
 		</dependency>
 
 		<dependency>

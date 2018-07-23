@@ -83,7 +83,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitExport(String paquet, int access, String... modules)
 	{
@@ -97,7 +96,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitMainClass(String mainClass)
 	{
@@ -105,7 +103,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitOpen(String paquet, int access, String... modules)
 	{
@@ -113,7 +110,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitPackage(String paquet)
 	{
@@ -121,7 +117,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitProvide(String service, String... providers)
 	{
@@ -137,7 +132,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitRequire(String moduleName, int access, String version)
 	{
@@ -145,7 +139,6 @@ final class BytecodeReader extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitUse(String service)
 	{

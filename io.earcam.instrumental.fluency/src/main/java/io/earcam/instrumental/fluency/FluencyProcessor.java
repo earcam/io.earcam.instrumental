@@ -54,7 +54,7 @@ import io.earcam.instrumental.fluent.Fluent;
 
 /**
  * <p>
- * FluencyProcessor class.
+ * FluencyProcessor; processes {@link Fluent}ly annotated class members.
  * </p>
  *
  */
@@ -63,12 +63,13 @@ public class FluencyProcessor extends AbstractProcessor {
 
 	static final String OPTION_NAME = "name";
 
+	/*
+	 * TODO
+	 * type parameters,
+	 * package-private/protected scope into same package if not signed,
+	 * support constructors as wrapped as fluid methods
+	 */
 	private class FluentMethod {
-
-		// TODO type parameters
-		// TODO We need to know if package-private or protected - then stuff into same package
-
-		// TODO constructors should also be permitted - this would allow package-private classes exposure
 
 		final ExecutableElement methodElement;
 		final String comment;
@@ -197,7 +198,6 @@ public class FluencyProcessor extends AbstractProcessor {
 	private String name;
 
 
-	/** {@inheritDoc} */
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv)
 	{
@@ -207,7 +207,6 @@ public class FluencyProcessor extends AbstractProcessor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
 	{
@@ -268,7 +267,6 @@ public class FluencyProcessor extends AbstractProcessor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<String> getSupportedAnnotationTypes()
 	{
@@ -276,7 +274,6 @@ public class FluencyProcessor extends AbstractProcessor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public SourceVersion getSupportedSourceVersion()
 	{

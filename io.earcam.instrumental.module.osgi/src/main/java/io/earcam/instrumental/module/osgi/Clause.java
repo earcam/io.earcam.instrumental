@@ -123,7 +123,6 @@ public class Clause {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString()
 	{
@@ -131,7 +130,6 @@ public class Clause {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -158,7 +156,6 @@ public class Clause {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{

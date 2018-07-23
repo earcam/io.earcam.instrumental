@@ -59,7 +59,6 @@ class BytecodeWriter extends ModuleVisitor {
 			visitor.visitMainClass(module.mainClass());
 		}
 
-		// TODO check spec - is only the non-exported, non-open packages here?
 		module.packages().stream()
 				.forEach(visitor::visitPackage);
 
@@ -75,7 +74,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitExport(String packaze, int access, String... modules)
 	{
@@ -89,7 +87,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitMainClass(String mainClass)
 	{
@@ -97,7 +94,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitOpen(String packaze, int access, String... modules)
 	{
@@ -118,7 +114,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitPackage(String packaze)
 	{
@@ -126,7 +121,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitProvide(String service, String... providers)
 	{
@@ -142,7 +136,6 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visitUse(String service)
 	{

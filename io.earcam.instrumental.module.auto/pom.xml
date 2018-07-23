@@ -55,27 +55,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-		</dependency>
-
-<!-- TODO remove once settled -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 		</dependency>
@@ -109,9 +88,21 @@
 			<artifactId>java-hamcrest</artifactId>
 		</dependency>
 
-		<dependency><!-- can't depend on ${project.groupId}.archive - tinybundles is perfect -->
+		<dependency>
 			<groupId>org.ops4j.pax.tinybundles</groupId>
 			<artifactId>tinybundles</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

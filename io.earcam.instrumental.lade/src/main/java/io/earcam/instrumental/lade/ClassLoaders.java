@@ -98,8 +98,14 @@ public final class ClassLoaders {
 	 */
 	public static Class<?> load(byte[] bytes)
 	{
+		return load(null, bytes, 0, bytes.length);
+	}
+
+
+	public static Class<?> load(String name, byte[] bytes, int offset, int length)
+	{
 		try(InMemoryClassLoader classLoader = inMemoryClassLoader()) {
-			return classLoader.define(bytes);
+			return classLoader.define(name, bytes, offset, length, null);
 		}
 	}
 

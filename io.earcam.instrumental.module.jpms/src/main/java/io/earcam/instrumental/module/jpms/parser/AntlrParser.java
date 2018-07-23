@@ -63,7 +63,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx)
 	{
@@ -72,7 +71,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterRequiresDirective(RequiresDirectiveContext ctx)
 	{
@@ -87,7 +85,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterExportsDirective(ExportsDirectiveContext ctx)
 	{
@@ -105,7 +102,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterOpensDirective(OpensDirectiveContext ctx)
 	{
@@ -115,7 +111,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterUsesDirective(UsesDirectiveContext ctx)
 	{
@@ -124,7 +119,6 @@ class AntlrParser extends Java9BaseListener {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void enterProvidesDirective(ProvidesDirectiveContext ctx)
 	{

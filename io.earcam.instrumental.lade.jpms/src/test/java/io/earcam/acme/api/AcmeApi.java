@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.module.osgi
+ * io.earcam.instrumental.lade.jpms
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,9 +16,9 @@
  * </ul>
  * #L%
  */
-package com.acme.api;
+package io.earcam.acme.api;
 
-public interface HelloService {
+public interface AcmeApi {
 
-	public abstract String hello(String name);
+	public abstract String greet(String recipient);
 }

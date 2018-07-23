@@ -32,7 +32,7 @@ import java.util.jar.Manifest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.acme.imp.DummyActivator;
+import com.acme.activate.DummyActivator;
 
 import io.earcam.instrumental.module.manifest.AbstractManifestBuilder;
 

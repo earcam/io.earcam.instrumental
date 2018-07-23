@@ -39,7 +39,25 @@ import io.earcam.instrumental.module.jpms.Require;
 public class AsJpmsModuleAutoRequireIntegrationTest {
 
 	@Test
-	void requiresJavaBase()
+	void anEmptyModuleStillRequiresJavaBase()
+	{
+		Archive archive = archive()
+				.configured(
+						asJpmsModule()
+								.named("empty")
+								.autoRequiring())
+				.toObjectModel();
+
+		Set<String> required = moduleInfoFrom(archive).requires().stream()
+				.map(Require::module)
+				.collect(toSet());
+
+		assertThat(required, hasItem(equalTo("java.base")));
+	}
+
+
+	@Test
+	void aSimpleModuleRequiresJavaBase()
 	{
 		Archive archive = archive()
 				.configured(

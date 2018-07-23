@@ -62,7 +62,6 @@ public class WithDigest implements ArchiveConfigurationPlugin, ManifestProcessor
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void attach(ArchiveRegistrar core)
 	{
@@ -71,7 +70,6 @@ public class WithDigest implements ArchiveConfigurationPlugin, ManifestProcessor
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void added(ArchiveResource resource)
 	{
@@ -106,7 +104,6 @@ public class WithDigest implements ArchiveConfigurationPlugin, ManifestProcessor
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void process(Manifest manifest)
 	{

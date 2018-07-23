@@ -4,7 +4,5 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
 #snippet ( "/src/test/java/io/earcam/instrumental/compile/glue/CompileToArchiveTest.java", "to-archive" )
 

@@ -103,7 +103,6 @@ public class AgentRule implements TestRule {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Statement apply(Statement base, Description description)
 	{

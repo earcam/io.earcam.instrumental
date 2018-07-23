@@ -41,7 +41,6 @@ public enum ModuleModifier implements Modifier {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int access()
 	{
@@ -49,7 +48,6 @@ public enum ModuleModifier implements Modifier {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean sourceVisible()
 	{

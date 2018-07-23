@@ -181,7 +181,6 @@ public interface CompilationTarget<T> extends Supplier<T> {
 			{
 				Map<String, byte[]> map = underlying.get();
 
-				// TODO this functionality belongs in InMemoryClassLoader
 				return new ClassLoader(parent) {
 					@Override
 					public Class<?> loadClass(String name) throws ClassNotFoundException

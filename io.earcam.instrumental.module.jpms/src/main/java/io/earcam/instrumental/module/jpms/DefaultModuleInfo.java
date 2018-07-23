@@ -57,7 +57,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	private HashSet<Export> opens = new HashSet<>();
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -105,7 +104,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
@@ -116,7 +114,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String name()
 	{
@@ -124,7 +121,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String version()
 	{
@@ -132,7 +128,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public SortedSet<CharSequence> packages()
 	{
@@ -140,7 +135,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public SortedSet<String> uses()
 	{
@@ -148,7 +142,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Map<String, String[]> provides()
 	{
@@ -156,7 +149,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String mainClass()
 	{
@@ -164,7 +156,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<Require> requires()
 	{
@@ -172,7 +163,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<Export> exports()
 	{
@@ -180,7 +170,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<Export> opens()
 	{
@@ -188,7 +177,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder named(String moduleName)
 	{
@@ -197,7 +185,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder versioned(String moduleVersion)
 	{
@@ -206,7 +193,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder withAccess(int accessFlags)
 	{
@@ -215,7 +201,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder packaging(CharSequence paquet)
 	{
@@ -224,7 +209,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder using(String serviceApi)
 	{
@@ -233,7 +217,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder providing(String contract, String... concretes)
 	{
@@ -242,7 +225,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder launching(String mainClass)
 	{
@@ -251,7 +233,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder requiring(String module, int access, String version)
 	{
@@ -260,7 +241,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder exporting(String paquet, int access, String... modules)
 	{
@@ -269,7 +249,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder opening(String paquet, int access, String... modules)
 	{
@@ -278,7 +257,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfo construct()
 	{
@@ -296,7 +274,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public ModuleInfoBuilder deconstruct()
 	{
@@ -442,7 +419,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public byte[] toBytecode()
 	{
@@ -450,7 +426,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int access()
 	{

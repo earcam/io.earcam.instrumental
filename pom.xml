@@ -21,7 +21,9 @@
 		<module>io.earcam.instrumental.reflect</module>
 		<module>io.earcam.instrumental.compile</module>
 		<module>io.earcam.instrumental.compile.glue</module>
+
 		<module>io.earcam.instrumental.lade</module>
+		<module>io.earcam.instrumental.lade.jpms</module>
 
 		<module>io.earcam.instrumental.fluent</module>
 		<module>io.earcam.instrumental.fluency</module>
@@ -123,6 +125,13 @@
 				<groupId>io.earcam.utilitarian</groupId>
 				<artifactId>io.earcam.utilitarian.security</artifactId>
 				<version>${version.earcam.utilitarian}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.earcam.utilitarian</groupId>
+				<artifactId>io.earcam.utilitarian.log.slf4j</artifactId>
+				<version>${version.earcam.utilitarian}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
@@ -257,13 +266,6 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
 				<version>${version.slf4j}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>io.earcam.utilitarian</groupId>
-				<artifactId>io.earcam.utilitarian.log.slf4j</artifactId>
-				<version>${version.earcam.utilitarian}</version>
 				<scope>test</scope>
 			</dependency>
 

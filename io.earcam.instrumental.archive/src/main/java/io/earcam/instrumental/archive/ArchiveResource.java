@@ -118,7 +118,6 @@ public class ArchiveResource {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -141,7 +140,6 @@ public class ArchiveResource {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{

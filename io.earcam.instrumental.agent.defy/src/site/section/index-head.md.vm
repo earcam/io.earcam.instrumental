@@ -9,6 +9,7 @@ Leverages [ASM][asm] to strip `final` modifiers from classes, methods and fields
 
 Use:
 
+* On command line with a comma-separated list of fully qualified class names or package name prefixes, e.g. `-javaagent:/path/to/this.jar=pa.ck.age,or.fully.qualified.ClassName`
 * Dynamically with module [instrumental.agent][instrumental-agent]
 * In [JUnit][junit] tests with the other module [instrumental.agent.junit][instrumental-agent-junit] 
 

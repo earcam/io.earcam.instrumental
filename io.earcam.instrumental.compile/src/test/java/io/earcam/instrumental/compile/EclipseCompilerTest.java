@@ -21,13 +21,7 @@ package io.earcam.instrumental.compile;
 import org.junit.jupiter.api.Disabled;
 
 /**
- * java -cp /data/repository/maven/org/eclipse/jdt/ecj/3.14.0/ecj-3.14.0.jar
- * org.eclipse.jdt.internal.compiler.batch.Main -help
- * 
- * 
- * The Eclipse compiler doesn't use JavaFileObject properly - it converts input objects to URIs and
- * assumes these are Files.
- * 
+ * @see EclipseSimpleCompilerTest
  */
 @SuppressWarnings("squid:S2187") // SonarQube false-positive
 @Disabled

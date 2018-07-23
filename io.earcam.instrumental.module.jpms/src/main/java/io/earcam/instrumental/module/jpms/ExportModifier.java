@@ -37,7 +37,6 @@ public enum ExportModifier implements Modifier {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int access()
 	{

@@ -25,13 +25,11 @@ import net.sf.cglib.proxy.Enhancer;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 final class ConstructorIgnorantEnhancer<T> extends Enhancer {
 
-	/** {@inheritDoc} */
 	@Override
 	protected void filterConstructors(Class sc, List constructors)
 	{ /* Avoid constructors as using Objenesis */ }
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<T> createClass()
 	{

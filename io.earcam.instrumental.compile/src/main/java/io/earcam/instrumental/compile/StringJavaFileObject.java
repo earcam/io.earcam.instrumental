@@ -68,7 +68,6 @@ class StringJavaFileObject extends SimpleJavaFileObject {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)
 	{

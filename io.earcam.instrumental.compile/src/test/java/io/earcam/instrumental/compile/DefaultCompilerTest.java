@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.compile;
 
+import static io.earcam.instrumental.compile.ClassAssertions.assertValidClass;
 import static io.earcam.instrumental.compile.CompilationTarget.toBlackhole;
 import static io.earcam.instrumental.compile.CompilationTarget.toByteArrays;
 import static io.earcam.instrumental.compile.CompilationTarget.toClassLoader;
@@ -93,27 +94,7 @@ import io.earcam.instrumental.reflect.Names;
  */
 public abstract class DefaultCompilerTest {
 
-	private static final byte[] CAFEBABE = { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE };
-
-
 	protected abstract Compiler compiling();
-
-
-	private static void assertValidClass(byte[] compiled, String canonicalName)
-	{
-		assertMagicNumber(compiled);
-		Class<?> loaded = ClassLoaders.load(compiled);
-		assertThat(loaded.getCanonicalName(), is(equalTo(canonicalName)));
-	}
-
-
-	private static void assertMagicNumber(byte[] compiled)
-	{
-		assertThat(compiled[0], is(CAFEBABE[0]));
-		assertThat(compiled[1], is(CAFEBABE[1]));
-		assertThat(compiled[2], is(CAFEBABE[2]));
-		assertThat(compiled[3], is(CAFEBABE[3]));
-	}
 
 	@Nested
 	class Simple {

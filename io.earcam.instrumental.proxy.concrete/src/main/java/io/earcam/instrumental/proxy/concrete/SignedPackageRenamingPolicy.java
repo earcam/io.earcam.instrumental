@@ -47,7 +47,6 @@ final class SignedPackageRenamingPolicy extends DefaultNamingPolicy {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String getClassName(String prefix, String source, Object key, Predicate names)
 	{

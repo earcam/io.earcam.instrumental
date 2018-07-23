@@ -18,16 +18,20 @@
  */
 package io.earcam.instrumental.archive.jpms.auto;
 
+import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
+import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.jar.Manifest;
 
 import io.earcam.instrumental.archive.Archive;
 import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
+import io.earcam.instrumental.module.jpms.ModuleInfoBuilder;
 
 public final class ArchivePackageModuleMapper extends AbstractPackageModuleMapper {
 
@@ -40,24 +44,54 @@ public final class ArchivePackageModuleMapper extends AbstractPackageModuleMappe
 	}
 
 
-	public static ArchivePackageModuleMapper byMappingModuleArchives(Archive... archives)
+	public static ArchivePackageModuleMapper fromArchives(Archive... archives)
 	{
 		return fromArchives(Arrays.asList(archives));
 	}
 
 
-	// TODO this doesn't take into account Auto-Modules @see AbstractPackageModuleMapper#moduleInfoFrom(JarInputStream)
 	public static ArchivePackageModuleMapper fromArchives(List<Archive> archives)
 	{
 		List<ModuleInfo> modules = archives.stream()
-				.map(a -> a.content("module-info.class"))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.map(ArchiveResource::bytes)
-				.map(ModuleInfo::read)
+				.map(ArchivePackageModuleMapper::extractModuleInfo)
 				.collect(toList());
 
 		return new ArchivePackageModuleMapper(modules);
+	}
+
+
+	private static ModuleInfo extractModuleInfo(Archive archive)
+	{
+
+		return archive.content("module-info.class")
+				.map(ArchiveResource::bytes)
+				.map(ModuleInfo::read)
+				.orElseGet((Supplier<ModuleInfo>) () -> archive.manifest()
+						.map(ArchivePackageModuleMapper::manifestToModuleInfo)
+						.map(m -> syntheticModuleInfoWithExports(m, archive))
+						.map(ModuleInfoBuilder::construct)
+						.orElse((ModuleInfo) null));
+	}
+
+
+	private static ModuleInfoBuilder manifestToModuleInfo(Manifest manifest)
+	{
+		String autoName = manifest.getMainAttributes().getValue(HEADER_AUTOMATIC_MODULE_NAME);
+
+		return (autoName == null) ? null
+				: moduleInfo()
+						.withAccess(SYNTHETIC.access())
+						.named(autoName);
+	}
+
+
+	private static ModuleInfoBuilder syntheticModuleInfoWithExports(ModuleInfoBuilder builder, Archive archive)
+	{
+		archive.contents().stream()
+				.filter(ArchiveResource::isQualifiedClass)
+				.map(ArchiveResource::pkg)
+				.forEach(builder::exporting);
+		return builder;
 	}
 
 

@@ -54,19 +54,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.module.manifest</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4-runtime</artifactId>
 		</dependency>
 
 		<dependency>
@@ -74,32 +64,6 @@
 			<artifactId>io.earcam.instrumental.module.auto</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-commons</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-		</dependency>
-
-<!-- TODO remove once settled -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>		
 
 		<dependency>
 			<groupId>io.earcam</groupId>
@@ -122,7 +86,12 @@
 			<groupId>io.earcam.utilitarian</groupId>
 			<artifactId>io.earcam.utilitarian.charstar</artifactId>
 		</dependency>
-	
+
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
@@ -155,11 +124,6 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>java-hamcrest</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
 

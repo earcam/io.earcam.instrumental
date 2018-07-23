@@ -306,7 +306,7 @@ public interface ModuleInfoBuilder {
 	 * @param module a {@link io.earcam.instrumental.module.jpms.ModuleInfo} object.
 	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfoBuilder} object.
 	 */
-	public default ModuleInfoBuilder opening(ModuleInfo module)  // FIXME what the fuck is this??? opens?
+	public default ModuleInfoBuilder opening(ModuleInfo module)
 	{
 		return opening(module.name(), ACC_MANDATED, module.version());
 	}

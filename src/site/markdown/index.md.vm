@@ -62,6 +62,7 @@
 
 
 *##if( $FileUtils.fileExists( $exampleFile ) )#*
+	*#<h3>Examples</h3>#*
 	*##parse( $exampleFile )#*
 *#
 <br/>
@@ -78,19 +79,27 @@
 <table>
  <thead>
  <tr>
- <th>Module</th><th>Description</th>
+ <th>Module</th><th>Description</th><th>Examples</th>
  </tr>
  </thead>
  <tbody>
 #*
 	*##foreach( $module in $project.collectedProjects )##
  <tr>
- <td><a href="/$module.properties.get('earcam.project.name.short')">${module.artifactId}</a></td><td>$escape.html(${module.description})</td>
+ <td><a href="/$module.properties.get('earcam.project.name.short')">${module.artifactId}</a></td><td>$escape.html(${module.description})</td><td>#*
+
+	*##set( $exampleFile = "${module.name}/src/site/markdown/example.md.vm" )#*
+	*##if( $FileUtils.fileExists( $exampleFile ) )#*
+		*#<a href="/$module.properties.get('earcam.project.name.short')$escape.getHash()Examples">&$escape.getHash()x2714;</a>#*
+	*##else#*
+		*#&$escape.getHash()x2717;#*
+	*##end#*
+*#</td>
  </tr>
 #*
 	*##end##
  </tbody>
- </table>
+</table>
 
 #*
 *##end#*
@@ -114,7 +123,7 @@
 	<li class="nav-header">Quick Links</li>
 	<li><a href="https://bitbucket.org/${coordinate}/issues/new" title="Report Issue or Request Feature"><img src="https://img.shields.io/badge/Raise%20Issue%2FFeature%20-%E2%86%91-41c4f4.svg" alt="Raise Issue/Feature"></img></a></li>
 #if($hasModules)##
-	<li><a href="./modules.html" title="Modules list"><img src="https://img.shields.io/badge/Module_List-%E2%98%B0-41c4f4.svg" alt="Module List"></img></a></li>
+	<li><a href="#Module_List" title="Modules list"><img src="https://img.shields.io/badge/Module_List-%E2%98%B0-41c4f4.svg" alt="Module List"></img></a></li>
 #else#*
 	*##if($isPlugin)##
 	<li><a href="./plugin-info.html" title="Details of plugin usage, goals, configuration, etc"><img src="https://img.shields.io/badge/Plugin_Goals-%E2%9A%BD-41c4f4.svg" alt="Plugin Goals &amp; Configuration"></img></a></li>

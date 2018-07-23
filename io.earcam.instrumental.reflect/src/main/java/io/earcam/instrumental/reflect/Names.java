@@ -42,7 +42,7 @@ import io.earcam.utilitarian.charstar.CharSequences;
  * Definitions by example, given {@code java.lang.Thread}:
  * <ul>
  *    <li>
- *       <i>binary</i>:
+ *       <i>internal</i>:
  *       <pre>java/lang/Thread</pre>
  *    </li>
  *    <li>
@@ -88,35 +88,31 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * binaryToTypeName.
-	 * </p>
-	 *
-	 * @param binaryName the binary name
+	 * @param internalName the <i>internal</i> name
 	 * @return the type name
 	 */
-	public static String binaryToTypeName(CharSequence binaryName)
+	public static String internalToTypeName(CharSequence internalName)
 	{
-		if(CharSequences.endsWith(binaryName, "package-info") || CharSequences.endsWith(binaryName, "module-info")) {
-			return CharSequences.replace(binaryName, '/', '.').toString();
+		if(CharSequences.endsWith(internalName, "package-info") || CharSequences.endsWith(internalName, "module-info")) {
+			return CharSequences.replace(internalName, '/', '.').toString();
 		}
 
 		int depth = 0;
-		while(CharSequences.indexOf(binaryName, '[', depth) != -1) {
+		while(CharSequences.indexOf(internalName, '[', depth) != -1) {
 			++depth;
 		}
 		StringBuilder typeName = new StringBuilder();
 		if(depth > 0) {
-			if(binaryName.charAt(depth) == 'L') {
-				typeName.append(binaryName, depth + 1, binaryName.length() - 1);
+			if(internalName.charAt(depth) == 'L') {
+				typeName.append(internalName, depth + 1, internalName.length() - 1);
 			} else {
-				typeName.append(PRIMITIVE_DESCRIPTORS.get(binaryName.charAt(depth)));
+				typeName.append(PRIMITIVE_DESCRIPTORS.get(internalName.charAt(depth)));
 			}
 			while(depth-- > 0) {
 				typeName.append('[').append(']');
 			}
 		} else {
-			typeName.append(binaryName);
+			typeName.append(internalName);
 		}
 		while((depth = typeName.indexOf("/", depth)) != -1) {
 			typeName.setCharAt(depth, '.');
@@ -126,40 +122,28 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * typeToBinaryName.
-	 * </p>
-	 *
 	 * @param type the fully qualified type name
-	 * @return the binary name
+	 * @return the <i>internal</i> name
 	 */
-	public static String typeToBinaryName(CharSequence type)
+	public static String typeToInternalName(CharSequence type)
 	{
 		return CharSequences.replace(type, '.', '/').toString();
 	}
 
 
 	/**
-	 * <p>
-	 * typeToBinaryName.
-	 * </p>
-	 *
-	 * @param type the type
-	 * @return the binary name
+	 * @param type the type.
+	 * @return the <i>internal</i> name.
 	 */
-	public static String typeToBinaryName(Type type)
+	public static String typeToInternalName(Type type)
 	{
-		return typeToBinaryName(type.getTypeName());
+		return typeToInternalName(type.getTypeName());
 	}
 
 
 	/**
-	 * <p>
-	 * typeToResourceName.
-	 * </p>
-	 *
-	 * @param type the type
-	 * @return the binary name with ".class" appended
+	 * @param type the type.
+	 * @return the <i>internal</i> name with ".class" appended.
 	 */
 	public static String typeToResourceName(Type type)
 	{
@@ -168,27 +152,19 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * typeToResourceName.
-	 * </p>
-	 *
-	 * @param type a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param type FQN of the type.
+	 * @return the <i>internal</i> name with ".class" appended.
 	 */
 	public static String typeToResourceName(String type)
 	{
-		return typeToBinaryName(type) + CLASS_SUFFIX;
+		return typeToInternalName(type) + CLASS_SUFFIX;
 	}
 
 
 	/**
-	 * <p>
-	 * descriptorToTypeName.
-	 * </p>
-	 *
 	 * @see <a href="http://download.forge.objectweb.org/asm/asm4-guide.pdf">2.1.3 of asm4-guide</a>
-	 * @param desc a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param desc the type descriptor.
+	 * @return the canonical name of the type.
 	 */
 	public static String descriptorToTypeName(String desc)
 	{
@@ -207,10 +183,6 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * descriptorsToTypeNames.
-	 * </p>
-	 *
 	 * @param desc a {@link java.lang.String} object.
 	 * @return a {@link java.util.List} object.
 	 */
@@ -245,10 +217,6 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * typeToDescriptor.
-	 * </p>
-	 *
 	 * @param c a {@link java.lang.Class} object.
 	 * @return a {@link java.lang.CharSequence} object.
 	 */
@@ -259,10 +227,6 @@ public final class Names {
 
 
 	/**
-	 * <p>
-	 * typeToDescriptor.
-	 * </p>
-	 *
 	 * @param type a {@link java.lang.CharSequence} object.
 	 * @return a {@link java.lang.CharSequence} object.
 	 */
@@ -281,15 +245,11 @@ public final class Names {
 
 	private static String classTypeToDescriptor(CharSequence type)
 	{
-		return "L" + typeToBinaryName(type) + ";";
+		return "L" + typeToInternalName(type) + ";";
 	}
 
 
 	/**
-	 * <p>
-	 * descriptorFor.
-	 * </p>
-	 *
 	 * @param method a {@link java.lang.reflect.Method} object.
 	 * @return a {@link java.lang.CharSequence} object.
 	 */
@@ -306,18 +266,15 @@ public final class Names {
 
 
 	/**
-	 * Get declared and anonymous class names recursively of {@code type} (not including
-	 * the {@code type} itself)
-	 *
 	 * @param type a {@link java.lang.Class} object.
 	 * @return a stream of all class names declared <i>inside</i> the {@code type} argument
 	 */
-	public static Stream<String> declaredBinaryNamesOf(Class<?> type)
+	public static Stream<String> declaredInternalNamesOf(Class<?> type)
 	{
 		return concat(
 				concat(
-						stream(type.getDeclaredClasses()).map(Names::typeToBinaryName),
-						stream(type.getDeclaredClasses()).flatMap(Names::declaredBinaryNamesOf)),
+						stream(type.getDeclaredClasses()).map(Names::typeToInternalName),
+						stream(type.getDeclaredClasses()).flatMap(Names::declaredInternalNamesOf)),
 				anonymousClassesOf(type));
 	}
 
@@ -326,7 +283,7 @@ public final class Names {
 	{
 		List<String> anonymousClasses = new ArrayList<>();
 		int i = 1;
-		String baseName = typeToBinaryName(type);
+		String baseName = typeToInternalName(type);
 		String name = anonymousName(baseName, i);
 		while(type.getClassLoader().getResource(name + CLASS_SUFFIX) != null) {
 			anonymousClasses.add(name);
@@ -340,5 +297,4 @@ public final class Names {
 	{
 		return baseName + '$' + i;
 	}
-
 }

@@ -138,9 +138,6 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 	@Override
 	public Archive toObjectModel()
 	{
-
-		// invoke everything --- Argh! No no no... erm yes ;-)
-
 		// @ this point no resources will have been filtered/listened
 
 		// so we need to call all the resource-sources
@@ -158,6 +155,7 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 			processor.process(manifest);
 		}
 
+		// Then final call for resources post-manifest
 		plist = processRound(FINAL);
 		updateListeners(plist);
 		list.addAll(plist);

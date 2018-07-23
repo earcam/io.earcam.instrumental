@@ -1,0 +1,7 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+Provides a `ModuleFinder` for `InMemoryClassLoader`, allowing dynamic JPMS from in-memory resources.
+
+Uses JPMS API, so JDK >= 9 required.

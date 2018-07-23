@@ -61,7 +61,7 @@ public final class ArchiveFileObjectProvider implements FileObjectProvider {
 		}
 		Set<String> k = kinds.stream().map(e -> e.extension).collect(Collectors.toSet());
 
-		String packageResource = Names.typeToBinaryName(packageName);
+		String packageResource = Names.typeToInternalName(packageName);
 
 		Predicate<? super ArchiveResource> recursive = r -> r.name().startsWith(packageResource);
 		Predicate<? super ArchiveResource> nonRecursive = r -> {
@@ -76,7 +76,7 @@ public final class ArchiveFileObjectProvider implements FileObjectProvider {
 				.filter(packageMatcher)
 				.filter(r -> k.contains(r.extension()))
 				.map(r -> new CustomJavaFileObject(
-						Names.binaryToTypeName(r.name().substring(0, r.name().length() - r.extension().length())),
+						Names.internalToTypeName(r.name().substring(0, r.name().length() - r.extension().length())),
 						kinds.stream()
 								.filter(x -> x.extension.equals(r.extension()))
 								.findFirst()

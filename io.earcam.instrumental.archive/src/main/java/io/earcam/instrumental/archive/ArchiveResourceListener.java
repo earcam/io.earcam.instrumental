@@ -20,20 +20,20 @@ package io.earcam.instrumental.archive;
 
 /**
  * <p>
- * ArchiveResourceListener interface.
+ * ArchiveResourceListener observes {@link ArchiveResource}s.
  * </p>
  *
  */
 @FunctionalInterface
 public interface ArchiveResourceListener {
 
-	// TODO ArchiveResource should be split into im/mutable, and immutable variant provided here
 	/**
 	 * <p>
-	 * added.
+	 * Query an {@link ArchiveResource} once filtered and added to the {@link Archive}
+	 * that this listener is attached to.
 	 * </p>
 	 *
-	 * @param resource a {@link io.earcam.instrumental.archive.ArchiveResource} object.
+	 * @param resource an {@link ArchiveResource} added to the {@link Archive}.
 	 */
 	public abstract void added(ArchiveResource resource);
 }

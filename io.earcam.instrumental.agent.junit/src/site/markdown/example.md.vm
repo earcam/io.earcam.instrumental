@@ -4,9 +4,6 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
-
 Given some setup:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/agent/junit/AbstractAgentJarTest.java", "setup" )

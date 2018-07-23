@@ -382,9 +382,8 @@ public class MethodsTest {
 	}
 
 
-	// TODO with TypeLiteral information we can deduce the concrete type (in this case "N" is "Integer"), need to look
-	// at
-	// class def to see upper bound "N extends..."
+	// TODO with TypeLiteral information we can deduce the concrete type (in this case "N" is "Integer"),
+	// need to look at class def to see upper bound "N extends..."
 	@Test
 	public void testGenericType()
 	{

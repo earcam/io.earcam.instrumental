@@ -64,8 +64,7 @@ public class ClasspathModulesTest {
 				.exporting(ClasspathModulesTest.class.getPackage().getName())
 				.construct();
 
-		byte[] bytes = ClasspathModules.moduleInfoFrom(eJar);
-		ModuleInfo extractedSynthetic = ModuleInfo.read(bytes);
+		ModuleInfo extractedSynthetic = new ClasspathModules().moduleInfoFrom(eJar);
 
 		assertThat(extractedSynthetic, is(equalTo(expectedSynthetic)));
 
@@ -156,7 +155,7 @@ public class ClasspathModulesTest {
 	private static Path writeAutoModule(Path baseDir, String moduleName, String jarName) throws FileNotFoundException
 	{
 		InputStream built = bundle()
-				.set(HEADER_AUTOMATIC_MODULE_NAME, moduleName)
+				.set(HEADER_AUTOMATIC_MODULE_NAME.toString(), moduleName)
 				.add(ClasspathModulesTest.class)
 				.build();
 

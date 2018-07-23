@@ -55,7 +55,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	protected abstract T self();
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -92,7 +91,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
@@ -100,7 +98,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public T manifestMain(Entry<Name, ? extends CharSequence> attribute)
 	{
@@ -109,7 +106,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public T manifestNamed(ManifestNamedEntry entry)
 	{
@@ -119,7 +115,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public T mergeFrom(Manifest manifest)
 	{
@@ -140,7 +135,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Manifest to(Manifest manifest)
 	{
@@ -202,7 +196,6 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void to(@WillNotClose OutputStream out)
 	{

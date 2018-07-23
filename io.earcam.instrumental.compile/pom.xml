@@ -53,11 +53,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.earcam.utilitarian</groupId>
-			<artifactId>io.earcam.utilitarian.charstar</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.lade</artifactId>
 			<version>${project.version}</version>
@@ -69,14 +64,6 @@
 			<artifactId>ecj</artifactId>
 			<version>3.14.0</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>io.earcam.wrapped</groupId>
-			<artifactId>jdk.compiler</artifactId>
-			<version>1.8.132</version>
-			<scope>test</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>

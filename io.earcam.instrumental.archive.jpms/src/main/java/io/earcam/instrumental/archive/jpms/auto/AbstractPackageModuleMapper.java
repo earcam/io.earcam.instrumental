@@ -29,14 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
 import javax.annotation.WillNotClose;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.earcam.instrumental.archive.jpms.PackageModuleMapper;
 import io.earcam.instrumental.module.jpms.Export;
@@ -48,30 +46,24 @@ import io.earcam.utilitarian.io.IoStreams;
 
 /**
  * <p>
- * Abstract AbstractPackageModuleMapper class.
+ * An abstract base for PackageModuleMapper.
  * </p>
- *
  */
 public abstract class AbstractPackageModuleMapper implements PackageModuleMapper {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageModuleMapper.class);
-
-	static final String HEADER_AUTOMATIC_MODULE_NAME = "Automatic-Module-Name";
-	static final String HEADER_ADDS_EXPORTS = "Add-Exports";
-	static final String HEADER_ADDS_OPENS = "Add-Opens";
+	static final Name HEADER_AUTOMATIC_MODULE_NAME = new Name("Automatic-Module-Name");
 
 
 	/**
 	 * <p>
-	 * modules.
+	 * The modules observed by this {@link PackageModuleMapper}.
 	 * </p>
 	 *
-	 * @return a {@link java.util.List} object.
+	 * @return the list of {@link ModuleInfo}s resolved by the package-module-mapper
 	 */
 	protected abstract List<ModuleInfo> modules();
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<ModuleInfo> moduleRequiredFor(CharSequence moduleName, Iterator<? extends CharSequence> requiredPackages)
 	{
@@ -101,13 +93,10 @@ public abstract class AbstractPackageModuleMapper implements PackageModuleMapper
 				.findFirst().ifPresent(m -> {
 					modules.add(m);
 					packages.remove();
-					LOG.debug("Found module {} for package {}, required by module {}",
-							m.name(), paquet, moduleName);
 				});
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<ModuleInfo> moduleOpenedFor(CharSequence moduleName, Iterator<? extends CharSequence> requiredPackages)
 	{
@@ -115,17 +104,22 @@ public abstract class AbstractPackageModuleMapper implements PackageModuleMapper
 	}
 
 
-	// TODO useful to expose independently
 	/**
 	 * <p>
-	 * moduleInfoFrom.
+	 * Extracts ModuleInfo for the given JAR.
 	 * </p>
+	 * <ul>
+	 * <li>If the {@literal #HEADER_AUTOMATIC_MODULE_NAME} header
+	 * is encountered, then a {@link SYNTHETIC} module is generated exporting all packages</li>
+	 * <li>Header values {@code Add-Exports} and {@code Add-Opens} are ignored (<i>though methods exposed to
+	 * subclasses</i>)</li>
+	 * </ul>
 	 *
-	 * @param path a {@link java.nio.file.Path} object.
-	 * @return an array of {@link byte} objects.
-	 * @throws java.io.IOException if any.
+	 * @param path a {@link Path} to a JAR (zip file or exploded directory).
+	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC}.
+	 * @throws java.io.IOException if thrown by the underlying.
 	 */
-	protected static byte[] moduleInfoFrom(Path path) throws IOException
+	protected ModuleInfo moduleInfoFrom(Path path) throws IOException
 	{
 		try(JarInputStream jin = ExplodedJarInputStream.jarInputStreamFrom(path)) {
 			return moduleInfoFrom(jin);
@@ -133,38 +127,45 @@ public abstract class AbstractPackageModuleMapper implements PackageModuleMapper
 	}
 
 
-	protected static byte[] moduleInfoFrom(@WillNotClose JarInputStream jin) throws IOException
+	/**
+	 * @param jin the JAR input stream.
+	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC}.
+	 * @throws java.io.IOException if thrown by the underlying.
+	 * 
+	 * @see #moduleInfoFrom(Path)
+	 */
+	protected ModuleInfo moduleInfoFrom(@WillNotClose JarInputStream jin) throws IOException
 	{
-		Set<String> packages = new HashSet<>();
+		Set<String> exports = new HashSet<>();
+
 		String autoName = null;
+		boolean hasAutoName = false;
 		Manifest manifest = jin.getManifest();
 		if(manifest != null) {
 			autoName = manifest.getMainAttributes().getValue(HEADER_AUTOMATIC_MODULE_NAME);
+			hasAutoName = (autoName != null);
 		}
 		JarEntry entry;
 		while((entry = jin.getNextJarEntry()) != null) {
 			String name = entry.getName();
 			if(!entry.isDirectory() && "module-info.class".equals(name)) {
-				return IoStreams.readAllBytes(jin);
+				return ModuleInfo.read(IoStreams.readAllBytes(jin));
 			}
-			if(!entry.isDirectory() && name.endsWith(".class")) {
+			if(hasAutoName && !entry.isDirectory() && name.endsWith(".class")) {
 				int end = name.lastIndexOf('/');
 				if(end != -1) {
-					packages.add(name.substring(0, end).replace('/', '.'));
+					exports.add(name.substring(0, end).replace('/', '.'));
 				}
 			}
 		}
-		if(autoName != null) {
-			// TODO
-			// additional manifest headers ... parse `Add-Exports` and `Add-Opens`
-			// auto-requires .... not important ATM, as we're only looking at immediate dependencies, not transitive/a graph
-			//
+
+		if(hasAutoName) {
 			ModuleInfoBuilder builder = moduleInfo()
 					.withAccess(SYNTHETIC.access())
 					.named(autoName);
-			packages.forEach(builder::exporting);
-			return builder.construct().toBytecode();
+			exports.forEach(builder::exporting);
+			return builder.construct();
 		}
-		return new byte[0];
+		return null;
 	}
 }

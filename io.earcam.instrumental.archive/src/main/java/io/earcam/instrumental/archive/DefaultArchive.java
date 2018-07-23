@@ -35,11 +35,11 @@ import io.earcam.unexceptional.Exceptional;
 
 /**
  * <p>
- * DefaultArchiveX class.
+ * Default implementation of {@link Archive}.
  * </p>
  *
  */
-public class DefaultArchive implements Archive {
+class DefaultArchive implements Archive {
 
 	private final Optional<Manifest> manifest;
 	private final List<ArchiveResource> contents;
@@ -52,7 +52,6 @@ public class DefaultArchive implements Archive {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Optional<Manifest> manifest()
 	{
@@ -60,7 +59,6 @@ public class DefaultArchive implements Archive {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public List<ArchiveResource> contents()
 	{

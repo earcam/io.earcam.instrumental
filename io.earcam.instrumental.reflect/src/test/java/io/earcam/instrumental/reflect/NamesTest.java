@@ -20,7 +20,7 @@ package io.earcam.instrumental.reflect;
 
 import static io.earcam.instrumental.reflect.Names.descriptorToTypeName;
 import static io.earcam.instrumental.reflect.Names.descriptorsToTypeNames;
-import static io.earcam.instrumental.reflect.Names.typeToBinaryName;
+import static io.earcam.instrumental.reflect.Names.typeToInternalName;
 import static io.earcam.instrumental.reflect.Names.typeToDescriptor;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -126,7 +126,7 @@ public class NamesTest {
 	@Test
 	public void binaryToTypeName_NoPrimitiveValues()  // Would be a class named B, C, J, I, S, D, F or V
 	{
-		String binaryName = Names.binaryToTypeName("I");
+		String binaryName = Names.internalToTypeName("I");
 
 		assertThat(binaryName, is(equalTo("I")));
 	}
@@ -135,7 +135,7 @@ public class NamesTest {
 	@Test
 	public void binaryToTypeName_primitiveBooleanArray()
 	{
-		String binaryName = Names.binaryToTypeName("[Z");
+		String binaryName = Names.internalToTypeName("[Z");
 
 		assertThat(binaryName, is(equalTo(boolean[].class.getTypeName())));
 	}
@@ -144,7 +144,7 @@ public class NamesTest {
 	@Test
 	public void binaryToTypeName_discriptorInvalidUnlessArrayType()
 	{
-		String binaryName = Names.binaryToTypeName("Ljava/lang/String;");
+		String binaryName = Names.internalToTypeName("Ljava/lang/String;");
 
 		assertThat(binaryName, is(not(equalTo("java.lang.String"))));
 	}
@@ -153,7 +153,7 @@ public class NamesTest {
 	@Test
 	public void binaryToTypeName_objectArray()
 	{
-		String binaryName = Names.binaryToTypeName("[Ljava/lang/Number;");
+		String binaryName = Names.internalToTypeName("[Ljava/lang/Number;");
 
 		assertThat(binaryName, is(equalTo(Number[].class.getTypeName())));
 	}
@@ -163,7 +163,7 @@ public class NamesTest {
 	public void binaryToTypeName_object2DArray()
 	{
 		// EARCAM_SNIPPET_BEGIN: binary-to-type
-		String binaryName = Names.binaryToTypeName("[[Ljava/lang/Object;");
+		String binaryName = Names.internalToTypeName("[[Ljava/lang/Object;");
 
 		assertThat(binaryName, is(equalTo(Object[][].class.getTypeName())));
 		// EARCAM_SNIPPET_END: binary-to-type
@@ -237,14 +237,14 @@ public class NamesTest {
 	void classesOf()
 	{
 		// EARCAM_SNIPPET_BEGIN: declared-binary-names
-		List<String> classes = Names.declaredBinaryNamesOf(Declares.class).collect(toList());
+		List<String> classes = Names.declaredInternalNamesOf(Declares.class).collect(toList());
 
 		assertThat(classes, containsInAnyOrder(
-				typeToBinaryName(Declares.DeclaredTop.class),
-				typeToBinaryName(Declares.DeclaredTop.DeclaredMiddle.class),
-				typeToBinaryName(Declares.DeclaredTop.DeclaredMiddle.class) + "$1",
-				typeToBinaryName(Declares.DeclaredTop.DeclaredMiddle.class) + "$2",
-				typeToBinaryName(Declares.DeclaredTop.DeclaredMiddle.DeclaredBottom.class)));
+				typeToInternalName(Declares.DeclaredTop.class),
+				typeToInternalName(Declares.DeclaredTop.DeclaredMiddle.class),
+				typeToInternalName(Declares.DeclaredTop.DeclaredMiddle.class) + "$1",
+				typeToInternalName(Declares.DeclaredTop.DeclaredMiddle.class) + "$2",
+				typeToInternalName(Declares.DeclaredTop.DeclaredMiddle.DeclaredBottom.class)));
 		// EARCAM_SNIPPET_END: declared-binary-names
 	}
 }

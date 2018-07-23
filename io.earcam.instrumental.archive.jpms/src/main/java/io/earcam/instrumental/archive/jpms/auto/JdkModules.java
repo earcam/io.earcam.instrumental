@@ -222,7 +222,6 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	protected List<ModuleInfo> modules()
 	{

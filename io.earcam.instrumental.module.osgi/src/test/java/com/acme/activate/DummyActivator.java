@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.agent.defy
+ * io.earcam.instrumental.module.osgi
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,7 +16,19 @@
  * </ul>
  * #L%
  */
-package io.earcam.acme.a;
+package com.acme.activate;
 
-//simply a way to refer to this package with loading anything of relevant to tests
-public interface Acme {}
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
+public class DummyActivator implements BundleActivator {
+
+	@Override
+	public void start(BundleContext context)
+	{}
+
+
+	@Override
+	public void stop(BundleContext context)
+	{}
+}

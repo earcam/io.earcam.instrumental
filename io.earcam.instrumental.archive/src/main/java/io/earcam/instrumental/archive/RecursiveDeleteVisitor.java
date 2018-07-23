@@ -61,7 +61,6 @@ final class RecursiveDeleteVisitor extends SimpleFileVisitor<Path> {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
 	{
@@ -70,7 +69,6 @@ final class RecursiveDeleteVisitor extends SimpleFileVisitor<Path> {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult postVisitDirectory(Path directory, IOException exception)
 	{

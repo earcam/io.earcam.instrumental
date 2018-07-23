@@ -4,8 +4,6 @@
 #set($h5 = '#####')
 
 
-$h3 Examples
-
 $h4 Method handle
 
 Find a method and then get a handle for it:

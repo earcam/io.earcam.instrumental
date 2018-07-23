@@ -28,11 +28,6 @@ import java.lang.annotation.Target;
 /**
  * Marks a static method as an otherwise fragmented part of a
  * larger fluent/fluid/builder API.
- *
- *
- * TODO the actual annotation processor
- * module MUST be called `io.earcam.instrumental.fluently`
- *
  */
 @Retention(RUNTIME)
 @Target(METHOD)

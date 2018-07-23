@@ -18,7 +18,6 @@
  */
 package io.earcam.instrumental.agent.defy;
 
-import static io.earcam.instrumental.agent.defy.Agent.PREFIXES_ARGUMENT;
 import static io.earcam.instrumental.proxy.handler.NoopInvocationHandler.NOOP_INVOCATION_HANDLER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,13 +31,16 @@ import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Test;
 
+import io.earcam.acme.a.FinalClass;
 import io.earcam.acme.a.InterfaceWithFinalField;
+import io.earcam.acme.b.FinalClassB;
+import io.earcam.acme.c.FinalClassC;
 import io.earcam.instrumental.agent.junit.extension.AgentClass;
 import io.earcam.instrumental.proxy.Proxies;
 import io.earcam.unexceptional.Exceptional;
 
-@AgentClass(value = Agent.class, arguments = PREFIXES_ARGUMENT + "=io.earcam.acme.a")
-public class AgentTest {
+@AgentClass(value = Agent.class, arguments = "io.earcam.acme.a,io.earcam.acme.c")
+public final class AgentTest {
 
 	public static final Instrumentation MOCK_INSTRUMENTATION = Proxies.proxy(NOOP_INVOCATION_HANDLER, Instrumentation.class);
 
@@ -47,6 +49,14 @@ public class AgentTest {
 	public void finalClassShouldNotBeFinal()
 	{
 		Class<?> clazz = loadClass("io.earcam.acme.a.FinalClass");
+		assertFalse(Modifier.isFinal(clazz.getModifiers()));
+	}
+
+
+	@Test
+	public void loadedFinalClassShouldNotBeFinal()
+	{
+		Class<?> clazz = FinalClass.class;
 		assertFalse(Modifier.isFinal(clazz.getModifiers()));
 	}
 
@@ -81,6 +91,30 @@ public class AgentTest {
 
 
 	@Test
+	public void finalSystemClassWillStillBeFinal()
+	{
+		Class<?> clazz = loadClass("java.lang.String");
+		assertTrue(Modifier.isFinal(clazz.getModifiers()));
+	}
+
+
+	@Test
+	public void otherFinalClassMatchedByPatternIsDefinalised()
+	{
+		Class<?> clazz = FinalClassC.class;
+		assertFalse(Modifier.isFinal(clazz.getModifiers()));
+	}
+
+
+	@Test
+	public void otherFinalClassNotMatchedByPatternIsStillFinal()
+	{
+		Class<?> clazz = FinalClassB.class;
+		assertTrue(Modifier.isFinal(clazz.getModifiers()));
+	}
+
+
+	@Test
 	public void agentThrowsIfArgumentIsNull()
 	{
 		try {
@@ -91,10 +125,10 @@ public class AgentTest {
 
 
 	@Test
-	public void agentThrowsIfArgumentDoesNotContainPrefixesArgumentAndEquals()
+	public void agentThrowsIfArgumentContainIllegalCharacters()
 	{
 		try {
-			Agent.premain(PREFIXES_ARGUMENT, MOCK_INSTRUMENTATION);
+			Agent.premain("com.acme.*", MOCK_INSTRUMENTATION);
 			fail();
 		} catch(IllegalArgumentException e) {}
 	}
@@ -103,7 +137,7 @@ public class AgentTest {
 	@Test
 	public void agentHoldsReferenceToInstrumentation()
 	{
-		Agent.premain(PREFIXES_ARGUMENT + "=" + "boo", MOCK_INSTRUMENTATION);
+		Agent.premain("com.acme.boo", MOCK_INSTRUMENTATION);
 
 		assertThat(Agent.instrumentation, is(equalTo(MOCK_INSTRUMENTATION)));
 	}

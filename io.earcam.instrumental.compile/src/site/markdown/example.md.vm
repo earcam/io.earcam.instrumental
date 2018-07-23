@@ -4,8 +4,6 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
 Take the source as a String, then compile it to a map of byte arrays:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/compile/DefaultCompilerTest.java", "string" )

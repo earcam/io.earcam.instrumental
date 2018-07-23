@@ -99,7 +99,7 @@
 				<artifactId>antlr4-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
+ 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>maven-replacer-plugin</artifactId>
 			</plugin>

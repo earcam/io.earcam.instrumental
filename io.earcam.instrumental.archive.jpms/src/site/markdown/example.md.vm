@@ -4,9 +4,7 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
-The following creates an in-memory JPMS module with export predicate::
+The following creates an in-memory JPMS module with export predicate:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/archive/jpms/AsJpmsModuleTest.java", "export-predicate" )
 

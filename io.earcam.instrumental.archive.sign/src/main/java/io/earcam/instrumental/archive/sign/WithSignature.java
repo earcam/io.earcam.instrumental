@@ -18,41 +18,19 @@
  */
 package io.earcam.instrumental.archive.sign;
 
-import static io.earcam.instrumental.archive.AbstractAsJarBuilder.*;
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.CREATED_BY;
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.V1_0;
 import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.FINAL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.jar.Attributes.Name.SIGNATURE_VERSION;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.List;
 import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 import java.util.jar.Attributes.Name;
+import java.util.jar.Manifest;
 import java.util.stream.Stream;
-
-import org.bouncycastle.cert.jcajce.JcaCertStore;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.CMSSignedDataGenerator;
-import org.bouncycastle.cms.CMSTypedData;
-import org.bouncycastle.cms.SignerInfoGenerator;
-import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.DigestCalculatorProvider;
-import org.bouncycastle.operator.OperatorException;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 import io.earcam.instrumental.archive.ArchiveConfigurationPlugin;
 import io.earcam.instrumental.archive.ArchiveRegistrar;
@@ -61,7 +39,8 @@ import io.earcam.instrumental.archive.ArchiveResourceListener;
 import io.earcam.instrumental.archive.ArchiveResourceSource;
 import io.earcam.instrumental.archive.ManifestProcessor;
 import io.earcam.unexceptional.Closing;
-import io.earcam.unexceptional.Exceptional;
+import io.earcam.utilitarian.security.OpenedKeyStore;
+import io.earcam.utilitarian.security.Signatures;
 
 // TODO file extension for DSA and make sure this can run if WithDigest invoked separately previously
 /**
@@ -73,8 +52,6 @@ import io.earcam.unexceptional.Exceptional;
 public class WithSignature extends WithDigest implements ArchiveConfigurationPlugin, ManifestProcessor, ArchiveResourceSource, ArchiveResourceListener {
 
 	private static final String META_INF = "META-INF/";
-
-	private static final BouncyCastleProvider PROVIDER = new BouncyCastleProvider();
 
 	private static final String DEFAULT_SIGNATURE_FILENAME = "SIGNATURE";
 	private static final String DEFAULT_SIGNATURE_ALGORITHM = "SHA512withRSA";
@@ -105,7 +82,6 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void added(ArchiveResource resource)
 	{
@@ -115,14 +91,14 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Stream<ArchiveResource> drain(ResourceSourceLifecycle stage)
 	{
 		if(stage == FINAL) {
 			byte[] sign = sign();
 			ArchiveResource sf = new ArchiveResource(META_INF + signatureFilename + ".SF", sign);
-			ArchiveResource cert = new ArchiveResource(META_INF + signatureFilename + ".RSA", Exceptional.apply(this::signSigFile, sign));
+			OpenedKeyStore openedKeyStore = new OpenedKeyStore(keyStore, keyAlias, keyPassword);
+			ArchiveResource cert = new ArchiveResource(META_INF + signatureFilename + ".RSA", Signatures.sign(sign, openedKeyStore, signatureAlgorithm));
 			return Stream.of(sf, cert);
 		}
 		return Stream.empty();
@@ -205,35 +181,6 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	}
 
 
-	private byte[] signSigFile(byte[] sigContents) throws GeneralSecurityException, OperatorException, CMSException, IOException
-	{
-		CMSSignedDataGenerator gen = createSignedDataGenerator();
-
-		CMSTypedData cmsData = new CMSProcessableByteArray(sigContents);
-		CMSSignedData signedData = gen.generate(cmsData);
-		return signedData.getEncoded();
-	}
-
-
-	private CMSSignedDataGenerator createSignedDataGenerator() throws GeneralSecurityException, OperatorException, CMSException
-	{
-		Security.addProvider(PROVIDER);
-
-		List<Certificate> certChain = Arrays.asList(keyStore.getCertificateChain(keyAlias));
-		JcaCertStore certStore = new JcaCertStore(certChain);
-		Certificate cert = keyStore.getCertificate(keyAlias);
-		PrivateKey privateKey = (PrivateKey) keyStore.getKey(keyAlias, keyPassword);
-		ContentSigner signer = new JcaContentSignerBuilder(signatureAlgorithm).setProvider(PROVIDER).build(privateKey);
-		CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
-		DigestCalculatorProvider dcp = new JcaDigestCalculatorProviderBuilder().setProvider(PROVIDER).build();
-		SignerInfoGenerator sig = new JcaSignerInfoGeneratorBuilder(dcp).build(signer, (X509Certificate) cert);
-		generator.addSignerInfoGenerator(sig);
-		generator.addCertificates(certStore);
-		return generator;
-	}
-
-
-	/** {@inheritDoc} */
 	@Override
 	public void attach(ArchiveRegistrar core)
 	{
@@ -244,7 +191,6 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 
 	/* WithDigest API */
 
-	/** {@inheritDoc} */
 	@Override
 	public WithSignature digestedBy(StandardDigestAlgorithms hash)
 	{
@@ -253,7 +199,6 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public WithSignature digestedBy(MessageDigest digest)
 	{

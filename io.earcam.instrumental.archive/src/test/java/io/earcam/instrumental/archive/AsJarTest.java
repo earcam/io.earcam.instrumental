@@ -118,7 +118,7 @@ public class AsJarTest {
 
 
 	@Test
-	void manifestIsMerged()
+	void manifestMainAttributesAreMerged()
 	{
 
 		Manifest manifest = new Manifest();
@@ -135,7 +135,41 @@ public class AsJarTest {
 		Attributes attributes = archive.manifest().get().getMainAttributes();
 		assertThat(attributes, allOf(
 				hasEntry(MAIN_CLASS, cn(DummyMain.class)),
-				hasEntry(new Attributes.Name("Existing-Header"), "Existing Value")));
+				hasEntry(new Name("Existing-Header"), "Existing Value")));
+	}
+
+
+	@Test
+	void manifestNamedEntriesAreMerged()
+	{
+
+		Manifest manifestA = new Manifest();
+		Attributes entryA = new Attributes();
+		entryA.putValue("Merged", "By A");
+		manifestA.getEntries().put("named", entryA);
+
+		Manifest manifestB = new Manifest();
+		Attributes entryB = new Attributes();
+		entryB.putValue("Merged-From", "B");
+		manifestB.getEntries().put("named", entryB);
+
+		Archive archive = archive()
+				.configured(asJar()
+						.mergingManifest(manifestA)
+						.mergingManifest(manifestB)
+						.withManifestHeader("Main", "Attribute"))
+				.toObjectModel();
+
+		assertValidJarManifest(archive);
+
+		Attributes attributes = archive.manifest().get().getAttributes("named");
+
+		Attributes expected = new Attributes();
+		expected.putValue("Merged", "By A");
+		expected.putValue("Merged-From", "B");
+		assertThat(attributes, is(equalTo(expected)));
+
+		assertThat(archive.manifest().get().getMainAttributes(), hasEntry(new Name("Main"), "Attribute"));
 	}
 
 

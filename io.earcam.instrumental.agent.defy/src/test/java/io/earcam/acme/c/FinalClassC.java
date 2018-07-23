@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.module.osgi
+ * io.earcam.instrumental.agent.defy
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,19 +16,15 @@
  * </ul>
  * #L%
  */
-package com.acme.imp;
+package io.earcam.acme.c;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+public final class FinalClassC {
 
-public class DummyActivator implements BundleActivator {
-
-	@Override
-	public void start(BundleContext context)
-	{}
+	public final String field = "Boo";
 
 
-	@Override
-	public void stop(BundleContext context)
-	{}
+	public final String sayFoo()
+	{
+		return "foo";
+	}
 }

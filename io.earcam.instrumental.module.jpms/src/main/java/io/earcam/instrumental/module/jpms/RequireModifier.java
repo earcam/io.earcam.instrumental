@@ -42,7 +42,6 @@ public enum RequireModifier implements Modifier {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int access()
 	{
@@ -50,7 +49,6 @@ public enum RequireModifier implements Modifier {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean sourceVisible()
 	{

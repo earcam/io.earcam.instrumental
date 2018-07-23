@@ -5,19 +5,27 @@
 <table>
  <thead>
  <tr>
- <th>Module</th><th>Description</th>
+ <th>Module</th><th>Description</th><th>Examples</th>
  </tr>
  </thead>
  <tbody>
 #*
 	*##foreach( $module in $project.collectedProjects )##
  <tr>
- <td><a href="/$module.properties.get('earcam.project.name.short')">${module.artifactId}</a></td><td>$escape.html(${module.description})</td>
+ <td><a href="/$module.properties.get('earcam.project.name.short')">${module.artifactId}</a></td><td>$escape.html(${module.description})</td><td>#*
+
+	*##set( $exampleFile = "${module.name}/src/site/markdown/example.md.vm" )#*
+	*##if( $FileUtils.fileExists( $exampleFile ) )#*
+		*#<a href="/$module.properties.get('earcam.project.name.short')$escape.getHash()Examples">&$escape.getHash()x2714;</a>#*
+	*##else#*
+		*#&$escape.getHash()x2717;#*
+	*##end#*
+*#</td>
  </tr>
 #*
 	*##end##
  </tbody>
- </table>
+</table>
 
 #*
 *##end#*

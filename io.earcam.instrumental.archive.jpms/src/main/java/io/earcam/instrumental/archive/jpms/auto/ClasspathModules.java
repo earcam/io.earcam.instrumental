@@ -22,7 +22,7 @@ import static io.earcam.instrumental.module.auto.Classpaths.allClasspaths;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Objects;
 
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 import io.earcam.unexceptional.Exceptional;
@@ -38,7 +38,6 @@ public final class ClasspathModules extends AbstractPackageModuleMapper {
 	private List<ModuleInfo> modules;
 
 
-	/** {@inheritDoc} */
 	@Override
 	protected List<ModuleInfo> modules()
 	{
@@ -49,13 +48,10 @@ public final class ClasspathModules extends AbstractPackageModuleMapper {
 
 	private void loadModules()
 	{
-		Predicate<byte[]> notEmpty = b -> b.length != 0;
-
 		if(modules == null) {
 			modules = allClasspaths()
-					.map(Exceptional.uncheckFunction(AbstractPackageModuleMapper::moduleInfoFrom))
-					.filter(notEmpty)
-					.map(ModuleInfo::read)
+					.map(Exceptional.uncheckFunction(this::moduleInfoFrom))
+					.filter(Objects::nonNull)
 					.collect(toList());
 		}
 	}

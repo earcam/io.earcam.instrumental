@@ -28,19 +28,15 @@ import java.util.function.Consumer;
 
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Remapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO
  * <ol>
  * <li>Optionally skip imports found only in annotations and the annotations themselves</li>
- * <li>Tests for Generic types/methods, lambdas, etc</li>
+ * <li>Tests for Generic types/methods, lambdas, etc - override mapDesc and take a peek</li>
  * </ol>
  */
 class ImportsOf extends Remapper {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ImportsOf.class);
 
 	private static final Set<String> PRIMITIVES = namesOf(
 			short.class, int.class, long.class, float.class, double.class, char.class, byte.class, boolean.class, void.class);
@@ -53,7 +49,7 @@ class ImportsOf extends Remapper {
 	 * Constructor for ImportsOf.
 	 * </p>
 	 *
-	 * @param importConsumer a {@link java.util.function.Consumer} object.
+	 * @param importConsumer a {@link Consumer} of imported types.
 	 */
 	public ImportsOf(Consumer<String> importConsumer)
 	{
@@ -75,7 +71,6 @@ class ImportsOf extends Remapper {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String map(String typeName)
 	{
@@ -85,7 +80,6 @@ class ImportsOf extends Remapper {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String mapType(String type)
 	{
@@ -124,23 +118,11 @@ class ImportsOf extends Remapper {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String[] mapTypes(String[] types)
 	{
 		String[] mapped = super.mapTypes(types);
 		Arrays.stream(types).forEach(this::addInternalType);
-		return mapped;
-	}
-
-
-	/** {@inheritDoc} */
-	@Override
-	public String mapDesc(String desc)
-	{
-		String mapped = super.mapDesc(desc);
-		LOG.trace("mapDesc({})", desc);
-		// TODO Type type = Type.getType(desc) ... addInternalType(type)
 		return mapped;
 	}
 }

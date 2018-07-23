@@ -72,7 +72,6 @@ public class NoopInvocationHandler implements InvocationHandler, Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 	{

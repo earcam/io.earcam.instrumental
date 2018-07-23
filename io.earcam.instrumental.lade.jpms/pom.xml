@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.earcam</groupId>
+		<artifactId>io.earcam.instrumental</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>io.earcam.instrumental</groupId>
+	<artifactId>io.earcam.instrumental.lade.jpms</artifactId>
+	<packaging>jar</packaging>
+
+	<description>Create and run dynamic JPMS module layers from an n-memory classloader</description>
+
+	<distributionManagement>
+		<site>
+			<id>site</id>
+			<url>${site.url}${earcam.project.name.short}/</url>
+		</site>
+	</distributionManagement>
+
+	<properties>
+		<version.java.platform>9</version.java.platform>
+		<version.java>9</version.java>
+		<maven.compiler.source>${version.java}</maven.compiler.source>
+		<maven.compiler.target>${version.java}</maven.compiler.target>
+
+		<skip.execution.pitest>true</skip.execution.pitest>
+		<tidy.skip>false</tidy.skip>
+		<revapi.skip>true</revapi.skip>
+		<forbiddenapis.skip>true</forbiddenapis.skip>
+		<earcam.project.name.short>lade.jpms</earcam.project.name.short>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.lade</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.archive</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.archive.jpms</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>java-hamcrest</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>${version.java}</version>
+							<vendor>oracle</vendor>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>9</release>
+					<jdkToolchain>
+						<vendor>oracle</vendor>
+						<version>9</version>
+					</jdkToolchain>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<inherited>true</inherited>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jdk9-test</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<jvm>${java.home.9}/bin/java</jvm>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jdk10-test</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<jvm>${java.home.10}/bin/java</jvm>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

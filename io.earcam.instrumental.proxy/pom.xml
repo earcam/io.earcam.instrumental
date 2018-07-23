@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.proxy</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Smoother API than java.lang.reflect.Proxy with various InvocationHandler implementations</description>
+	<description>Smoother API than java.lang.reflect and various InvocationHandlers</description>
 
 	<distributionManagement>
 		<site>
@@ -82,11 +82,13 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

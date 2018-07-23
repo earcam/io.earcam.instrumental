@@ -19,6 +19,7 @@
 package io.earcam.instrumental.lade;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singleton;
 import static java.util.Locale.ROOT;
@@ -27,78 +28,109 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.security.CodeSigner;
+import java.security.CodeSource;
+import java.security.SecureClassLoader;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import io.earcam.unexceptional.Exceptional;
+import io.earcam.utilitarian.security.Signatures;
 
 /**
+ * <p>
  * A {@link java.lang.ClassLoader} that doesn't require a file system.
- *
- * Class/resource loading strategy is parent last.
- *
- * TODO does not provide for `CodeSource` and `ProtectionDomain`
- *
+ * </p>
+ * 
+ * <p>
+ * Class/resource loading strategy is self-first. With multiple JARs added,
+ * the search is linear in-order; so "hiding" is possible as per classpath.
+ * </p>
+ * 
+ * <p>
+ * Current partial support for signed JARs; the certificate will be loaded
+ * and {@link CodeSigner}/{@link CodeSource} associated with loaded classes,
+ * however no validation is performed. RSA only.
+ * </p>
  */
-public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
+@ThreadSafe
+public final class InMemoryClassLoader extends SecureClassLoader implements AutoCloseable {
+
+	static {
+		InMemoryClassLoader.registerAsParallelCapable();
+	}
 
 	static final String MANIFEST_PATH = "META-INF/MANIFEST.MF";
+
+	static final ConcurrentMap<String, WeakReference<InMemoryClassLoader>> loaders = new ConcurrentHashMap<>();
 
 	/**
 	 * The URL protocol used by resources from this {@link ClassLoader}.
 	 * Note: this is only valid for URLs returned by this instance as they
 	 * include a handler which maintain a reference to this instance.
-	 * More specifically; no URLStreamHandler is globally registered for
-	 * this fake "protocol".
+	 * 
+	 * You may register the protocol handler to load URLs within the same JVM.
+	 * 
+	 * @see Handler#addProtocolHandlerSystemProperty()
 	 */
-	public static final String URL_PROTOCOL = "mental";
-
-	private class MentalHandler extends URLStreamHandler {
-
-		@Override
-		protected URLConnection openConnection(URL url)
-		{
-			return new URLConnection(url) {
-
-				@Override
-				public void connect()
-				{ /* NOOP */ }
-
-
-				@Override
-				public InputStream getInputStream()
-				{
-					return getResourceAsStream(url.getPath());
-				}
-			};
-		}
-	}
+	public static final String URL_PROTOCOL = "lade";
 
 	// Map of resource-name to map of resource-owner-name to resource
-	private final Map<String, Map<String, byte[]>> resources = new HashMap<>();
+	private final ConcurrentMap<String, Map<String, byte[]>> resources = new ConcurrentHashMap<>();
 
-	private final MentalHandler handler = new MentalHandler();
+	private final ConcurrentMap<String, CodeSource> codeSources = new ConcurrentHashMap<>();
+
+	private final ConcurrentMap<String, Class<?>> loaded = new ConcurrentHashMap<>();
+
+	private final Handler handler = new Handler();
+
+	private boolean addCodeSources = true;
 
 
 	/**
-	 * Exposed for use as "<tt>java.system.class.loader</tt>"
+	 * Exposed for use as the "<tt>java.system.class.loader</tt>"
 	 *
-	 * @param parent a {@link java.lang.ClassLoader} object.
+	 * @param parent a {@link java.lang.ClassLoader} instance.
 	 * @see ClassLoader#getSystemClassLoader()
 	 */
 	public InMemoryClassLoader(ClassLoader parent)
 	{
 		super(parent);
+		loaders.put(identityHashCodeHex(this), new WeakReference<InMemoryClassLoader>(this));
+	}
+
+
+	/**
+	 * <p>
+	 * By default the {@link InMemoryClassLoader} adds the {@link CodeSigner}/{@link CodeSource}
+	 * details where found.
+	 * </p>
+	 * <p>
+	 * Invoking this method disables this behaviour, but only for JARs added subsequently.
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public InMemoryClassLoader doNotAddSubsequentSignatures()
+	{
+		this.addCodeSources = false;
+		return this;
 	}
 
 
@@ -201,6 +233,9 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 	{
 		addManifest(jar, name);
 		addJarEntries(jar, name);
+		if(addCodeSources) {
+			addCodeSource(name);
+		}
 		return this;
 	}
 
@@ -210,7 +245,7 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 		if(jar.getManifest() != null) {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			jar.getManifest().write(os);
-			resources.computeIfAbsent(MANIFEST_PATH, k -> new HashMap<>()).put(name, os.toByteArray());
+			resources.computeIfAbsent(MANIFEST_PATH, k -> new ConcurrentHashMap<>()).put(name, os.toByteArray());
 		}
 	}
 
@@ -218,8 +253,27 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 	void addJarEntries(JarInputStream jar, String name) throws IOException
 	{
 		JarEntry jarEntry;
-		while((jarEntry = jar.getNextJarEntry()) != null) {
-			resources.computeIfAbsent(jarEntry.getName(), k -> new HashMap<>()).put(name, inputStreamToBytes(jar));
+		try(JarInputStream wrap = jar) {
+			while((jarEntry = wrap.getNextJarEntry()) != null) {
+				resources.computeIfAbsent(jarEntry.getName(), k -> new ConcurrentHashMap<>()).put(name, inputStreamToBytes(wrap));
+			}
+		}
+	}
+
+
+	private void addCodeSource(String name)
+	{
+		byte[] bytes = resources.keySet().stream()
+				.filter(r -> r.startsWith("META-INF/") && r.endsWith(".SF"))
+				.map(r -> r.substring(0, r.length() - 2) + "RSA")
+				.map(this::resourcesForName)
+				.map(m -> m.get(name))
+				.filter(Objects::nonNull)
+				.findFirst().orElse(new byte[0]);
+
+		if(bytes.length != 0) {
+			X509Certificate[] certificates = Signatures.certificatesFromSignature(bytes).stream().toArray(s -> new X509Certificate[s]);
+			codeSources.put(name, new CodeSource(createResourceUrl(name, ""), certificates));
 		}
 	}
 
@@ -237,25 +291,30 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException
 	{
+		Class<?> wasLoaded = loaded.get(name);
+		if(wasLoaded != null) {
+			return wasLoaded;
+		}
 		String className = classToResourceName(name);
-		Iterator<byte[]> iterator = resourcesForName(className).values().iterator();
-
+		Iterator<Entry<String, byte[]>> iterator = resourcesForName(className).entrySet().iterator();
 		if(!iterator.hasNext()) {
 			if(getParent() == null) {
 				throw new ClassNotFoundException(name);
 			}
 			return getParent().loadClass(name);
 		}
-		byte[] resource = iterator.next();
-		return defineClass(name, resource, 0, resource.length);
+		Entry<String, byte[]> resource = iterator.next();
+		byte[] bytes = resource.getValue();
+		Class<?> defined = defineClass(name, bytes, 0, bytes.length, codeSources.get(resource.getKey()));
+		loaded.put(name, defined);
+		return defined;
 	}
 
 
-	static String classToResourceName(String name)
+	private static String classToResourceName(String name)
 	{
 		return name.replaceAll("\\.", "/") + ".class";
 	}
@@ -263,32 +322,81 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 
 	private Map<String, byte[]> resourcesForName(String resource)
 	{
-		return resources.getOrDefault(resource, emptyMap());
+		return resources.getOrDefault(stripLeadingSlash(resource), emptyMap());
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void close()
 	{
 		resources.clear();
+		loaded.clear();
+		loaders.remove(identityHashCodeHex(this));
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public InputStream getResourceAsStream(String name)
 	{
-		String resource = (name.charAt(0) == '/') ? name.substring(1) : name;
-		Iterator<byte[]> iterator = resourcesForName(resource).values().iterator();
+		Iterator<byte[]> iterator = resourcesForName(name).values().iterator();
 		if(!iterator.hasNext()) {
-			return super.getResourceAsStream(resource);
+			return super.getResourceAsStream(name);
 		}
 		return new ByteArrayInputStream(iterator.next());
 	}
 
 
-	/** {@inheritDoc} */
+	private static String stripLeadingSlash(String name)
+	{
+		return (name.length() > 0 && name.charAt(0) == '/') ? name.substring(1) : name;
+	}
+
+
+	static InputStream getResourceAsStream(URL earl) throws IOException
+	{
+		String host = earl.getHost();
+		int index = host.indexOf('.');
+		String loaderId = host.substring(0, index);
+		String archiveId = host.substring(index + 1);
+
+		InMemoryClassLoader loader = InMemoryClassLoader.loaders.get(loaderId).get();
+
+		String resource = stripLeadingSlash(earl.getPath());
+
+		if(resource.isEmpty()) {
+			// We must now serialize the entire JAR for the given archiveId ... as something
+			// is trying to look up the JAR having trimmed off the resource path
+
+			return loader.serializeJar(archiveId);
+		}
+		byte[] bytes = loader.resourcesForName(resource).get(archiveId);
+
+		return (bytes == null) ? null : new ByteArrayInputStream(bytes);
+	}
+
+
+	private InputStream serializeJar(String archiveId) throws IOException
+	{
+		byte[] manifestBytes = resourcesForName(MANIFEST_PATH).get(archiveId);
+		Manifest manifest = new Manifest(new ByteArrayInputStream(manifestBytes));
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try(JarOutputStream output = new JarOutputStream(baos, manifest)) {
+
+			for(Entry<String, Map<String, byte[]>> entrySet : resources.entrySet()) {
+
+				if(!MANIFEST_PATH.equals(entrySet.getKey()) && entrySet.getValue().containsKey(archiveId)) {
+					JarEntry jarEntry = new JarEntry(entrySet.getKey());
+					byte[] bytes = entrySet.getValue().get(archiveId);
+					jarEntry.setSize(bytes.length);
+					output.putNextEntry(jarEntry);
+					output.write(bytes);
+				}
+			}
+		}
+		return new ByteArrayInputStream(baos.toByteArray());
+	}
+
+
 	@Override
 	public URL getResource(String name)
 	{
@@ -301,39 +409,64 @@ public class InMemoryClassLoader extends ClassLoader implements AutoCloseable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Enumeration<URL> getResources(String name)
 	{
+		return getResources(name, true);
+	}
+
+
+	public Enumeration<URL> getResources(String name, boolean includeParents)
+	{
 		Iterator<Entry<String, byte[]>> iterator = resourcesForName(name).entrySet().iterator();
+
+		Enumeration<URL> superResources = includeParents ? Exceptional.apply(super::getResources, name) : emptyEnumeration();
 
 		return new Enumeration<URL>() {
 
 			@Override
 			public boolean hasMoreElements()
 			{
-				return iterator.hasNext();
+				return iterator.hasNext() || superResources.hasMoreElements();
 			}
 
 
 			@Override
 			public URL nextElement()
 			{
-				String resourceOwner = iterator.next().getKey();
-				return Exceptional.url(URL_PROTOCOL, resourceOwner, 0, (name.charAt(0) != '/') ? "/" + name : name, handler);
+				if(iterator.hasNext()) {
+					String archiveId = iterator.next().getKey();
+					return createResourceUrl(archiveId, name);
+				}
+				return superResources.nextElement();
 			}
 		};
 	}
 
 
-	/**
-	 * Exposes functionality of {@link #defineClass(String, java.nio.ByteBuffer, java.security.ProtectionDomain)}
-	 *
-	 * @param bytes bytecode
-	 * @return the class defined by the bytecode
-	 */
-	public Class<?> define(byte[] bytes)
+	public Stream<URL> resources()
 	{
-		return defineClass(null, bytes, 0, bytes.length, null);
+		return resources.entrySet()
+				.stream()
+				.flatMap(e -> e.getValue().entrySet().stream().map(r -> createResourceUrl(r.getKey(), e.getKey())));
+	}
+
+
+	private URL createResourceUrl(String archiveId, String path)
+	{
+		String host = identityHashCodeHex(this) + '.' + archiveId;
+		return Exceptional.url(URL_PROTOCOL, host, 0, "/" + path, handler);
+	}
+
+
+	public Class<?> define(String name, byte[] bytes, CodeSource codeSource)
+	{
+		return define(name, bytes, 0, bytes.length, codeSource);
+	}
+
+
+	public Class<?> define(String name, byte[] bytes, int offset, int length, CodeSource codeSource)
+	{
+		return defineClass(name, bytes, offset, length, codeSource);
 	}
 }

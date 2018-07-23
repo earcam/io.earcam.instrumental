@@ -21,81 +21,107 @@ package io.earcam.instrumental.module.osgi;
 import static io.earcam.instrumental.module.osgi.ClauseParameters.ClauseParameter.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class ClauseParametersTest {
 
-	@Test
-	void singleAttributeEqual()
-	{
-		ClauseParameters a = attribute("key", "value");
-		ClauseParameters b = attribute("key", "value");
+	@Nested
+	public class Equality {
 
-		assertThat(a, is(equalTo(b)));
-		assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+		@Test
+		void singleAttributeEqual()
+		{
+			ClauseParameters a = attribute("key", "value");
+			ClauseParameters b = attribute("key", "value");
+
+			assertThat(a, is(equalTo(b)));
+			assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+		}
+
+
+		@Test
+		void singleAttributeNotEqualWhenValuesDiffer()
+		{
+			ClauseParameters a = attribute("key", "X");
+			ClauseParameters b = attribute("key", "O");
+
+			assertThat(a, is(not(equalTo(b))));
+		}
+
+
+		@Test
+		void singleDirectiveEqual()
+		{
+			ClauseParameters a = directive("key", "value");
+			ClauseParameters b = directive("key", "value");
+
+			assertThat(a, is(equalTo(b)));
+			assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+		}
+
+
+		@Test
+		void singleDirectiveNotEqualWhenKeysDiffer()
+		{
+			ClauseParameters a = directive("key", "value");
+			ClauseParameters b = directive("yek", "value");
+
+			assertThat(a, is(not(equalTo(b))));
+		}
+
+
+		@Test
+		void mixedAttributeAndDirectiveAreEqual()
+		{
+			ClauseParameters a = directive("level", "42").attribute("key", "value");
+			ClauseParameters b = attribute("key", "value").directive("level", "42");
+
+			assertThat(a, is(equalTo(b)));
+			assertThat(a.hashCode(), is(equalTo(b.hashCode())));
+		}
+
+
+		@Test
+		void notEqualToNullInstance()
+		{
+			ClauseParameters a = directive("key", "value");
+			ClauseParameters b = null;
+
+			assertFalse(a.equals(b));
+		}
+
+
+		@Test
+		void notEqualToNullObject()
+		{
+			ClauseParameters a = directive("key", "value");
+			Object b = null;
+
+			assertFalse(a.equals(b));
+		}
 	}
 
+	@Nested
+	public class Defaults {
 
-	@Test
-	void singleAttributeNotEqualWhenValuesDiffer()
-	{
-		ClauseParameters a = attribute("key", "X");
-		ClauseParameters b = attribute("key", "O");
+		@Test
+		void attributeOrDefaultReturnsValue()
+		{
+			String value = attribute("key", "value").attributeOrDefault("key", "invalid");
 
-		assertThat(a, is(not(equalTo(b))));
-	}
-
-
-	@Test
-	void singleDirectiveEqual()
-	{
-		ClauseParameters a = directive("key", "value");
-		ClauseParameters b = directive("key", "value");
-
-		assertThat(a, is(equalTo(b)));
-		assertThat(a.hashCode(), is(equalTo(b.hashCode())));
-	}
+			assertThat(value, is(equalTo("value")));
+		}
 
 
-	@Test
-	void singleDirectiveNotEqualWhenKeysDiffer()
-	{
-		ClauseParameters a = directive("key", "value");
-		ClauseParameters b = directive("yek", "value");
+		@Test
+		void attributeOrDefaultReturnsDefault()
+		{
+			String value = attribute("key", "invalid").attributeOrDefault("unknown", "value");
 
-		assertThat(a, is(not(equalTo(b))));
-	}
-
-
-	@Test
-	void mixedAttributeAndDirectiveAreEqual()
-	{
-		ClauseParameters a = directive("level", "42").attribute("key", "value");
-		ClauseParameters b = attribute("key", "value").directive("level", "42");
-
-		assertThat(a, is(equalTo(b)));
-		assertThat(a.hashCode(), is(equalTo(b.hashCode())));
-	}
-
-
-	@Test
-	void notEqualToNullInstance()
-	{
-		ClauseParameters a = directive("key", "value");
-		ClauseParameters b = null;
-
-		assertFalse(a.equals(b));
-	}
-
-
-	@Test
-	void notEqualToNullObject()
-	{
-		ClauseParameters a = directive("key", "value");
-		Object b = null;
-
-		assertFalse(a.equals(b));
+			assertThat(value, is(equalTo("value")));
+		}
 	}
 }

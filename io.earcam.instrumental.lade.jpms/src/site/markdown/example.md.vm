@@ -1,0 +1,39 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+The following example, creates &times;3 in-memory JPMS JARs, creates a `ModuleLayer` and executes the application.
+
+
+$h4 Create JARs
+
+An API, Imp and App:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/jpms/InMemoryModuleFinderTest.java", "setup-three-jars" )
+
+
+$h4 Create InMemoryClassLoader
+
+Remembering to register the `URLStreamHandler`
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/jpms/InMemoryModuleFinderTest.java", "create-loader" )
+
+
+$h4 Create `ModuleFinder` and `ModuleLayer`
+
+The ModuleLayer has in-memory modules resolved by the finder, and service dependencies are bound 
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/jpms/InMemoryModuleFinderTest.java", "create-layer" )
+
+
+$h4 Execute the App
+
+Launch the application
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/jpms/InMemoryModuleFinderTest.java", "execute-app" )
+
+
+
+View full [source](xref-test/io/earcam/instrumental/lade/jpms/InMemoryModuleFinderTest.html) of associated test.

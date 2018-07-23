@@ -23,7 +23,6 @@ import static java.lang.reflect.Modifier.STATIC;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.jar.Attributes.Name.SEALED;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.lang.reflect.Method;
@@ -47,8 +46,7 @@ import io.earcam.instrumental.reflect.Types;
 import io.earcam.unexceptional.Exceptional;
 
 // TODO 
-// 1. Should just use a java.util.jar.Manifest instance replacing #manifestHeaders
-// 2. Should apply checks at build time to allow e.g. ..compiler integration (this could also make validation optional... for better or worse, allows testing with "bad" jars).
+// 1. Should apply checks at build time to allow e.g. ..compiler integration (this could also make validation optional... for better or worse, allows testing with "bad" jars).
 /**
  * AsJar, configures an {@link Archive} as a JAR.
  */
@@ -63,7 +61,8 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	public static final String V1_0 = "1.0";
 
 	protected final BasicArchiveResourceSource source = new BasicArchiveResourceSource();
-	protected final Map<String, String> manifestHeaders = new HashMap<>();
+
+	protected final Manifest manifest = new Manifest();
 
 	private final Map<String, Set<String>> spi = new HashMap<>();
 
@@ -78,7 +77,7 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	 */
 	protected AbstractAsJarBuilder()
 	{
-		manifestHeaders.put(MANIFEST_VERSION, V1_0);
+		manifest.getMainAttributes().putValue(MANIFEST_VERSION, V1_0);
 	}
 
 
@@ -99,9 +98,8 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public void process(Manifest manifest)
 	{
-		Attributes attributes = manifest.getMainAttributes();
-		manifestHeaders.entrySet()
-				.forEach(e -> attributes.putValue(e.getKey(), e.getValue()));
+		merge(this.manifest, manifest);
+
 		Map<String, Attributes> entries = manifest.getEntries();
 
 		for(String sealed : sealedPackages) {
@@ -163,7 +161,7 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public T launching(String mainClass)
 	{
-		manifestHeaders.put(MAIN_CLASS, mainClass);
+		manifest.getMainAttributes().putValue(MAIN_CLASS, mainClass);
 		return self();
 	}
 
@@ -253,26 +251,31 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 
 
 	/**
-	 * TODO this currently only copies over the main attributes - the named entries are ignored
-	 * 
 	 * @param manifest the manifest to merge from
 	 * @return this builder.
 	 */
 	@Override
 	public T mergingManifest(Manifest manifest)
 	{
-		Map<String, String> mainAttributes = manifest.getMainAttributes().entrySet().stream()
-				.collect(toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
-
-		manifestHeaders.putAll(mainAttributes);
+		merge(manifest, this.manifest);
 		return self();
+	}
+
+
+	protected static void merge(Manifest sauce, Manifest sink)
+	{
+		sink.getMainAttributes().putAll(sauce.getMainAttributes());
+		sauce.getEntries().forEach((k, v) -> sink.getEntries().merge(k, v, (v1, v2) -> {
+			v1.putAll(v2);
+			return v1;
+		}));
 	}
 
 
 	@Override
 	public T withManifestHeader(String key, String value)
 	{
-		manifestHeaders.put(key, value);
+		manifest.getMainAttributes().putValue(key, value);
 		return self();
 	}
 }

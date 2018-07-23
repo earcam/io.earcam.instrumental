@@ -46,42 +46,11 @@
 			<artifactId>io.earcam.instrumental.module.auto</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-commons</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-		</dependency>
-
-<!-- TODO remove once settled -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>		
 
 		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.module.jpms</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4-runtime</artifactId>
 		</dependency>
 
 		<dependency>
@@ -149,12 +118,6 @@
 		<dependency>
 			<groupId>org.ops4j.pax.tinybundles</groupId>
 			<artifactId>tinybundles</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

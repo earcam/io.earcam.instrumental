@@ -74,7 +74,6 @@ public class Export implements Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -99,7 +98,6 @@ public class Export implements Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{

@@ -61,7 +61,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void addTransformer(ClassFileTransformer transformer, boolean canRetransform)
 	{
@@ -69,7 +68,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void addTransformer(ClassFileTransformer transformer)
 	{
@@ -77,7 +75,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean removeTransformer(ClassFileTransformer transformer)
 	{
@@ -85,7 +82,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isRetransformClassesSupported()
 	{
@@ -93,7 +89,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void retransformClasses(Class<?>... classes) throws UnmodifiableClassException
 	{
@@ -101,7 +96,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isRedefineClassesSupported()
 	{
@@ -109,7 +103,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void redefineClasses(ClassDefinition... definitions) throws ClassNotFoundException, UnmodifiableClassException
 	{
@@ -117,7 +110,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isModifiableClass(Class<?> theClass)
 	{
@@ -125,7 +117,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<?>[] getAllLoadedClasses()
 	{
@@ -133,7 +124,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<?>[] getInitiatedClasses(ClassLoader loader)
 	{
@@ -141,7 +131,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public long getObjectSize(Object objectToSize)
 	{
@@ -149,7 +138,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void appendToBootstrapClassLoaderSearch(JarFile jarfile)
 	{
@@ -157,7 +145,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void appendToSystemClassLoaderSearch(JarFile jarfile)
 	{
@@ -165,7 +152,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isNativeMethodPrefixSupported()
 	{
@@ -173,7 +159,6 @@ public class InstrumentationWrapper implements Instrumentation {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void setNativeMethodPrefix(ClassFileTransformer transformer, String prefix)
 	{

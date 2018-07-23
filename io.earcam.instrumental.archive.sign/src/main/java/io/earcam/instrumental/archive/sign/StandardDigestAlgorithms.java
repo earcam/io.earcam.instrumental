@@ -71,6 +71,6 @@ public enum StandardDigestAlgorithms {
 	 */
 	public MessageDigest create()
 	{
-		return Exceptional.apply(MessageDigest::getInstance, algorithm);
+		return Exceptional.apply(MessageDigest::getInstance, algorithm());
 	}
 }

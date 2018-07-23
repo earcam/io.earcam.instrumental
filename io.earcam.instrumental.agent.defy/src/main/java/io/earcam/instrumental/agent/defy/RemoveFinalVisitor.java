@@ -37,7 +37,6 @@ class RemoveFinalVisitor extends ClassVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
 	{
@@ -58,7 +57,6 @@ class RemoveFinalVisitor extends ClassVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
 	{
@@ -66,7 +64,6 @@ class RemoveFinalVisitor extends ClassVisitor {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
 	{

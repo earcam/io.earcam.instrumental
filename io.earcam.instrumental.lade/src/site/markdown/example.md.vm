@@ -4,10 +4,29 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
 Self-first URLClassLoader:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/lade/ClassLoadersTest.java", "selffirst" )
 
 View full [source](xref-test/io/earcam/instrumental/lade/ClassLoadersTest.html) of associated test.
+
+
+`InMemoryClassLoader` (loading byte array JARs in `try` head):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/InMemoryClassLoaderTest.java", "simple-inmemory" )
+
+
+_Orphaned_ `InMemoryClassLoader` (loading byte array JARs in `try` body):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/InMemoryClassLoaderTest.java", "simple-orphan" )
+
+
+Safely add the `URLStreamHandler` for `InMemoryClassLoader`:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/InMemoryClassLoaderTest.java", "add-handler" )
+
+
+Safely remove the `URLStreamHandler` for `InMemoryClassLoader`:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/lade/InMemoryClassLoaderTest.java", "remove-handler" )
+

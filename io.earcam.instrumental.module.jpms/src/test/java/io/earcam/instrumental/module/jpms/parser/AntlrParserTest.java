@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -410,7 +409,8 @@ public class AntlrParserTest {
 	@Nested
 	class LargeExamples {
 
-		@Disabled // TODO failing to parse,
+		// Note; java.base's module-info.java had missing semi-colons on some qualified exports (lines 306-309), these
+		// were added as otherwise invalid
 		@Test
 		void javaBase() throws IOException
 		{

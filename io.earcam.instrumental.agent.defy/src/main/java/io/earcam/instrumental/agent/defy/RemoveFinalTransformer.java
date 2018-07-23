@@ -30,26 +30,39 @@ import org.objectweb.asm.ClassWriter;
 
 class RemoveFinalTransformer implements ClassFileTransformer {
 
-	private String classNamePrefix;
+	private final String[] prefixes;
 
 
 	/**
-	 * Note: Do not use wildcard or regex, prefix only
+	 * <p>
+	 * Create a new {@link RemoveFinalTransformer} removing final modifiers
+	 * from classes matching the {@code prefixes} parameter
+	 * </p>
 	 * 
-	 * @param classNamePrefix the pattern to match against
+	 * @param prefixes
 	 */
-	RemoveFinalTransformer(String classNamePrefix)
+	RemoveFinalTransformer(String[] prefixes)
 	{
-		this.classNamePrefix = classNamePrefix.replace('.', '/');
+		this.prefixes = prefixes;
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer)
 			throws IllegalClassFormatException
 	{
-		return className.startsWith(classNamePrefix) ? transform(classfileBuffer) : classfileBuffer;
+		return prefixMatched(className) ? transform(classfileBuffer) : classfileBuffer;
+	}
+
+
+	private boolean prefixMatched(String className)
+	{
+		for(String prefix : prefixes) {
+			if(className.startsWith(prefix)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 

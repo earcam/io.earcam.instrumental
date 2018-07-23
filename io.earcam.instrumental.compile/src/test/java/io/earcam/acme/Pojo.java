@@ -22,7 +22,6 @@ public class Pojo {
 
 	private String name;
 	private int size;
-	private int unused;
 
 
 	public String getName()

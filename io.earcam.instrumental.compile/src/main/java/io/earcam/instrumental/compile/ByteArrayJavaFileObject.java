@@ -61,7 +61,6 @@ class ByteArrayJavaFileObject extends SimpleJavaFileObject {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public OutputStream openOutputStream() throws IOException
 	{

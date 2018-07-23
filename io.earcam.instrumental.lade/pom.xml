@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.lade</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Not just the usual fudge of ClassLoader.defineClass() - loads in-memory JARs and returns almost valid resource URLs</description>
+	<description>Not just the usual fudge of ClassLoader.defineClass() - loads in-memory JARs returning valid resource URLs</description>
 
 	<!--  
 		Issues with surefire and JUnit 5 (due to multiple executions of surefire), mean
@@ -36,7 +36,17 @@
 			<groupId>io.earcam</groupId>
 			<artifactId>io.earcam.unexceptional</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.security</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.reflect</artifactId>
@@ -59,10 +69,6 @@
 			<artifactId>java-hamcrest</artifactId>
 		</dependency>
 
-		<!-- 
-			can't depend on ${project.groupId}.archive - 
-			so good ol' tinybundles is perfect
-		-->
 		<dependency>
 			<groupId>org.ops4j.pax.tinybundles</groupId>
 			<artifactId>tinybundles</artifactId>
@@ -71,6 +77,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -111,9 +118,9 @@
 							<forkCount>1</forkCount>
 							<reuseForks>false</reuseForks>
 							<argLine>-Djava.system.class.loader=${project.artifactId}.InMemoryClassLoader</argLine>
-							<systemProperties>
-								<java.system.class.loader>${project.artifactId}.InMemoryClassLoader</java.system.class.loader>
-							</systemProperties>
+<!-- 							<systemProperties> -->
+<!-- 								<java.system.class.loader>${project.artifactId}.InMemoryClassLoader</java.system.class.loader> -->
+<!-- 							</systemProperties> -->
 						</configuration>
 					</execution>
 				</executions>

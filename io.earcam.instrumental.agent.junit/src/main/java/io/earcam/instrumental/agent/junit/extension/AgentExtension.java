@@ -40,7 +40,6 @@ public class AgentExtension implements BeforeEachCallback, BeforeAllCallback {
 	Store store;
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception
 	{
@@ -87,7 +86,6 @@ public class AgentExtension implements BeforeEachCallback, BeforeAllCallback {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public void beforeAll(ExtensionContext context) throws Exception
 	{

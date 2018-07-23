@@ -56,7 +56,6 @@ public class Require implements Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -81,7 +80,6 @@ public class Require implements Serializable {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{

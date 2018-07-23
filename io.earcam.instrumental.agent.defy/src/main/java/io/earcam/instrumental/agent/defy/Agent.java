@@ -19,17 +19,22 @@
 package io.earcam.instrumental.agent.defy;
 
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
+import java.util.Objects;
+import java.util.function.IntPredicate;
 
 /**
+ * <p>
  * An instrumentation agent that removes final modifiers from classes, fields and methods
- * for classes matching the regex provided as agent argument "{@value Agent#PREFIXES_ARGUMENT}".
+ * for classes matching the agent's argument.
+ * </p>
+ * <p>
+ * The value supplied to as the agent argument is a comma-separated list
+ * of package names or qualified class names.
+ * These are matched by invocations to {@link String#startsWith(String)}
+ * </p>
  *
  */
 public final class Agent {
-
-	/** Constant <code>PREFIXES_ARGUMENT="prefixes"</code> */
-	public static final String PREFIXES_ARGUMENT = "prefixes";
 
 	static Instrumentation instrumentation;
 
@@ -63,35 +68,22 @@ public final class Agent {
 	public static void agentmain(String agentArgs, Instrumentation instrumentation)
 	{
 		Agent.instrumentation = instrumentation;
-		instrumentation.addTransformer(new RemoveFinalTransformer(extractClassNameRegexArg(agentArgs)));
+		instrumentation.addTransformer(new RemoveFinalTransformer(extractPrefixes(agentArgs)));
 	}
 
 
-	private static String extractClassNameRegexArg(String agentArgs)
+	private static String[] extractPrefixes(String agentArgs)
 	{
-		checkArgumentStringForPrefixes(agentArgs);
-		return agentArgs.replaceAll(".*" + PREFIXES_ARGUMENT + "=([^,]+).*", "$1");
-	}
+		IntPredicate invalid = Character::isJavaIdentifierPart;
+		invalid = invalid.or(c -> c == '.').or(c -> c == ',').negate();
 
+		boolean illegalChars = agentArgs == null || agentArgs.codePoints()
+				.anyMatch(invalid);
 
-	private static void checkArgumentStringForPrefixes(String agentArgs)
-	{
-		if(agentArgs == null || !agentArgs.contains(PREFIXES_ARGUMENT + "=")) {
-			throw new IllegalArgumentException(Agent.class.getCanonicalName() + " requires " + PREFIXES_ARGUMENT + "agent argument");
+		if(illegalChars) {
+			throw new IllegalArgumentException("Agent args must only contain valid Java identifier chars and comma, recieved: " + Objects.toString(agentArgs));
 		}
-	}
 
-
-	/**
-	 * <p>
-	 * reinstrument.
-	 * </p>
-	 *
-	 * @param classes a {@link java.lang.Class} object.
-	 * @throws java.lang.instrument.UnmodifiableClassException if any.
-	 */
-	public static void reinstrument(Class<?>... classes) throws UnmodifiableClassException
-	{
-		instrumentation.retransformClasses(classes);
+		return agentArgs.replace('.', '/').split(",");
 	}
 }

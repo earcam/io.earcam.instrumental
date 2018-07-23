@@ -4,8 +4,6 @@
 #set($h5 = '#####')
 
 
-$h3 Example
-
 The following creates an in-memory JAR with the supplied class and a manifest header indicating the `Main-Class`:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/archive/AsJarTest.java", "jar-main" )

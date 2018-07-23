@@ -1,0 +1,95 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+
+In lieu of decent documentation, a ridiculous "Hello, World" example is presented below (to be taken 
+as an example of what *can*, not what *should* be done). 
+
+
+$h3 Ridiculous Hello World Example
+
+The following compiles, from String source, to 3 archives (API, Imp and App), complete with OSGi and 
+JMPS meta. The archives are then run in various contexts (vanilla Java, JPMS Jigsaw and OSGi).
+
+$h4 Create interdependent JARS
+
+Create the API, Imp and App JARs in-memory from String sources. 
+
+$h5 API JAR
+
+A pure API JAR, complete with OSGi and JPMS metadata, then signed (just for demonstration purposes):
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "api-jar" ) 
+
+$h5 Imp JAR
+
+An implementation JAR, depending on the in-memory API JAR previously created:
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "imp-jar" )
+
+(Programmatic OSGi API above, swapped  below, for declaratively annotated component) 
+
+$h5 App JAR
+
+An Application JAR, executable with vanilla Java SPI, OSGi or JPMS:
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "app-jar" ) 
+
+
+$h4 Load in-memory
+
+Create a `ClassLoader` for subsequent runs:
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "load-inmemory" ) 
+
+
+$h5 Run Vanilla 
+
+Run as *vanilla* Java (i.e. SPI not JPMS):
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-vanilla" ) 
+
+The output is something like:
+
+		unnamed module @3a60c416: Hello Vanilla
+		
+
+$h5 Run JPMS
+
+An in-memory `ModuleFinder` is required (provided by [lade.jpms](/lade.jpms). Execution is then:
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-jpms-inmemory" ) 
+
+The output is:
+
+		module com.acme.app: Hello In-Memory
+
+
+$h5 Run OSGi
+
+Using felix.connect (aka PojoSR):
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-osgi" ) 
+
+The output is:
+
+		OSGi: Hello Modularity
+
+		
+$h4 Onto boring filesystem
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "filesystem" ) 
+
+
+$h5 Run Filesystem JPMS
+
+#snippet ( "/io.earcam.instrumental.uber/src/test/java/io/earcam/instrumental/uber/ExampleTest.java", "run-jpms-filesystem" ) 
+
+The output is:
+
+		module com.acme.app: Hello FileSystem
+
+		

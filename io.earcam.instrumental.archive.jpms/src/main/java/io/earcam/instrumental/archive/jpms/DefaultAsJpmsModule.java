@@ -21,6 +21,7 @@ package io.earcam.instrumental.archive.jpms;
 import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.PRE_MANIFEST;
 import static io.earcam.instrumental.module.auto.Reader.reader;
 import static io.earcam.instrumental.module.jpms.RequireModifier.MANDATED;
+import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 		}
 
 
-		public void test(ArchiveResource resource)  // TODO should this be for classes only or resources too? check spec
+		public void test(ArchiveResource resource)
 		{
 			String pkg = resource.pkg();
 			if(matcher.test(pkg)) {
@@ -96,7 +97,11 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 		{
 			Predicate<? super String> ownPackages = imports.keySet()::contains;
 
-			return imports.values().stream()
+			Stream<Set<String>> importsRequired = Stream.concat(
+					imports.values().stream(),
+					Stream.of(singleton("java.lang")));
+
+			return importsRequired
 					.flatMap(Set::stream)
 					.filter(ownPackages.negate())
 					.collect(toSet());
@@ -206,6 +211,7 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	@Override
 	public AsJpmsModule providing(Class<?> service, List<Class<?>> implementations)
 	{
+		super.providing(service, implementations);
 		Set<String> imps = implementations.stream()
 				.map(DefaultAsJpmsModule::cn)
 				.collect(toSet());
@@ -239,7 +245,8 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 
 	/**
 	 * <p>
-	 * exporting... Composition of predicates is more powerful than regex or globs
+	 * exporting... Composition of predicates is more powerful than regex or globs.
+	 * Exports classes and resources
 	 * </p>
 	 *
 	 * @param predicate a {@link java.util.function.Predicate} object.

@@ -5,8 +5,6 @@
 
 
 
-$h3 Example
-
 The following creates a signed JAR on the filesystem:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/archive/sign/WithSignatureTest.java", "method" ) 

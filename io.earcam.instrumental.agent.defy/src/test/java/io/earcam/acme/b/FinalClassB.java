@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.module.osgi
+ * io.earcam.instrumental.agent.defy
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,16 +16,15 @@
  * </ul>
  * #L%
  */
-package com.acme.imp;
+package io.earcam.acme.b;
 
-import com.acme.api.HelloService;
+public final class FinalClassB {
 
-public class DefaultHelloService implements HelloService {
+	public final String field = "Boo";
 
-	@Override
-	public String hello(String name)
+
+	public final String sayFoo()
 	{
-		return "Hello " + name;
+		return "foo";
 	}
-
 }

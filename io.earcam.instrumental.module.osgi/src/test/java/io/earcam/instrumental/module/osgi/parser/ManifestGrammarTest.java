@@ -47,30 +47,8 @@ import io.earcam.instrumental.module.osgi.parser.ManifestParser.SymbolicNameCont
 @SuppressWarnings("squid:S2187")  // SonarQube false-positive; tests are only in @Nested
 public class ManifestGrammarTest {
 
-	// initally just test in/valid, but must confirm tree elements?
-
 	@Nested
 	class IndividualRule {
-
-		// @Nested
-		// class Version {
-		//
-		// @Test
-		// void versionRange()
-		// {
-		// String range = "\"[0.0.1,1.0.0)\"";
-		// String value = "version=" + range;
-		//
-		// ManifestParser parser = parserFor(value);
-		//
-		// VersionAttributeContext context = parser.versionAttribute();
-		//
-		// assertThat(context, is(valid()));
-		//
-		// // TODO fragile - this will be covered by the listener-to-builder tests
-		// assertThat(context.getChild(2).getText(), is(equalTo(range)));
-		// }
-		// }
 
 		@Nested
 		class SymbolicName {

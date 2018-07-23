@@ -89,4 +89,32 @@ public class ClassLoadersTest {
 
 		assertThat(currentThread().getContextClassLoader(), is(sameInstance(a)));
 	}
+
+
+	@Test
+	public void canDefineAClass()
+	{
+		byte[] bytes = Resources.classAsBytes(ClassLoadersTest.class);
+
+		Class<?> loaded = ClassLoaders.load(bytes);
+
+		assertThat(loaded.getCanonicalName(), is(equalTo(ClassLoadersTest.class.getCanonicalName())));
+		assertThat(loaded, is(not(equalTo(ClassLoadersTest.class))));
+	}
+
+
+	@Test
+	public void canDefineAClassFromSubsectionOfArray()
+	{
+		byte[] section = Resources.classAsBytes(ClassLoadersTest.class);
+
+		byte[] bytes = new byte[10 + section.length + 20];
+
+		System.arraycopy(section, 0, bytes, 10, section.length);
+
+		Class<?> loaded = ClassLoaders.load(ClassLoadersTest.class.getCanonicalName(), bytes, 10, section.length);
+
+		assertThat(loaded.getCanonicalName(), is(equalTo(ClassLoadersTest.class.getCanonicalName())));
+		assertThat(loaded, is(not(equalTo(ClassLoadersTest.class))));
+	}
 }

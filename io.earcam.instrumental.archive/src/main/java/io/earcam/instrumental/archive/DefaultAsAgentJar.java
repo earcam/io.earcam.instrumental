@@ -64,8 +64,8 @@ public class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implemen
 	@Override
 	public void process(Manifest manifest)
 	{
-		manifestHeaders.put(CAN_REDEFINE_CLASSES, Boolean.toString(canRedefine));
-		manifestHeaders.put(CAN_RETRANSFORM_CLASSES, Boolean.toString(canRetransform));
+		withManifestHeader(CAN_REDEFINE_CLASSES, Boolean.toString(canRedefine));
+		withManifestHeader(CAN_RETRANSFORM_CLASSES, Boolean.toString(canRetransform));
 
 		super.process(manifest);
 	}
@@ -85,9 +85,9 @@ public class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implemen
 		source.with(type);
 		String name = type.getCanonicalName();
 		if(hasAgentPreMainMethod(type)) {
-			manifestHeaders.put(PREMAIN_CLASS, name);
+			withManifestHeader(PREMAIN_CLASS, name);
 		}
-		manifestHeaders.put(AGENT_CLASS, name);
+		withManifestHeader(AGENT_CLASS, name);
 		return this;
 	}
 

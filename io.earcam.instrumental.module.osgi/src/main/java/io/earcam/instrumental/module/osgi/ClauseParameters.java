@@ -120,7 +120,6 @@ public final class ClauseParameters {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -144,7 +143,6 @@ public final class ClauseParameters {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
@@ -199,7 +197,7 @@ public final class ClauseParameters {
 	 * attributes.
 	 * </p>
 	 *
-	 * @return a {@link java.util.Map} object.
+	 * @return a modifiable {@link Map}.
 	 */
 	public Map<String, String> attributes()
 	{
@@ -279,8 +277,8 @@ public final class ClauseParameters {
 	 * @param name a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String attribute(String name)   // TODO tests and same for directives
+	public String attribute(String name)
 	{
-		return attributes.get(name);
+		return attributes().get(name);
 	}
 }

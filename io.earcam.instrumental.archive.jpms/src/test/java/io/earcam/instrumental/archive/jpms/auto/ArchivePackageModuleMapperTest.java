@@ -20,6 +20,9 @@ package io.earcam.instrumental.archive.jpms.auto;
 
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.AsJar.asJar;
+import static io.earcam.instrumental.archive.jpms.auto.AbstractPackageModuleMapper.HEADER_AUTOMATIC_MODULE_NAME;
+import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
+import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
@@ -33,16 +36,40 @@ public class ArchivePackageModuleMapperTest {
 	@Test
 	void maps()
 	{
-		ModuleInfo moduleInfo = ModuleInfo.moduleInfo().named("blah.blah").exporting("some.paquet").construct();
+		ModuleInfo moduleInfo = moduleInfo()
+				.named("blah.blah")
+				.exporting("some.paquet")
+				.construct();
 
 		Archive module = archive()
 				.configured(asJar())
 				.with("module-info.class", moduleInfo.toBytecode())
 				.toObjectModel();
 
-		ArchivePackageModuleMapper mapper = ArchivePackageModuleMapper.byMappingModuleArchives(module);
+		ArchivePackageModuleMapper mapper = ArchivePackageModuleMapper.fromArchives(module);
 
 		assertThat(mapper.modules(), contains(moduleInfo));
+	}
+
+
+	@Test
+	void mapsSynthetic()
+	{
+		ModuleInfo expected = moduleInfo()
+				.named("synth.etic")
+				.withAccess(SYNTHETIC.access())
+				.exporting("some.paquet")
+				.construct();
+
+		Archive module = archive()
+				.configured(asJar()
+						.withManifestHeader(HEADER_AUTOMATIC_MODULE_NAME.toString(), "synth.etic"))
+				.with("some/paquet/SomeThing.class", new byte[0])
+				.toObjectModel();
+
+		ArchivePackageModuleMapper mapper = ArchivePackageModuleMapper.fromArchives(module);
+
+		assertThat(mapper.modules(), contains(expected));
 	}
 
 }
