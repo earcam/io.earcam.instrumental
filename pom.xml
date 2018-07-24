@@ -38,6 +38,7 @@
 		<module>io.earcam.instrumental.archive.osgi</module>
 		<module>io.earcam.instrumental.archive.sign</module>
 		<module>io.earcam.instrumental.archive.glue</module>
+		<module>io.earcam.instrumental.archive.maven</module>
 
 		<module>io.earcam.instrumental.proxy</module>
 		<module>io.earcam.instrumental.proxy.concrete</module>

@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.AsAgentJar.*;
 import static io.earcam.instrumental.archive.DefaultAsAgentJar.*;
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.reflect.Names.typeToResourceName;
@@ -78,10 +79,16 @@ public class AsAgentJarTest {
 
 	private Archive validAgentArchive()
 	{
+		return validAgentArchiveBuilder()
+				.toObjectModel();
+	}
+
+
+	private ArchiveConfiguration validAgentArchiveBuilder()
+	{
 		return archive()
 				.configured(asAgentJar()
-						.withAgentClass(DummyAgent.class))
-				.toObjectModel();
+						.withAgentClass(DummyAgent.class));
 	}
 
 
@@ -156,5 +163,37 @@ public class AsAgentJarTest {
 		String can = archive.manifest().get().getMainAttributes().getValue(CAN_RETRANSFORM_CLASSES);
 
 		assertThat(can, is(equalTo(TRUE.toString())));
+	}
+
+
+	@Test
+	void explicitCanNotRedefine()
+	{
+		Archive archive = archive()
+				.configured(
+						asAgentJar()
+								.withAgentClass(DummyAgent.class)
+								.canNotRedefineClasses())
+				.toObjectModel();
+
+		String can = archive.manifest().get().getMainAttributes().getValue(CAN_REDEFINE_CLASSES);
+
+		assertThat(can, is(equalTo(FALSE.toString())));
+	}
+
+
+	@Test
+	void explicitCanNotRetransform()
+	{
+		Archive archive = archive()
+				.configured(
+						asAgentJar()
+								.withAgentClass(DummyAgent.class)
+								.canNotRetransformClasses())
+				.toObjectModel();
+
+		String can = archive.manifest().get().getMainAttributes().getValue(CAN_RETRANSFORM_CLASSES);
+
+		assertThat(can, is(equalTo(FALSE.toString())));
 	}
 }

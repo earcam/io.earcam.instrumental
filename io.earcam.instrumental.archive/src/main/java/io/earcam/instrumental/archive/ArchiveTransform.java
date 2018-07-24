@@ -29,6 +29,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.util.function.Function;
 
 public interface ArchiveTransform {
 
@@ -45,6 +46,9 @@ public interface ArchiveTransform {
 		to(baos);
 		return baos.toByteArray();
 	}
+
+
+	public abstract <R> R to(Function<Archive, R> transformer);
 
 
 	/**

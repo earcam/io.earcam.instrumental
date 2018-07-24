@@ -21,10 +21,9 @@ package io.earcam.instrumental.archive;
 import java.lang.instrument.Instrumentation;
 import java.util.jar.Manifest;
 
-import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.instrumental.reflect.Methods;
 
-public class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implements AsAgentJar {
+class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implements AsAgentJar {
 
 	static final String PREMAIN_CLASS = "Premain-Class";
 	static final String AGENT_CLASS = "Agent-Class";
@@ -44,20 +43,6 @@ public class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implemen
 	protected AsAgentJar self()
 	{
 		return this;
-	}
-
-
-	/**
-	 * <p>
-	 * asAgentJar.
-	 * </p>
-	 *
-	 * @return a {@link io.earcam.instrumental.archive.DefaultAsAgentJar} object.
-	 */
-	@Fluent
-	public static final DefaultAsAgentJar asAgentJar()
-	{
-		return new DefaultAsAgentJar();
 	}
 
 

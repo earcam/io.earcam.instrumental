@@ -59,6 +59,7 @@ public class BasicArchiveResourceSource implements ArchiveResourceSource {
 		resources.add(typeToArchiveResource(type));
 
 		Names.declaredInternalNamesOf(type)
+				.map(Names::internalToTypeName)
 				.map(n -> Types.getClass(n, type.getClassLoader()))
 				.map(BasicArchiveResourceSource::typeToArchiveResource)
 				.forEach(resources::add);

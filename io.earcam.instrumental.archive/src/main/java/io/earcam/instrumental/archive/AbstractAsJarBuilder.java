@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import io.earcam.instrumental.reflect.Methods;
 import io.earcam.instrumental.reflect.Types;
 import io.earcam.unexceptional.Exceptional;
 
@@ -168,7 +169,8 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 
 	protected static void requireMainMethod(Class<?> type)
 	{
-		Method main = Exceptional.apply(type::getMethod, "main", String[].class);
+		Method main = Methods.getMethod(type, "main", String[].class)
+				.orElseThrow(IllegalArgumentException::new);
 		if(!isPublicStaticVoid(main)) {
 			throw new IllegalArgumentException("'public static void main(String[] args)' method not found on " + type);
 		}

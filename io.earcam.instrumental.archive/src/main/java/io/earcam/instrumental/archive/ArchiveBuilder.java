@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
@@ -197,6 +198,13 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 	{
 		return manifest.getMainAttributes().isEmpty()
 				&& manifest.getEntries().isEmpty();
+	}
+
+
+	@Override
+	public <R> R to(Function<Archive, R> transformer)
+	{
+		return transformer.apply(toObjectModel());
 	}
 
 

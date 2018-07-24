@@ -18,8 +18,8 @@
  */
 package io.earcam.instrumental.archive;
 
-import static io.earcam.instrumental.archive.AsJar.asJar;
 import static io.earcam.instrumental.archive.Archive.archive;
+import static io.earcam.instrumental.archive.AsJar.asJar;
 import static io.earcam.instrumental.archive.Hamcrest.present;
 import static io.earcam.instrumental.reflect.Names.typeToResourceName;
 import static java.lang.Boolean.TRUE;
@@ -27,13 +27,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.jar.Attributes.Name.MAIN_CLASS;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Comparator;
 import java.util.List;
@@ -114,6 +117,32 @@ public class AsJarTest {
 		assertThat(attributes, hasEntry(MAIN_CLASS, cn(DummyMain.class)));
 
 		assertThat(archive.contents(), contains(new ArchiveResource(typeToResourceName(DummyMain.class), new byte[0])));
+	}
+
+
+	@Test
+	void invalidMainClassFailsFastWhenNoSuchMethodNameFound()
+	{
+		try {
+			asJar().launching(AsJar.class);
+			fail();
+		} catch(IllegalArgumentException e) {}
+	}
+
+
+	protected static boolean main(String[] ahhargs)
+	{
+		return false;
+	}
+
+
+	@Test
+	void invalidMainClassFailsFastWhenMainMethodInvalid()
+	{
+		try {
+			asJar().launching(AsJarTest.class);
+			fail();
+		} catch(IllegalArgumentException e) {}
 	}
 
 
@@ -240,6 +269,16 @@ public class AsJarTest {
 	private <T> Stream<T> streamSpiServices(Class<T> service, ClassLoader classLoader)
 	{
 		return StreamSupport.stream(ServiceLoader.load(service, classLoader).spliterator(), false);
+	}
+
+
+	@Test
+	void providingFailsFastWhenServicesDoesNotImplementInterface()
+	{
+		try {
+			asJar().providing(Comparator.class, Byte.class);
+			fail();
+		} catch(IllegalArgumentException e) {}
 	}
 
 

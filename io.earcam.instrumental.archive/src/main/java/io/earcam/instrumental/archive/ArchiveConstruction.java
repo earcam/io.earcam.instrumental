@@ -214,9 +214,17 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	@Fluent
 	public static ArchiveResourceSource contentFrom(Path path, Predicate<String> filter)
 	{
+		JarInputStream inputStream = Exceptional.apply(ExplodedJarInputStream::jarInputStreamFrom, path);
+		return contentFrom(inputStream, filter);
+	}
+
+
+	@Fluent
+	public static ArchiveResourceSource contentFrom(JarInputStream inputStream, Predicate<String> filter)
+	{
 		BasicArchiveResourceSource source = new BasicArchiveResourceSource();
 		JarEntry entry;
-		try(JarInputStream jin = ExplodedJarInputStream.jarInputStreamFrom(path)) {
+		try(JarInputStream jin = inputStream) {
 			while((entry = jin.getNextJarEntry()) != null) {
 				if(!filter.test(entry.getName()) || entry.isDirectory()) {
 					/* noop */

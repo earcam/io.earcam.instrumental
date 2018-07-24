@@ -20,12 +20,11 @@ package io.earcam.instrumental.archive;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -67,19 +66,22 @@ class DefaultArchive implements Archive {
 
 
 	@Override
+	public <R> R to(Function<Archive, R> transformer)
+	{
+		return transformer.apply(this);
+	}
+
+
+	@Override
 	public void to(OutputStream os)
 	{
 		JarOutputStream out = manifest()
 				.map(m -> Exceptional.apply(JarOutputStream::new, os, m))
 				.orElseGet(() -> Exceptional.apply(JarOutputStream::new, os));
 
-		try(JarOutputStream target = out) {
-			contents()
-					.stream()
-					.forEach(e -> addEntry(e, target));
-		} catch(IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		Closing.closeAfterAccepting(out, o -> contents()
+				.stream()
+				.forEach(e -> addEntry(e, o)));
 	}
 
 

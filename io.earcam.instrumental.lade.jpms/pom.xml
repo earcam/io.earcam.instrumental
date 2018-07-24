@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.lade.jpms</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Create and run dynamic JPMS module layers from an n-memory classloader</description>
+	<description>Create and run dynamic JPMS module layers from an in-memory classloader</description>
 
 	<distributionManagement>
 		<site>

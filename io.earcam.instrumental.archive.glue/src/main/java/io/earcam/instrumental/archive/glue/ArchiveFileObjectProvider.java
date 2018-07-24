@@ -38,18 +38,24 @@ import io.earcam.instrumental.reflect.Names;
 
 public final class ArchiveFileObjectProvider implements FileObjectProvider {
 
-	private Archive archive;
+	private List<Archive> archives;
 
 
-	private ArchiveFileObjectProvider(Archive archive)
+	private ArchiveFileObjectProvider(List<Archive> archives)
 	{
-		this.archive = archive;
+		this.archives = archives;
 	}
 
 
 	public static ArchiveFileObjectProvider fromArchive(Archive archive)
 	{
-		return new ArchiveFileObjectProvider(archive);
+		return fromArchives(Collections.singletonList(archive));
+	}
+
+
+	public static ArchiveFileObjectProvider fromArchives(List<Archive> archives)
+	{
+		return new ArchiveFileObjectProvider(archives);
 	}
 
 
@@ -71,8 +77,9 @@ public final class ArchiveFileObjectProvider implements FileObjectProvider {
 
 		Predicate<? super ArchiveResource> packageMatcher = (recurse) ? recursive : nonRecursive;
 
-		return archive.contents()
-				.stream()
+		return archives.stream()
+				.map(Archive::contents)
+				.flatMap(List::stream)
 				.filter(packageMatcher)
 				.filter(r -> k.contains(r.extension()))
 				.map(r -> new CustomJavaFileObject(

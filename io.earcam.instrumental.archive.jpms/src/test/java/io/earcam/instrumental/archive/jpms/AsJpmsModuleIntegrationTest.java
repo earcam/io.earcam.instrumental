@@ -40,7 +40,7 @@ import io.earcam.unexceptional.Exceptional;
 public class AsJpmsModuleIntegrationTest {
 
 	@Test
-	void produceModuleInfoForProjectUnexceptional() throws Exception
+	public void produceModuleInfoForProjectUnexceptional() throws Exception
 	{
 		// EARCAM_SNIPPET_BEGIN: add-to-jar
 		Path jar = Paths.get(Resources.sourceOfResource(Exceptional.class));

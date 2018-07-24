@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +44,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void emptyArchive()
+	public void emptyArchive()
 	{
 		Archive archive = archive().toObjectModel();
 
@@ -53,7 +54,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void singleContent()
+	public void singleContent()
 	{
 		String name = "/path/to/some.file";
 		byte[] contents = bytes("Some Content");
@@ -76,7 +77,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void sourcingContentFrom()
+	public void sourcingContentFrom()
 	{
 		Path dir = baseDir.resolve("sourcingContentFrom");
 
@@ -109,7 +110,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void explodeToExistingDirectoryWithoutMerging() throws IOException
+	public void explodeToExistingDirectoryWithoutMerging() throws IOException
 	{
 		Path dir = baseDir.resolve("explodeToExistingDirectoryWithoutMerging");
 		Path subdir = dir.resolve("sub");
@@ -127,7 +128,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void explodeToExistingDirectoryByMerging() throws IOException
+	public void explodeToExistingDirectoryByMerging() throws IOException
 	{
 		Path dir = baseDir.resolve("explodeToExistingDirectoryByMerging");
 		Path subdir = dir.resolve("sub");
@@ -145,7 +146,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void filterChangesContent()
+	public void filterChangesContent()
 	{
 		ArchiveResourceFilter filter = r -> {
 			if("something.txt".equals(r.name())) {
@@ -165,7 +166,7 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void filterExcludesResource()
+	public void filterAddedInConfigurationExcludesResource()
 	{
 		ArchiveResourceFilter filter = r -> {
 			if("something.txt".equals(r.name())) {
@@ -186,7 +187,28 @@ public class ArchiveBuilderTest {
 
 
 	@Test
-	void filterChangesContentListenerInformedAfterTheFact()
+	public void filterByExcludesResource()
+	{
+		ArchiveResourceFilter filter = r -> {
+			if("something.txt".equals(r.name())) {
+				return null;
+			}
+			return r;
+		};
+
+		Archive archive = archive()
+				.with("different.txt", bytes("something"))
+				.with("something.txt", bytes("something"))
+				.filteredBy(filter)
+				.toObjectModel();
+
+		assertThat(archive.content("something.txt").isPresent(), is(false));
+		assertThat(archive.content("different.txt").isPresent(), is(true));
+	}
+
+
+	@Test
+	public void filterChangesContentListenerInformedAfterTheFact()
 	{
 		ArchiveResourceFilter filter = r -> {
 			if("something.txt".equals(r.name())) {
@@ -206,5 +228,16 @@ public class ArchiveBuilderTest {
 
 		assertThat(heard.get().name(), is(equalTo("something.txt")));
 		assertThat(heard.get().bytes(), is(equalTo(bytes("anotherthing"))));
+	}
+
+
+	@Test
+	public void transformerFunction()
+	{
+		Archive archive = archive()
+				.with("something.txt", bytes("something"))
+				.to(Function.identity());
+
+		assertThat(archive.content("something.txt").get().bytes(), is(equalTo(bytes("something"))));
 	}
 }

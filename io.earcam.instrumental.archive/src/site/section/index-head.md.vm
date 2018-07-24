@@ -7,19 +7,21 @@ Code for handling [JAR][jar]s.
 
 Use with:
 
-| Integration Module           | Description |
-| ---------------------------- | ----------- |
-| [compile.glue][compile-glue] | archive output of programmatic compilation |
-| [archive.jpms][archive-jpms] | JPMS [modules][jigsaw] support |
-| [archive.osgi][archive-osgi] | [OSGi][osgi] [Bundles][wikipedia-osgi-bundles] support |
-| [archive.sign][archive-sign] | Digital signature (jar signing) |
-| [archive.glue][archive-glue] | use an in-memory archive as a dependency for compilation |
+| Integration Module             | Description |
+| ------------------------------ | ----------- |
+| [compile.glue][compile-glue]   | archive output of programmatic compilation |
+| [archive.jpms][archive-jpms]   | JPMS [modules][jigsaw] support |
+| [archive.osgi][archive-osgi]   | [OSGi][osgi] [Bundles][wikipedia-osgi-bundles] support |
+| [archive.sign][archive-sign]   | Digital signature (jar signing) |
+| [archive.maven][archive-maven] | Resolve dependency graphs and install to a local repo |
+| [archive.glue][archive-glue]   | use an in-memory archive as a dependency for compilation |
 
 
 [compile-glue]: /compile.glue
 [archive-jpms]: /archive.jpms
 [archive-osgi]: /archive.osgi
 [archive-sign]: /archive.sign
+[archive-maven]: /archive.maven
 [archive-glue]: /archive.glue
 [osgi]: https://www.osgi.org
 [jar]: https://docs.oracle.com/javase/${version.java.platform}/docs/technotes/guides/jar/jarGuide.html
