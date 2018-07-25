@@ -24,6 +24,7 @@ import static io.earcam.instrumental.archive.maven.Maven.CENTRAL_ID;
 import static io.earcam.instrumental.archive.maven.Maven.CENTRAL_URL;
 import static io.earcam.instrumental.archive.maven.Maven.DEFAULT_TYPE;
 import static io.earcam.instrumental.archive.maven.Maven.maven;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
@@ -38,6 +39,7 @@ import static org.hamcrest.io.FileMatchers.aFileNamed;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -228,8 +230,43 @@ public class MavenTest {
 
 
 	@Test
+	void useALocalAsARemote() throws Exception
+	{
+		Path localAsRemote = Paths.get(".", "target", "repo-local-as-remote");
+		maven()
+				.usingCentral()
+				.usingLocal(localAsRemote)
+				.dependencies("junit:junit:4.12");
+
+		Path localPath = Paths.get(".", "target", "repo-local-from-local-as-remote");
+		String localAsRemoteId = "local-as-remote";
+
+		Map<MavenArtifact, Archive> dependencies = maven()
+				.usingRemote(localAsRemoteId, "default", localAsRemote.toAbsolutePath().toUri().toString())
+				.usingLocal(localPath)
+				.dependencies("junit:junit:4.12");
+
+		MavenArtifact junit = new MavenArtifact("junit", "junit", "4.12", "jar", "");
+		MavenArtifact hamcrest = new MavenArtifact("org.hamcrest", "hamcrest-core", "1.3", "jar", "");
+
+		assertThat(dependencies, allOf(
+				aMapWithSize(2),
+				hasKey(junit),
+				hasKey(hamcrest)));
+
+		Path remotesIndex = localPath.resolve(Paths.get("junit", "junit", "4.12", "_remote.repositories"));
+		String meta = new String(Files.readAllBytes(remotesIndex), UTF_8);
+
+		assertThat(meta, allOf(
+				containsString(localAsRemoteId),
+				not(containsString("central"))));
+	}
+
+
+	@Test
 	void dependenciesToArchives() throws Exception
 	{
+		// EARCAM_SNIPPET_BEGIN: resolve-dependencies
 		Map<MavenArtifact, Archive> dependencies = maven()
 				.usingCentral()
 				.usingLocal(Paths.get(".", "target", "repo-resolve-depgraph"))
@@ -242,6 +279,7 @@ public class MavenTest {
 				aMapWithSize(2),
 				hasKey(junit),
 				hasKey(hamcrest)));
+		// EARCAM_SNIPPET_END: resolve-dependencies
 	}
 
 
@@ -249,6 +287,7 @@ public class MavenTest {
 	@Test
 	void dependenciesToClassPath() throws Exception
 	{
+		// EARCAM_SNIPPET_BEGIN: classpath
 		List<String> classpath = maven()
 				.usingCentral()
 				.usingLocal(Paths.get(".", "target", "repo-resolve-classpath"))
@@ -260,6 +299,8 @@ public class MavenTest {
 		assertThat(classpath, containsInAnyOrder(
 				endsWith("junit-4.12.jar"),
 				endsWith("hamcrest-core-1.3.jar")));
+
+		// EARCAM_SNIPPET_END: classpath
 	}
 
 

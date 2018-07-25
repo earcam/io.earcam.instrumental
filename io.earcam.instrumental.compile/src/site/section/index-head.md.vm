@@ -7,14 +7,15 @@
 * Convenience functionality on top of `javax.tools.JavaCompiler`  
 * Compile to/from the file-system, or entirely in-memory (e.g. from source as `String` to class as `byte` array)  
 * Fluid builder with specific support for [annotation processors][annotation-processor]
-* Create native headers
+* Create native headers in arbitrary locations (in-mem/on-disk)
 * Find sourcecode for classes within maven module or it's dependencies (on proviso that source jar has been downloaded)
 
 Provides a complete in-memory _experience_:
 
-* Can be integrated with [instrumental.archive][instrumental-archive], via [instrumental.compile.glue][instrumental-compile-glue], such that compiler 
-output is added to the archive
-* By using [instrumental.archive.glue][instrumental-archive-glue] in-memory archives may be used as the source of compiler dependencies
+* Using [instrumental.archive][instrumental-archive], via [instrumental.compile.glue][instrumental-compile-glue], compiler 
+output can be added to an in-memory archive
+* By using [instrumental.archive.glue][instrumental-archive-glue] in-memory archives may be used as the source of compiler 
+dependencies (coupled with [instrumental.archive.maven](/archive.maven) to download Maven dependency graphs as compilation deps).
 
 
 **Note**: currently the Eclipse compiler only supports input from the filesystem.

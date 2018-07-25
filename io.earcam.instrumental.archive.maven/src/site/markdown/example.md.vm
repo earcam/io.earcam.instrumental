@@ -1,0 +1,15 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+Download a dependency graph and make available as a Map of maven artifact GAV coordinate to instrumental Archive.
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/maven/MavenTest.java", "resolve-dependencies" )
+
+Download a dependency graph and make available as a `classpath`.
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/maven/MavenTest.java", "classpath" )
+
+([source](xref-test/io/earcam/instrumental/archive/maven/MavenTest.html)).

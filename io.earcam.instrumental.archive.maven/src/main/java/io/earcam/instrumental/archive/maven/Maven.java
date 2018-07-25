@@ -108,6 +108,12 @@ public final class Maven {
 	}
 
 
+	public Maven usingDefaultLocalAsARemote()
+	{
+		return usingLocal(findLocalRepoPath());
+	}
+
+
 	private Path findLocalRepoPath()
 	{
 		Path m2 = Paths.get(System.getProperty("user.home")).resolve(".m2");

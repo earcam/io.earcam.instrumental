@@ -1,0 +1,23 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+An extension for [instrumental.archive](/archive), providing access to Maven repositories, with artifacts as `Archive`s.
+
+Provides:
+
+* Configurable local and remote repositories
+* Download from remote repositories
+* Configure a (real) local repository as a remote
+* Install to local repositories (for later resolution)
+* Resolve dependency graphs (download with transitive dependencies)
+* Build classpaths
+
+Use to:
+
+* Provide compilation dependencies for [instrumental.compile](/compile)
+* Extract compilation sourcecode for [instrumental.compile](/compile)
+* Maintain dependency graph information for dynamically created archives
+* Meddle with your local Maven repository
+* Build uber/shaded JARs programmatically
