@@ -119,7 +119,8 @@ public final class Maven {
 				if(!localPath.isAbsolute()) {
 					localPath = m2.resolve(localPath);
 				}
-				return checkLocalPath(localPath, "<localRepository> in " + settingsXml + " is not an existing directory");
+				return checkLocalPath(localPath,
+						"<localRepository> in " + settingsXml + " is not an existing directory: " + localPath.toAbsolutePath());
 			}
 		}
 		Path localPath = m2.resolve("repository");
