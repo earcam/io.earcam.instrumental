@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.lade.jpms;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.module.ModuleDescriptor;
 import java.lang.module.ModuleFinder;
@@ -93,7 +94,7 @@ public final class InMemoryModuleFinder implements ModuleFinder {
 
 	private ModuleDescriptor parseModuleInfoByteCode(URL moduleInfo)
 	{
-		CheckedFunction<InputStream, ModuleDescriptor> converter = ModuleDescriptor::read;
+		CheckedFunction<InputStream, ModuleDescriptor, IOException> converter = ModuleDescriptor::read;
 		return Closing.closeAfterApplying(
 				URL::openStream,
 				moduleInfo,

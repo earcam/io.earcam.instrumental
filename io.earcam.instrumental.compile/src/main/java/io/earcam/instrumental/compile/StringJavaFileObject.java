@@ -73,29 +73,4 @@ class StringJavaFileObject extends SimpleJavaFileObject {
 	{
 		return source;
 	}
-
-	// for ECJ? or remove
-	/*
-	 * @Override
-	 * public OutputStream openOutputStream() throws IOException
-	 * {
-	 * return new ByteArrayOutputStream() {
-	 * 
-	 * @Override
-	 * public void close() throws IOException
-	 * {
-	 * super.close();
-	 * source = new String(toByteArray(), UTF_8);
-	 * }
-	 * };
-	 * }
-	 * 
-	 * 
-	 * @Override
-	 * public InputStream openInputStream() throws IOException
-	 * {
-	 * return new ByteArrayInputStream(source.getBytes(UTF_8)); //note: charset must be taken from that passed into
-	 * FileManager
-	 * }
-	 */
 }

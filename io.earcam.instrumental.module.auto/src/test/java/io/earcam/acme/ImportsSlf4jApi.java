@@ -18,6 +18,7 @@
  */
 package io.earcam.acme;
 
+// EARCAM_SNIPPET_BEGIN: example-simple-class
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -33,3 +34,4 @@ public class ImportsSlf4jApi {
 		LOG.debug("hello " + Arrays.toString(args));
 	}
 }
+// EARCAM_SNIPPET_END: example-simple-class

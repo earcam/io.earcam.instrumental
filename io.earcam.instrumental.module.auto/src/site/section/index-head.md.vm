@@ -1,0 +1,7 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+Determines required imports - used for JPMS and OSGi auto-import.
+
+`ImportsOf` does the grunt work, `Reader` provides a suitable abstraction for package-to-module mappers. 

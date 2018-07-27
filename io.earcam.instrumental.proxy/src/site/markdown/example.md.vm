@@ -1,0 +1,17 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+Given an interface with default methods:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/handler/PartialInvocationHandlerTest.java", "default-methods" )
+
+Selectively override (without inheritance, override by method signature matching):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/handler/PartialInvocationHandlerTest.java", "partial-handler" )
+
+And invoke:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/handler/PartialInvocationHandlerTest.java", "partial-invocation" )

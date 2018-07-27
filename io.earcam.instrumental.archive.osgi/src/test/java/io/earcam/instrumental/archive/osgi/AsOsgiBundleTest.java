@@ -221,11 +221,13 @@ public class AsOsgiBundleTest {
 		@Test
 		public void validActivator()
 		{
+			// EARCAM_SNIPPET_BEGIN: activator
 			Archive archive = archive()
 					.configured(asOsgiBundle()
-							.named("mandatory.value")
+							.named("sym.nom")
 							.withActivator(DummyActivator.class))
 					.toObjectModel();
+			// EARCAM_SNIPPET_END: activator
 
 			BundleInfo bundleInfo = bundleInfoFrom(archive);
 

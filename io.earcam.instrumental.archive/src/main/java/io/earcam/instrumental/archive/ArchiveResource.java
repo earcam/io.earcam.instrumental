@@ -90,23 +90,11 @@ public class ArchiveResource {
 	 */
 	public boolean sameName(CharSequence name)
 	{
-		CharSequence norm = trimLeadingSlash(name);
-		return CharSequences.same(this.name, norm);
+		return sameName(this.name, name);
 	}
 
 
-	/**
-	 * <p>
-	 * A conveninance method allowing callers to make use of same logic as {@link #sameName(CharSequence)}.
-	 * </p>
-	 * 
-	 * @param a first argument.
-	 * @param b second argument.
-	 * @return {@code true} IFF a &cong; b (given leading slashes removed)
-	 * 
-	 * @see #sameName(CharSequence)
-	 */
-	public static boolean sameName(CharSequence a, CharSequence b)
+	static boolean sameName(CharSequence a, CharSequence b)
 	{
 		return CharSequences.same(trimLeadingSlash(a), trimLeadingSlash(b));
 	}

@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.compile</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Compile to and from, memory and filesystem, easily</description>
+	<description>Compile from memory/filesystem to memory/filesystem, easily</description>
 
 	<distributionManagement>
 		<site>

@@ -1,0 +1,42 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+The examples below use a bit of test support for class and packages:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/auto/ReaderTest.java", "test-support" )
+
+
+$h4 Simple example
+
+Given a class:
+
+#snippet ( "/src/test/java/io/earcam/acme/ImportsSlf4jApi.java", "example-simple-class" )
+
+List all it's imports:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/auto/ReaderTest.java", "imports-simple-class" )
+
+
+
+$h4 Annotations selectively in/excluded
+
+Given a heavily annotated class:
+
+#snippet ( "/src/test/java/io/earcam/acme/Annotated.java", "example-annotated-class" )
+
+List all imports, including annotations and their elements:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/auto/ReaderTest.java", "do-read-annotations" )
+
+Or don't (configure `Reader` to ignore):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/auto/ReaderTest.java", "do-not-read-annotations" )
+
+
+$h4 At a higher level
+
+Map an artifact/archive/module; in this case defining-packages-to-required-packages:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/module/auto/ReaderTest.java", "map-jar-reduced-to-packages" )

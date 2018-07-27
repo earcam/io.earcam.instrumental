@@ -99,6 +99,7 @@ public class PartialInvocationHandlerTest {
 		assertThat(proxy.get(404), is(equalTo(value)));
 	}
 
+	// EARCAM_SNIPPET_BEGIN: default-methods
 	public interface WithDefaultMethod {
 
 		default int returnOne()
@@ -112,6 +113,7 @@ public class PartialInvocationHandlerTest {
 			return returnOne() + returnOne();
 		}
 	}
+	// EARCAM_SNIPPET_END: default-methods
 
 	public static class OverridesDefault extends PartialInvocationHandler<WithDefaultMethod> implements WithDefaultMethod {
 		OverridesDefault(WithDefaultMethod target)
@@ -159,19 +161,24 @@ public class PartialInvocationHandlerTest {
 	@Test
 	public void invokesDefaultMethodWhereOverrideIsNotPresent2()
 	{
-		WithDefaultMethod noopTarget = Proxies.proxy(NOOP_INVOCATION_HANDLER, WithDefaultMethod.class);
+		// EARCAM_SNIPPET_BEGIN: partial-handler
+		WithDefaultMethod noop = Proxies.proxy(NOOP_INVOCATION_HANDLER, WithDefaultMethod.class);
 
-		PartialInvocationHandler<WithDefaultMethod> handler = new PartialInvocationHandler<WithDefaultMethod>(noopTarget) {
+		PartialInvocationHandler<WithDefaultMethod> handler;
+		handler = new PartialInvocationHandler<WithDefaultMethod>(noop) {
 			public int returnTwo()
 			{
 				return -2;
 			}
 		};
+		// EARCAM_SNIPPET_END: partial-handler
 
+		// EARCAM_SNIPPET_BEGIN: partial-invocation
 		WithDefaultMethod proxy = Proxies.proxy(handler, WithDefaultMethod.class);
 
 		assertThat(proxy.returnOne(), is(1));
 		assertThat(proxy.returnTwo(), is(-2));
+		// EARCAM_SNIPPET_END: partial-invocation
 	}
 
 

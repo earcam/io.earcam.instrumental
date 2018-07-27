@@ -23,13 +23,15 @@ import static java.nio.file.StandardOpenOption.SYNC;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.function.Function;
+
+import javax.annotation.WillClose;
+
+import io.earcam.unexceptional.Exceptional;
 
 public interface ArchiveTransform {
 
@@ -58,7 +60,7 @@ public interface ArchiveTransform {
 	 *
 	 * @param os a {@link java.io.OutputStream} object.
 	 */
-	public abstract void to(OutputStream os);
+	public abstract void to(@WillClose OutputStream os);
 
 
 	/**
@@ -85,15 +87,9 @@ public interface ArchiveTransform {
 	 */
 	public default Path to(Path archive, OpenOption... options)
 	{
-		try {
-			archive.getParent().toFile().mkdirs();
-
-			// TODO we're creating an intermediate byte-array for no point
-
-			Files.write(archive, toByteArray(), options);
-		} catch(IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		archive.getParent().toFile().mkdirs();
+		OutputStream outputStream = Exceptional.apply(Files::newOutputStream, archive, options);
+		to(outputStream);
 		return archive;
 	}
 

@@ -1,0 +1,23 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+$h4 Proxy an abstract class
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/concrete/ProxyTest.java", "proxy-abstract-class" )
+
+$h4 Proxy an awkward class
+
+A bit awkward:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/concrete/ProxyTest.java", "awkward-proxy-target" )
+
+A simple partial handler:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/concrete/ProxyTest.java", "simple-proxy-handler" )
+
+Then invocation:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/proxy/concrete/ProxyTest.java", "simple-proxy-invocation" )

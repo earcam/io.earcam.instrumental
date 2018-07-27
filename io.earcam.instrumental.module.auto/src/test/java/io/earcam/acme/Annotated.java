@@ -16,6 +16,7 @@
  * </ul>
  * #L%
  */
+// EARCAM_SNIPPET_BEGIN: example-annotated-class
 package io.earcam.acme;
 
 import java.io.UncheckedIOException;
@@ -62,3 +63,4 @@ public class Annotated implements Comparable<@AcmeAnnotation(Test.class) Annotat
 		}
 	}
 }
+// EARCAM_SNIPPET_END: example-annotated-class

@@ -80,15 +80,6 @@ class ByteArrayJavaFileObject extends SimpleJavaFileObject {
 		return outputStream.toByteArray();
 	}
 
-	// for ECJ? or remove
-	/*
-	 * @Override
-	 * public InputStream openInputStream() throws IOException
-	 * {
-	 * return new ByteArrayInputStream(getBytes());
-	 * }
-	 */
-
 
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)

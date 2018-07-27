@@ -59,6 +59,7 @@ import io.earcam.utilitarian.charstar.CharSequences;
 @SuppressWarnings("squid:S2187")  // SonarQube false-positive; tests are only in @Nested
 public class ReaderTest {
 
+	// EARCAM_SNIPPET_BEGIN: test-support
 	private static String cn(Class<?> type)
 	{
 		return type.getCanonicalName();
@@ -69,6 +70,7 @@ public class ReaderTest {
 	{
 		return type.getPackage().getName();
 	}
+	// EARCAM_SNIPPET_END: test-support
 
 	@Nested
 	class Annotations {
@@ -76,6 +78,8 @@ public class ReaderTest {
 		@Test
 		void readsAnnotationsAndTheirValuesByDefault()
 		{
+			// @formatter:off
+			// EARCAM_SNIPPET_BEGIN: do-read-annotations
 			Map<String, Set<String>> imports = new HashMap<>();
 
 			reader()
@@ -84,7 +88,8 @@ public class ReaderTest {
 
 			assertThat(imports, is(aMapWithSize(1)));
 
-			assertThat(imports, hasEntry(equalTo(cn(Annotated.class)), containsInAnyOrder(
+			assertThat(imports, hasEntry(equalTo(cn(Annotated.class)), 
+				containsInAnyOrder(
 					cn(Object.class),
 					cn(Comparable.class),
 					cn(Class.class),
@@ -104,6 +109,8 @@ public class ReaderTest {
 					cn(Comparator.class),
 					cn(Objects.class),
 					cn(UncheckedIOException.class))));
+			// EARCAM_SNIPPET_END: do-read-annotations
+			// @formatter:on
 		}
 
 
@@ -112,6 +119,7 @@ public class ReaderTest {
 		{
 			Map<String, Set<String>> imports = new HashMap<>();
 
+			// EARCAM_SNIPPET_BEGIN: do-not-read-annotations
 			reader()
 					.ignoreAnnotations()
 					.addImportListener(imports::put)
@@ -126,6 +134,7 @@ public class ReaderTest {
 					cn(Throwable.class),
 					cn(OutOfMemoryError.class),
 					cn(Integer.class))));
+			// EARCAM_SNIPPET_END: do-not-read-annotations
 		}
 	}
 
@@ -138,6 +147,7 @@ public class ReaderTest {
 			@Test
 			void importListenerOnly() throws IOException
 			{
+				// EARCAM_SNIPPET_BEGIN: imports-simple-class
 				Map<String, Set<String>> imports = new HashMap<>();
 
 				reader()
@@ -154,6 +164,7 @@ public class ReaderTest {
 						cn(Class.class),
 						cn(StringBuilder.class),
 						cn(String.class))));
+				// EARCAM_SNIPPET_END: imports-simple-class
 			}
 
 		}
@@ -233,6 +244,7 @@ public class ReaderTest {
 			@Test
 			void listenerAndTypeReducers() throws IOException
 			{
+				// EARCAM_SNIPPET_BEGIN: map-jar-reduced-to-packages
 				Map<String, Set<String>> imports = new HashMap<>();
 
 				InputStream jar = bundle()
@@ -260,6 +272,7 @@ public class ReaderTest {
 						pkg(String.class)));
 
 				assertThat(imports, hasEntry(equalTo(pkg(ImportsSlf4jApi.class)), equalTo(expected)));
+				// EARCAM_SNIPPET_END: map-jar-reduced-to-packages
 			}
 		}
 	}

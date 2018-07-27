@@ -49,6 +49,7 @@ import io.earcam.utilitarian.security.Keys;
 @SuppressWarnings("serial")
 public class ProxyTest {
 
+	// EARCAM_SNIPPET_BEGIN: awkward-proxy-target
 	public static class Foo {
 
 		public Foo()
@@ -72,7 +73,9 @@ public class ProxyTest {
 			return "goodbye";
 		}
 	}
+	// EARCAM_SNIPPET_END: awkward-proxy-target
 
+	// EARCAM_SNIPPET_BEGIN: simple-proxy-handler
 	public static class Handler extends PartialInvocationHandler<Foo> {
 
 		public Handler(Foo delegate)
@@ -86,15 +89,18 @@ public class ProxyTest {
 			return "not " + delegate.goodbye() + ", but farewell";
 		}
 	}
+	// EARCAM_SNIPPET_END: simple-proxy-handler
 
 
 	@Test
 	public void partial()
 	{
+		// EARCAM_SNIPPET_BEGIN: simple-proxy-invocation
 		Foo proxy = Proxy.createProxy(Foo.class, new Handler(new Foo(42)));
 
 		assertThat(proxy.hello(), is(equalTo("hello")));
 		assertThat(proxy.goodbye(), is(equalTo("not goodbye, but farewell")));
+		// EARCAM_SNIPPET_END: simple-proxy-invocation
 	}
 
 
@@ -137,6 +143,7 @@ public class ProxyTest {
 	@Test
 	public void proxyAbstractClass()
 	{
+		// EARCAM_SNIPPET_BEGIN: proxy-abstract-class
 		Number proxy = Proxy.createProxy(Number.class, new NoopInvocationHandler() {
 			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
@@ -146,6 +153,7 @@ public class ProxyTest {
 		});
 
 		assertThat(proxy.doubleValue(), is(42D));
+		// EARCAM_SNIPPET_END: proxy-abstract-class
 	}
 
 

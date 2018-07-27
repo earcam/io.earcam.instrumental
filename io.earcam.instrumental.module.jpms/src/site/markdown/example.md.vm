@@ -4,7 +4,7 @@
 #set($h5 = '#####')
 
 
-Invoking `toString()` returns the sourcecode:
+Bytecode easily available, furthermore invoking `toString()` returns the sourcecode:
 
 #snippet ( "/src/test/java/io/earcam/instrumental/module/jpms/DefaultModuleInfoTest.java", "to-string-is-source" )
 

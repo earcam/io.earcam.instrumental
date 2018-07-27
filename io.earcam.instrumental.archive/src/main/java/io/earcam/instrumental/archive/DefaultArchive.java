@@ -29,6 +29,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import javax.annotation.WillClose;
+
 import io.earcam.unexceptional.Closing;
 import io.earcam.unexceptional.Exceptional;
 
@@ -73,7 +75,7 @@ class DefaultArchive implements Archive {
 
 
 	@Override
-	public void to(OutputStream os)
+	public void to(@WillClose OutputStream os)
 	{
 		JarOutputStream out = manifest()
 				.map(m -> Exceptional.apply(JarOutputStream::new, os, m))

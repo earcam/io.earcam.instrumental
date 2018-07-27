@@ -173,7 +173,7 @@ public class InMemoryModuleFinderTest {
 	}
 
 
-	private static String captureStdout(CheckedRunnable runnable)
+	private static String captureStdout(CheckedRunnable<ReflectiveOperationException> runnable)
 	{
 		PrintStream old = System.out;
 		try {

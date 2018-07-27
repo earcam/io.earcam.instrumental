@@ -12,7 +12,7 @@
 Please note; `PartialInvocationHandler` contains some disgusting code for handling interface default methods and also suffers from [inner/anon class issues][kabutz-heinz-inner-class] - so don't try extending this as an anonymous class.. 
 
 
-To proxy classes, see [instrumental.proxy.concrete][instrumental-proxy-concrete].
+To proxy abstract and concrete classes, see [instrumental.proxy.concrete][instrumental-proxy-concrete].
 
 [instrumental-proxy-concrete]: /proxy.concrete
 

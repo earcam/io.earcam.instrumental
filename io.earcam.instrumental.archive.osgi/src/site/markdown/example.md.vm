@@ -1,0 +1,12 @@
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+#set($h5 = '#####')
+
+
+The following on OSGi bundle with the specified activator (validating that it implements `BundleActivator`):
+
+#snippet ( "/src/test/java/io/earcam/instrumental/archive/osgi/AsOsgiBundleTest.java", "activator" )
+
+([source](xref-test/io/earcam/instrumental/archive/osgi/AsOsgiBundleTest.html)).
+
