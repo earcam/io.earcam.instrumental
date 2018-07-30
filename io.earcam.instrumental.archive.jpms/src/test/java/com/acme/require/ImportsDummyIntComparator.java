@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.archive
+ * io.earcam.instrumental.archive.jpms
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,17 +16,14 @@
  * </ul>
  * #L%
  */
-package io.earcam.instrumental.archive;
+package com.acme.require;
 
-import java.util.function.UnaryOperator;
+import com.acme.DummyIntComparator;
 
-@FunctionalInterface
-public interface ArchiveResourceFilter extends UnaryOperator<ArchiveResource> {
+public class ImportsDummyIntComparator {
 
-	/**
-	 * @param resource
-	 * @return the original/modified resource, or {@code null} to signal the resource is to removed
-	 */
-	@Override
-	public abstract ArchiveResource apply(ArchiveResource resource);
+	public DummyIntComparator comparator()
+	{
+		return null;
+	}
 }

@@ -78,6 +78,12 @@ public interface FileObjectProvider {
 		{
 			return new ByteArrayInputStream(bytes.get());
 		}
+
+
+		public byte[] bytes()
+		{
+			return bytes.get();
+		}
 	}
 
 

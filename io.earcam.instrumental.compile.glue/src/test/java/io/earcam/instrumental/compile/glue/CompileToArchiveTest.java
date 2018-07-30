@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.archive.glue
+ * io.earcam.instrumental.compile.glue
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import io.earcam.instrumental.archive.Archive;
 import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.compile.Compiler;
 import io.earcam.instrumental.lade.ClassLoaders;
@@ -64,6 +65,45 @@ public class CompileToArchiveTest {
 			)
 			.compile(toArchive())
 			// EARCAM_SNIPPET_END: to-archive
+			.toObjectModel()
+			.content("/com/acme/FooBar.class")
+			.orElseThrow(NullPointerException::new);
+		//@formatter:on
+		Class<?> loaded = ClassLoaders.load(compiled.bytes());
+
+		assertThat(loaded.getCanonicalName(), is(equalTo("com.acme.FooBar")));
+	}
+
+
+	@Test
+	public void contentCompiledFromStringSource()
+	{
+		//@formatter:off
+		ArchiveResource compiled =
+		// EARCAM_SNIPPET_BEGIN: compiled-from
+			Archive.archive()
+				.sourcing(contentCompiledFrom(
+					compiler.versionAt(RELEASE_8)
+					.source(from(
+					"package com.acme;                 \n" +
+	
+					"public class FooBar {             \n" +
+	
+					"   private String field;          \n" +
+	
+					"   public String get()            \n" +
+					"   {                              \n" +
+					"      return field;               \n" +
+					"   }                              \n" +
+	
+					"   public void set(String field)  \n" +
+					"   {                              \n" +
+					"      this.field = field;         \n" +
+					"   }                              \n" +
+	
+					"}                                 \n"))
+				))
+			// EARCAM_SNIPPET_END: compiled-from
 			.toObjectModel()
 			.content("/com/acme/FooBar.class")
 			.orElseThrow(NullPointerException::new);

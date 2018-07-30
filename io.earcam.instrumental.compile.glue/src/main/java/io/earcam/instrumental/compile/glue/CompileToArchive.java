@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.archive.glue
+ * io.earcam.instrumental.compile.glue
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -19,7 +19,10 @@
 package io.earcam.instrumental.compile.glue;
 
 import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.INITIAL;
+import static io.earcam.instrumental.compile.CompilationTarget.toByteArrays;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -29,9 +32,12 @@ import javax.tools.StandardJavaFileManager;
 import io.earcam.instrumental.archive.Archive;
 import io.earcam.instrumental.archive.ArchiveConfiguration;
 import io.earcam.instrumental.archive.ArchiveConfigurationPlugin;
+import io.earcam.instrumental.archive.ArchiveConstruction;
 import io.earcam.instrumental.archive.ArchiveResource;
+import io.earcam.instrumental.archive.ArchiveResourceFilter;
 import io.earcam.instrumental.archive.ArchiveResourceSource;
 import io.earcam.instrumental.compile.CompilationTarget;
+import io.earcam.instrumental.compile.Compiler;
 import io.earcam.instrumental.fluent.Fluent;
 
 /**
@@ -48,7 +54,36 @@ public final class CompileToArchive {
 
 	/**
 	 * <p>
-	 * toArchive.
+	 * Use the provided {@code compiler} as a source of archive resources.
+	 * </p>
+	 * <p>
+	 * This method allows multiple compilations to contribute content to an archive.
+	 * Note: methods taking {@link ArchiveResourceSource} in {@link ArchiveConstruction}
+	 * also take {@link ArchiveResourceFilter}.
+	 * </p>
+	 * 
+	 * @param compiler
+	 * @return a source of archive resources
+	 * 
+	 * @see ArchiveConstruction#sourcing(ArchiveResourceSource)
+	 */
+	@Fluent
+	public static ArchiveResourceSource contentCompiledFrom(Compiler compiler)
+	{
+		Map<String, byte[]> compiled = compiler.compile(toByteArrays());
+
+		List<ArchiveResource> resources = compiled.entrySet().stream()
+				.map(e -> new ArchiveResource(e.getKey(), e.getValue()))
+				.collect(toList());
+
+		return ArchiveResourceSource.wrap(resources);
+	}
+
+
+	/**
+	 * <p>
+	 * Create an {@link Archive} as the compilation target - the archive is not build,
+	 * so further configuration may be performed.
 	 * </p>
 	 *
 	 * @return a {@link io.earcam.instrumental.compile.CompilationTarget} object.
@@ -79,6 +114,7 @@ public final class CompileToArchive {
 			}
 
 
+			@Override
 			public ArchiveConfiguration get()
 			{
 				return archive;

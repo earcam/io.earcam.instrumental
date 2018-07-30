@@ -25,5 +25,4 @@ final class DefaultAsJar extends AbstractAsJarBuilder<AsJar> implements AsJar {
 	{
 		return this;
 	}
-
 }

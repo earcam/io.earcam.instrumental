@@ -42,7 +42,7 @@ Construction then proceeds as follows:
 0. `ArchiveResourceFilter` drained resources are filtered
 0. `ArchiveResourceListener` listeners are informed of new resources
 
-As observed above, the subcycle for resources is; drain sources, filter and inform listeners.  The lifecycle staging is a rather simplistic approach, but sufficient for current approach.
+As observed above, the subcycle for resources is; drain sources, filter and inform listeners.  The lifecycle staging is a rather simplistic approach, but sufficient currently.
 
 
 <br/>

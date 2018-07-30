@@ -18,6 +18,9 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.INITIAL;
+
+import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
@@ -34,13 +37,19 @@ public interface ArchiveResourceSource {
 	}
 
 
+	public static ArchiveResourceSource wrap(Collection<ArchiveResource> resources)
+	{
+		return s -> INITIAL.equals(s) ? resources.stream() : Stream.empty();
+	}
+
+
 	/**
 	 * <p>
-	 * drain.
+	 * Drain: resources must only be made available once.
 	 * </p>
 	 *
-	 * @param stage a {@link io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle} object.
-	 * @return a {@link java.util.stream.Stream} object.
+	 * @param stage the current construction stage
+	 * @return the resources available at this stage
 	 */
 	Stream<ArchiveResource> drain(ResourceSourceLifecycle stage);
 }

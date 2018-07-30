@@ -44,10 +44,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import io.earcam.instrumental.reflect.Methods;
 import io.earcam.instrumental.reflect.Types;
-import io.earcam.unexceptional.Exceptional;
 
-// TODO 
-// 1. Should apply checks at build time to allow e.g. ..compiler integration (this could also make validation optional... for better or worse, allows testing with "bad" jars).
 /**
  * AsJar, configures an {@link Archive} as a JAR.
  */
@@ -70,6 +67,8 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	private Predicate<String> packageMatcher = p -> false;
 	private Set<String> sealedPackages = new HashSet<>();
 
+	private boolean validate = true;
+
 
 	/**
 	 * <p>
@@ -83,6 +82,20 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 
 
 	protected abstract T self();
+
+
+	@Override
+	public T disableValidation()
+	{
+		validate = false;
+		return self();
+	}
+
+
+	protected boolean validate()
+	{
+		return validate;
+	}
 
 
 	@OverridingMethodsMustInvokeSuper
@@ -153,7 +166,9 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public T launching(Class<?> mainClass)
 	{
-		Exceptional.accept(AbstractAsJarBuilder::requireMainMethod, mainClass);
+		if(validate) {
+			AbstractAsJarBuilder.requireMainMethod(mainClass);
+		}
 		source.with(mainClass);
 		return launching(mainClass.getCanonicalName());
 	}
@@ -225,7 +240,9 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public T providing(Class<?> service, List<Class<?>> implementations)
 	{
-		implementations.forEach(i -> requireImplements(i, service));
+		if(validate) {
+			implementations.forEach(i -> requireImplements(i, service));
+		}
 		implementations.forEach(source::with);
 
 		Set<String> imps = implementations.stream()

@@ -77,6 +77,13 @@ public class ArchiveResource {
 	}
 
 
+	public static ArchiveResource rename(String aka, ArchiveResource formerly)
+	{
+		return formerly.isInputStreamBacked() ? new ArchiveResource(aka, formerly.inputStream())
+				: new ArchiveResource(aka, formerly.bytes());
+	}
+
+
 	/**
 	 * <p>
 	 * Compares the {@code name} argument with this resource's name. A leading

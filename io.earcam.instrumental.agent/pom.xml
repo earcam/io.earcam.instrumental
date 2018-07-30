@@ -26,6 +26,7 @@
 			https://github.com/jacoco/jacoco/issues/407 <jacoco.skip>true</jacoco.skip> -->
 		<sonar.coverage.exclusions>**/InstrumentationWrapper.*</sonar.coverage.exclusions>
 		<tidy.skip>false</tidy.skip>
+		<forbiddenapis.skip>true</forbiddenapis.skip>
 
 		<earcam.project.name.short>agent</earcam.project.name.short>
 
@@ -237,56 +238,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>strict</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>de.thetaphi</groupId>
-						<artifactId>forbiddenapis</artifactId>
-						<version>${version.forbiddenapis}</version>
-						<executions>
-							<execution>
-								<id>check</id>
-								<goals>
-									<goal>check</goal>
-								</goals>
-								<configuration>
-									<bundledSignatures>
-										<bundledSignature>jdk-unsafe</bundledSignature>
-										<bundledSignature>jdk-deprecated</bundledSignature>
-										<!-- <bundledSignature>jdk-non-portable</bundledSignature> -->
-										<bundledSignature>jdk-system-out</bundledSignature>
-										<bundledSignature>jdk-reflection</bundledSignature>
-									</bundledSignatures>
-								</configuration>
-							</execution>
-
-							<execution>
-								<id>test-check</id>
-								<goals>
-									<goal>testCheck</goal>
-								</goals>
-								<configuration>
-									<bundledSignatures>
-										<bundledSignature>jdk-unsafe</bundledSignature>
-										<bundledSignature>jdk-deprecated</bundledSignature>
-										<!-- <bundledSignature>jdk-non-portable</bundledSignature> -->
-										<bundledSignature>jdk-system-out</bundledSignature>
-										<bundledSignature>jdk-reflection</bundledSignature>
-									</bundledSignatures>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

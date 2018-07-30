@@ -184,7 +184,7 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 					.forEach(builder::importPackages);
 		}
 
-		if(!imports.isEmpty()) {
+		if(validate() && !imports.isEmpty()) {
 			throw new IllegalStateException("' unresolved imports remain: " + imports);
 		}
 	}
@@ -201,7 +201,9 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 	@Override
 	public AsOsgiBundle withActivator(Class<?> activator)
 	{
-		requireActivator(activator);
+		if(validate()) {
+			requireActivator(activator);
+		}
 		source.with(activator);
 		return withActivator(activator.getCanonicalName());
 	}

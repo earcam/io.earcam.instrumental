@@ -12,7 +12,7 @@
 	<artifactId>io.earcam.instrumental.archive</artifactId>
 	<packaging>jar</packaging>
 
-	<description>Create/read archives in-memory/on-filesystem, extended variously</description>
+	<description>Create/read archives in-memory/on-disk, supports Multi-Release JARs</description>
 
 	<distributionManagement>
 		<site>
@@ -60,6 +60,12 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

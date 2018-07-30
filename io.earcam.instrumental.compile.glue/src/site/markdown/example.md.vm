@@ -3,6 +3,12 @@
 #set($h4 = '####')
 #set($h5 = '#####')
 
+Compile to a new Archive (a single compiler output to new archive)
 
 #snippet ( "/src/test/java/io/earcam/instrumental/compile/glue/CompileToArchiveTest.java", "to-archive" )
+
+
+Add compiler to existing Archive (multiple compilers output to existing archive)
+
+#snippet ( "/src/test/java/io/earcam/instrumental/compile/glue/CompileToArchiveTest.java", "compiled-from" )
 

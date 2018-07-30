@@ -66,7 +66,9 @@ class DefaultAsAgentJar extends AbstractAsJarBuilder<AsAgentJar> implements AsAg
 	 */
 	public DefaultAsAgentJar withAgentClass(Class<?> type)
 	{
-		requireAgentMainMethod(type);
+		if(validate()) {
+			requireAgentMainMethod(type);
+		}
 		source.with(type);
 		String name = type.getCanonicalName();
 		if(hasAgentPreMainMethod(type)) {

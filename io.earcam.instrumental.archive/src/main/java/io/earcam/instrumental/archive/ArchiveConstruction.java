@@ -18,6 +18,8 @@
  */
 package io.earcam.instrumental.archive;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,9 +27,13 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.stream.Collectors;
 
 import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.unexceptional.Exceptional;
@@ -158,11 +164,60 @@ public interface ArchiveConstruction extends ArchiveTransform {
 
 	/**
 	 * <p>
+	 * Include an Archive's resources in the construction of another.
+	 * </p>
+	 * <p>
+	 * Note: this does not copy the manifest, see {@link AbstractAsJarBuilder#mergingManifest(java.util.jar.Manifest)}
+	 * </p>
+	 * 
+	 * @param archive the archive with content
+	 * @return an {@link ArchiveResourceSource} that will be drained on first call.
+	 * 
+	 * @see #contentFrom(Archive, ArchiveResourceFilter)
+	 * @see #sourcing(ArchiveResourceSource)
+	 */
+	public static ArchiveResourceSource contentFrom(Archive archive)
+	{
+		ArchiveResourceFilter noop = UnaryOperator.<ArchiveResource> identity()::apply;
+		return contentFrom(archive, noop);
+	}
+
+
+	/**
+	 * <p>
+	 * Include an Archive's resources in the construction of another, using the supplied {@code filter}
+	 * to optionally modify or exclude content.
+	 * </p>
+	 * <p>
+	 * Note: this does not copy the manifest, see {@link AbstractAsJarBuilder#mergingManifest(java.util.jar.Manifest)}
+	 * </p>
+	 * 
+	 * @param archive the archive with content
+	 * @param filter the filter to apply to content from the archive
+	 * @return an {@link ArchiveResourceSource} that will be drained on first call.
+	 * 
+	 * @see #contentFrom(Archive)
+	 * @see #sourcing(ArchiveResourceSource)
+	 */
+	public static ArchiveResourceSource contentFrom(Archive archive, ArchiveResourceFilter filter)
+	{
+		List<ArchiveResource> resources = archive.contents().stream()
+				.map(filter)
+				.filter(Objects::nonNull)
+				.collect(toList());
+		return ArchiveResourceSource.wrap(resources);
+	}
+
+
+	/**
+	 * <p>
 	 * contentFrom.
 	 * </p>
 	 *
 	 * @param path a {@link java.nio.file.Path} object.
 	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * 
+	 * @see #sourcing(ArchiveResourceSource)
 	 */
 	@Fluent
 	public static ArchiveResourceSource contentFrom(Path path)
@@ -178,6 +233,8 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 *
 	 * @param path a {@link java.io.File} object.
 	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * 
+	 * @see #sourcing(ArchiveResourceSource)
 	 */
 	@Fluent
 	public static ArchiveResourceSource contentFrom(File path)
@@ -194,6 +251,8 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * @param path a {@link java.io.File} object.
 	 * @param filter a {@link java.util.function.Predicate} object.
 	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * 
+	 * @see #sourcing(ArchiveResourceSource)
 	 */
 	@Fluent
 	public static ArchiveResourceSource contentFrom(File path, Predicate<String> filter)
@@ -210,6 +269,8 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * @param path a {@link java.nio.file.Path} object.
 	 * @param filter a {@link java.util.function.Predicate} object.
 	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * 
+	 * @see #sourcing(ArchiveResourceSource)0
 	 */
 	@Fluent
 	public static ArchiveResourceSource contentFrom(Path path, Predicate<String> filter)
@@ -219,6 +280,14 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	}
 
 
+	/**
+	 * 
+	 * @param inputStream
+	 * @param filter
+	 * @return
+	 * 
+	 * @see #sourcing(ArchiveResourceSource)
+	 */
 	@Fluent
 	public static ArchiveResourceSource contentFrom(JarInputStream inputStream, Predicate<String> filter)
 	{

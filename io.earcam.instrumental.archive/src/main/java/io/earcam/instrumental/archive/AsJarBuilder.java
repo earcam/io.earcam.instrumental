@@ -26,6 +26,16 @@ import java.util.jar.Manifest;
 
 public interface AsJarBuilder<T extends AsJarBuilder<T>> extends ArchiveConfigurationPlugin {
 
+	/**
+	 * Various sanity checks are applied (e.g. that a "Main-Class" actually has a
+	 * {@code main} method). This method disables such validation, allowing creation
+	 * of <i>bad JARs</i>.
+	 * 
+	 * @return this builder
+	 */
+	public abstract T disableValidation();
+
+
 	public abstract T launching(Class<?> mainClass);
 
 

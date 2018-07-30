@@ -130,6 +130,15 @@ public class AsJarTest {
 	}
 
 
+	@Test
+	void invalidMainClassIgnoredWhenValidationDisabled()
+	{
+		asJar()
+				.disableValidation()
+				.launching(AsJar.class);
+	}
+
+
 	protected static boolean main(String[] ahhargs)
 	{
 		return false;
@@ -276,9 +285,18 @@ public class AsJarTest {
 	void providingFailsFastWhenServicesDoesNotImplementInterface()
 	{
 		try {
-			asJar().providing(Comparator.class, Byte.class);
+			asJar().providing(Comparator.class, Other.class);
 			fail();
 		} catch(IllegalArgumentException e) {}
+	}
+
+
+	@Test
+	void invalidProvidingIgnoredWhenValidationDisabled()
+	{
+		asJar()
+				.disableValidation()
+				.providing(Comparator.class, Other.class);
 	}
 
 

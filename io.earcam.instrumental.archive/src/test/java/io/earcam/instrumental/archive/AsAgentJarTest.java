@@ -104,6 +104,15 @@ public class AsAgentJarTest {
 
 
 	@Test
+	void canUseInvalidAgentClassWhenValidationDisabled()
+	{
+		asAgentJar()
+				.disableValidation()
+				.withAgentClass(DummyAgentInvalidAgentMainNotPublicStatic.class);
+	}
+
+
+	@Test
 	void invalidAgentClassMethodsWrongParameters()
 	{
 		try {

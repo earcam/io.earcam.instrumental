@@ -27,11 +27,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
@@ -43,9 +41,9 @@ import io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecy
 class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 
 	private final BasicArchiveResourceSource basicSource = new BasicArchiveResourceSource();
-	private final Set<ArchiveResourceSource> sources = new HashSet<>();
-	private final Set<ArchiveResourceListener> listeners = new HashSet<>();
-	private final Set<ManifestProcessor> manifestProcessors = new HashSet<>();
+	private final List<ArchiveResourceSource> sources = new ArrayList<>();
+	private final List<ArchiveResourceListener> listeners = new ArrayList<>();
+	private final List<ManifestProcessor> manifestProcessors = new ArrayList<>();
 
 	private final List<ArchiveResourceFilter> filters = new ArrayList<>();
 
@@ -182,7 +180,7 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 			current = Stream.concat(current, source.drain(stage));
 		}
 		for(ArchiveResourceFilter filter : filters) {
-			current = current.map(filter::filter);
+			current = current.map(filter::apply);
 		}
 		return current.filter(Objects::nonNull).collect(toList());
 	}

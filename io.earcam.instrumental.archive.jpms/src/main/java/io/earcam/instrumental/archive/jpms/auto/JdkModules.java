@@ -168,8 +168,9 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"	} catch(IOException ioe) { \n" +
 				"	    throw new UncheckedIOException(ioe); \n" +
 				"	} \n" +
-				"	System.out.println(\"D\" + \"O\" + \"N\" + \"E\"); \n" +    // printed as individual chars concatenated, in case script error causes dumping
-																			    // of script source (and we're checking output for "DONE" aside from exit code)
+				// printed as individual chars concatenated, in case script error causes dumping
+				// of script source (and we're checking output for "DONE" aside from exit code)
+				"	System.out.println(\"D\" + \"O\" + \"N\" + \"E\"); \n" +
 				"";
 	}
 

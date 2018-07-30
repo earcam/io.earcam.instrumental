@@ -23,6 +23,7 @@ import static io.earcam.instrumental.archive.AsJar.asJar;
 import static io.earcam.instrumental.archive.maven.Maven.CENTRAL_ID;
 import static io.earcam.instrumental.archive.maven.Maven.CENTRAL_URL;
 import static io.earcam.instrumental.archive.maven.Maven.DEFAULT_TYPE;
+import static io.earcam.instrumental.archive.maven.Maven.ID_LOCAL_AS_REMOTE;
 import static io.earcam.instrumental.archive.maven.Maven.maven;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
@@ -50,6 +51,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import io.earcam.instrumental.archive.Archive;
+import io.earcam.unexceptional.Exceptional;
 
 public class MavenTest {
 
@@ -89,6 +91,18 @@ public class MavenTest {
 		}
 	}
 
+
+	private void runWithFakeUserHome(String fakeHome, Runnable runnable)
+	{
+		String realHome = System.getProperty("user.home");
+		try {
+			System.setProperty("user.home", fakeHome);
+			runnable.run();
+		} finally {
+			System.setProperty("user.home", realHome);
+		}
+	}
+
 	@Nested
 	public class UsingDefaultLocalRepository {
 
@@ -102,18 +116,6 @@ public class MavenTest {
 
 				assertThat(maven.local.getBasedir(), aFileNamed(endsWith("nonstandard.repository")));
 			});
-		}
-
-
-		private void runWithFakeUserHome(String fakeHome, Runnable runnable)
-		{
-			String realHome = System.getProperty("user.home");
-			try {
-				System.setProperty("user.home", fakeHome);
-				runnable.run();
-			} finally {
-				System.setProperty("user.home", realHome);
-			}
 		}
 
 
@@ -232,34 +234,37 @@ public class MavenTest {
 	@Test
 	void useALocalAsARemote() throws Exception
 	{
-		Path localAsRemote = Paths.get(".", "target", "repo-local-as-remote");
-		maven()
-				.usingCentral()
-				.usingLocal(localAsRemote)
-				.dependencies("junit:junit:4.12");
+		Path fakeHome = Paths.get(".", "target", "local-as-remote-fake-home").toAbsolutePath();
+		fakeHome.resolve(Paths.get(".m2", "repository")).toFile().mkdirs();
 
-		Path localPath = Paths.get(".", "target", "repo-local-from-local-as-remote");
-		String localAsRemoteId = "local-as-remote";
+		runWithFakeUserHome(fakeHome.toString(), () -> {
+			maven()
+					.usingCentral()
+					.usingDefaultLocal()
+					.dependencies("junit:junit:4.12");
 
-		Map<MavenArtifact, Archive> dependencies = maven()
-				.usingRemote(localAsRemoteId, "default", localAsRemote.toAbsolutePath().toUri().toString())
-				.usingLocal(localPath)
-				.dependencies("junit:junit:4.12");
+			Path localPath = Paths.get(".", "target", "repo-local-from-local-as-remote");
 
-		MavenArtifact junit = new MavenArtifact("junit", "junit", "4.12", "jar", "");
-		MavenArtifact hamcrest = new MavenArtifact("org.hamcrest", "hamcrest-core", "1.3", "jar", "");
+			Map<MavenArtifact, Archive> dependencies = maven()
+					.usingDefaultLocalAsARemote()
+					.usingLocal(localPath)
+					.dependencies("junit:junit:4.12");
 
-		assertThat(dependencies, allOf(
-				aMapWithSize(2),
-				hasKey(junit),
-				hasKey(hamcrest)));
+			MavenArtifact junit = new MavenArtifact("junit", "junit", "4.12", "jar", "");
+			MavenArtifact hamcrest = new MavenArtifact("org.hamcrest", "hamcrest-core", "1.3", "jar", "");
 
-		Path remotesIndex = localPath.resolve(Paths.get("junit", "junit", "4.12", "_remote.repositories"));
-		String meta = new String(Files.readAllBytes(remotesIndex), UTF_8);
+			assertThat(dependencies, allOf(
+					aMapWithSize(2),
+					hasKey(junit),
+					hasKey(hamcrest)));
 
-		assertThat(meta, allOf(
-				containsString(localAsRemoteId),
-				not(containsString("central"))));
+			Path remotesIndex = localPath.resolve(Paths.get("junit", "junit", "4.12", "_remote.repositories"));
+			String meta = new String(Exceptional.apply(Files::readAllBytes, remotesIndex), UTF_8);
+
+			assertThat(meta, allOf(
+					containsString(ID_LOCAL_AS_REMOTE),
+					not(containsString("central"))));
+		});
 	}
 
 

@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -76,7 +77,7 @@ public class ArchiveResourceTest {
 	}
 
 	@Nested
-	class Naming {
+	public class Naming {
 
 		@Test
 		void extensionPresentGivenPathIsNonExistent()
@@ -166,5 +167,68 @@ public class ArchiveResourceTest {
 
 			assertThat(a.isQualifiedClass(), is(false));
 		}
+	}
+
+	@Nested
+	public class Renaming {
+
+		@Test
+		public void byteArrayArchiveResource()
+		{
+			String newName = "a/b/C.class";
+			byte[] content = new byte[0];
+			ArchiveResource a = ArchiveResource.rename(newName, new ArchiveResource("x/y/Z.class", content));
+
+			assertThat(a.name(), is(equalTo(newName)));
+			assertThat(a.bytes(), is(sameInstance(content)));
+		}
+
+
+		@Test
+		public void inputStreamArchiveResource()
+		{
+			String newName = "a/b/C.class";
+			InputStream content = new ByteArrayInputStream(new byte[0]);
+			ArchiveResource a = ArchiveResource.rename(newName, new ArchiveResource("x/y/Z.class", content));
+
+			assertThat(a.name(), is(equalTo(newName)));
+			assertThat(a.inputStream(), is(sameInstance(content)));
+		}
+	}
+
+	@Nested
+	public class Backing {
+
+		@Test
+		public void aByteArrayBackedArchiveResourceHasKnownSize()
+		{
+			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new byte[42]);
+
+			assertThat(a.unknownSize(), is(false));
+			assertThat(a.knownSize(), is(42L));
+		}
+
+
+		@Test
+		public void anInputStreamBackedArchiveResourceHasUnknownSize()
+		{
+			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new ByteArrayInputStream(new byte[101]));
+
+			assertThat(a.unknownSize(), is(true));
+			assertThat(a.knownSize(), is(-1L));
+		}
+
+
+		@Test
+		public void givenAnInputStreamBackedArchiveResourceWhenBytesInvokedThenHasKnownSize()
+		{
+			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new ByteArrayInputStream(new byte[19]));
+
+			a.bytes();
+
+			assertThat(a.unknownSize(), is(false));
+			assertThat(a.knownSize(), is(19L));
+		}
+
 	}
 }

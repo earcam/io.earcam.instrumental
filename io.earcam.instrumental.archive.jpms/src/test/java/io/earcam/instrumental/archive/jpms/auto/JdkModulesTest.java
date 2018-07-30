@@ -33,7 +33,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +43,7 @@ public class JdkModulesTest {
 	@Test
 	public void mainMethodCreatesCache() throws Exception
 	{
-		Path directory = Paths.get("target/" + JdkModulesTest.class.getSimpleName() + '/' + UUID.randomUUID());
+		Path directory = Paths.get("target", JdkModulesTest.class.getSimpleName(), Long.toString(System.currentTimeMillis()));
 
 		JdkModules.main(new String[] { directory.toString() });
 
@@ -54,7 +53,8 @@ public class JdkModulesTest {
 
 		List<ModuleInfo> modules = JdkModules.deserialize(new FileInputStream(cache.toFile()));
 
-		assertThat(modules, hasSize(greaterThan(50)));  // completely arbitrary, previous observed JDK9 module counts have been 96 and 99
+		// completely arbitrary, previous observed JDK9 module counts have been 96 and 99
+		assertThat(modules, hasSize(greaterThan(50)));
 
 		String jdkVersion = modules.get(0).version();   // makes the test less fragile
 
@@ -80,5 +80,4 @@ public class JdkModulesTest {
 
 		assertThat(modules, hasItem(equalTo(jdeps)));
 	}
-
 }

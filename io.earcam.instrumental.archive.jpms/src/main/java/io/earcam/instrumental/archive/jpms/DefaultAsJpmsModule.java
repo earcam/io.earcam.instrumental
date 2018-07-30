@@ -171,7 +171,7 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 					.forEach(builder::requiring);
 		}
 
-		if(!imports.isEmpty()) {
+		if(validate() && !imports.isEmpty()) {
 			throw new IllegalStateException("For module '" + name + "' unresolved imports remain: " + imports);
 		}
 	}

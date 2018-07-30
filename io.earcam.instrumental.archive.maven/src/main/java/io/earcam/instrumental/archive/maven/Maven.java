@@ -67,6 +67,7 @@ import io.earcam.unexceptional.Exceptional;
 
 public final class Maven {
 
+	static final String ID_LOCAL_AS_REMOTE = "local-as-remote";
 	static final String CENTRAL_URL = "http://central.maven.org/maven2/";
 	static final String DEFAULT_TYPE = "default";
 	static final String CENTRAL_ID = "central";
@@ -110,7 +111,7 @@ public final class Maven {
 
 	public Maven usingDefaultLocalAsARemote()
 	{
-		return usingLocal(findLocalRepoPath());
+		return usingRemote(ID_LOCAL_AS_REMOTE, DEFAULT_TYPE, findLocalRepoPath().toUri().toString());
 	}
 
 

@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.archive.glue;
 
+import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.AsJar.asJar;
 import static io.earcam.instrumental.archive.glue.ArchiveFileObjectProvider.fromArchive;
 import static io.earcam.instrumental.compile.Compiler.compiling;
@@ -25,11 +26,24 @@ import static io.earcam.instrumental.compile.SourceSource.from;
 import static io.earcam.instrumental.compile.glue.CompileToArchive.toArchive;
 import static javax.lang.model.SourceVersion.RELEASE_8;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.tools.StandardLocation;
+import javax.tools.JavaFileObject.Kind;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import io.earcam.instrumental.archive.Archive;
+import io.earcam.instrumental.compile.FileObjectProvider.CustomJavaFileObject;
 
 public class ArchiveFileObjectProviderTest {
 
@@ -50,7 +64,6 @@ public class ArchiveFileObjectProviderTest {
 						"public interface Greet {                       \n" +
 
 						"   public abstract String greeting(String to); \n" +
-
 						"}\n")
 				)
 				.compile(toArchive())
@@ -73,7 +86,6 @@ public class ArchiveFileObjectProviderTest {
 						"   {                                           \n" +
 						"      return \"Hello \" + to;                  \n" +
 						"   }                                           \n" +
-
 						"}\n")
 				)
 				.compile(toArchive())
@@ -86,4 +98,55 @@ public class ArchiveFileObjectProviderTest {
 
 		// @formatter:on
 	}
+
+	@Nested
+	public class Lists {
+
+		private final Archive archive = archive()
+				.configured(asJar())
+				.with("resource.txt", new byte[0])
+				.with("/com/acme/api/Api.class", new byte[0])
+				.with("/com/acme/other/Other.class", new byte[0])
+				.with("/com/acme/other/another/Another.class", new byte[0])
+				.toObjectModel();
+
+
+		@Test
+		public void platformClasspathIgnored() throws IOException
+		{
+			List<CustomJavaFileObject> list = fromArchive(archive).list(StandardLocation.PLATFORM_CLASS_PATH, "com.acme", EnumSet.allOf(Kind.class), true);
+
+			assertThat(list, is(empty()));
+		}
+
+
+		@Test
+		public void recursivelyLists() throws IOException
+		{
+			List<CustomJavaFileObject> list = fromArchive(archive).list(StandardLocation.CLASS_PATH, "com.acme", EnumSet.allOf(Kind.class), true);
+
+			List<String> names = list.stream()
+					.map(CustomJavaFileObject::getName)
+					.collect(Collectors.toList());
+
+			assertThat(names, containsInAnyOrder(
+					"/com/acme/other/another/Another.class",
+					"/com/acme/other/Other.class",
+					"/com/acme/api/Api.class"));
+		}
+
+
+		@Test
+		public void nonRecursivelyLists() throws IOException
+		{
+			List<CustomJavaFileObject> list = fromArchive(archive).list(StandardLocation.CLASS_PATH, "com.acme.other", EnumSet.allOf(Kind.class), false);
+
+			List<String> names = list.stream()
+					.map(CustomJavaFileObject::getName)
+					.collect(Collectors.toList());
+
+			assertThat(names, contains("/com/acme/other/Other.class"));
+		}
+	}
+
 }

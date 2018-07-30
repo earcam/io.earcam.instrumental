@@ -253,6 +253,22 @@ public class AsOsgiBundleTest {
 
 			}
 		}
+
+
+		@Test
+		public void invalidActivatorIgnoredWhenValidationDisabled()
+		{
+			Archive archive = archive()
+					.configured(asOsgiBundle()
+							.disableValidation()
+							.named("mandatory.value")
+							.withActivator(DummyInterface.class))
+					.toObjectModel();
+
+			BundleInfo bundleInfo = bundleInfoFrom(archive);
+
+			assertThat(bundleInfo.activator(), is(equalTo(cn(DummyInterface.class))));
+		}
 	}
 
 	@Nested
@@ -351,6 +367,28 @@ public class AsOsgiBundleTest {
 			} catch(IllegalStateException e) {
 
 			}
+		}
+
+
+		@Test
+		void unmappedImportsIgnoredWhenValidationDisabled()
+		{
+
+			PackageBundleMapper mapper = new AbstractPackageBundleMapper() {
+				@Override
+				protected List<BundleInfo> bundles()
+				{
+					return Collections.emptyList();
+				}
+			};
+
+			archive()
+					.configured(asOsgiBundle()
+							.disableValidation()
+							.named("dependee")
+							.autoImporting(mapper))
+					.with(TakesExt.class)
+					.toObjectModel();
 		}
 
 	}

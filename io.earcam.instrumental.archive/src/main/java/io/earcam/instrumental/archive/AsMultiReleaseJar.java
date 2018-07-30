@@ -18,15 +18,18 @@
  */
 package io.earcam.instrumental.archive;
 
-import java.util.function.UnaryOperator;
+import javax.lang.model.SourceVersion;
 
-@FunctionalInterface
-public interface ArchiveResourceFilter extends UnaryOperator<ArchiveResource> {
+import io.earcam.instrumental.fluent.Fluent;
 
-	/**
-	 * @param resource
-	 * @return the original/modified resource, or {@code null} to signal the resource is to removed
-	 */
-	@Override
-	public abstract ArchiveResource apply(ArchiveResource resource);
+public interface AsMultiReleaseJar extends AsReleaseJar {
+
+	@Fluent
+	public static AsMultiReleaseJar asMultiReleaseJar()
+	{
+		return new DefaultAsMultiReleaseJar();
+	}
+
+
+	public abstract AsReleaseJar base(SourceVersion version, ArchiveConstruction archive);
 }

@@ -3,4 +3,9 @@
 #set($h3 = '###')
 
 
-An annotation for demarcation of fluent API methods
+An annotation for demarcation of fluent API methods.  
+
+The [associated annotation processor](/fluency) is purely experimental and largely unimplemented thus far - however
+as documentation is rather light but with many requisite static imports scattered across modules; searching
+the source for methods annotated `@Fluent` will highlight possible compositions perhaps not immediately 
+obvious from viewing test source.  

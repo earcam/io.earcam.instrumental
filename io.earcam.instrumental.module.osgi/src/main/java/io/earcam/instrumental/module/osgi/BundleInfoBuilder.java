@@ -36,7 +36,6 @@ import io.earcam.instrumental.module.manifest.ManifestInfoBuilder;
 import io.earcam.instrumental.module.osgi.parser.BundleInfoParser;
 import io.earcam.unexceptional.Exceptional;
 
-//TODO fragment-host etc, consider using custom javax.validation reflecting grammar rules (e.g. sym name)
 /**
  * <p>
  * BundleInfoBuilder interface.

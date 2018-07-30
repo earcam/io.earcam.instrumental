@@ -19,13 +19,13 @@
 package io.earcam.instrumental.archive.glue;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject.Kind;
@@ -65,23 +65,38 @@ public final class ArchiveFileObjectProvider implements FileObjectProvider {
 		if(location == StandardLocation.PLATFORM_CLASS_PATH) {
 			return Collections.emptyList();
 		}
-		Set<String> k = kinds.stream().map(e -> e.extension).collect(Collectors.toSet());
+		return list(packageName, kinds, recurse);
+	}
 
+
+	private List<CustomJavaFileObject> list(String packageName, Set<Kind> kinds, boolean recurse)
+	{
+		Set<String> extensions = kinds.stream().map(e -> e.extension).collect(toSet());
+		Predicate<? super ArchiveResource> packageMatcher = packageMatcher(recurse, packageName);
+
+		return listFromArchives(kinds, extensions, packageMatcher);
+	}
+
+
+	private Predicate<? super ArchiveResource> packageMatcher(boolean recurse, String packageName)
+	{
 		String packageResource = Names.typeToInternalName(packageName);
-
 		Predicate<? super ArchiveResource> recursive = r -> r.name().startsWith(packageResource);
 		Predicate<? super ArchiveResource> nonRecursive = r -> {
 			int index = r.name().lastIndexOf('/');
 			return (index == -1) ? r.name().startsWith(packageResource) : r.name().substring(0, index).equals(packageResource);
 		};
+		return (recurse) ? recursive : nonRecursive;
+	}
 
-		Predicate<? super ArchiveResource> packageMatcher = (recurse) ? recursive : nonRecursive;
 
+	private List<CustomJavaFileObject> listFromArchives(Set<Kind> kinds, Set<String> extensions, Predicate<? super ArchiveResource> packageMatcher)
+	{
 		return archives.stream()
 				.map(Archive::contents)
 				.flatMap(List::stream)
 				.filter(packageMatcher)
-				.filter(r -> k.contains(r.extension()))
+				.filter(r -> extensions.contains(r.extension()))
 				.map(r -> new CustomJavaFileObject(
 						Names.internalToTypeName(r.name().substring(0, r.name().length() - r.extension().length())),
 						kinds.stream()
