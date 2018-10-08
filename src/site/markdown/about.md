@@ -8,10 +8,6 @@ dependent on JDK paths.  And while the modules and tests run against Java 8, 9 a
 be launched with Java 8.
 
 
-## Naming
-
-Could have been called Instrumentool but that looks stoopid.
-
 ## Building 
 
 This project uses [maven-toolchains-plugin][maven-toolchains-plugin], so you'll need to [setup toolchains][maven-toolchains-plugin-setup].  
@@ -26,6 +22,12 @@ according to conventions (Apache Maven's standards for POMs, my own undocumented
 To run PiTest use `mvn -P analyze clean install`
 
 To run against SonarQube use `mvn -P analyze,report,sonar`
+
+## SCA Metrics
+
+Due to issues with Jacoco vs mutli-release JARs, coverage reports are currently only available 
+via [SonarCloud](https://sonarcloud.io/component_measures?id=io.earcam%3Aio.earcam.instrumental&metric=coverage). 
+
 
 
 ## Roadmap

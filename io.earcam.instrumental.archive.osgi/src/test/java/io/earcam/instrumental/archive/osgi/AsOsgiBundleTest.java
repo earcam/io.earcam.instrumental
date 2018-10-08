@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -295,7 +296,6 @@ public class AsOsgiBundleTest {
 	@Nested
 	public class AutoImports {
 
-		@Disabled  // breaking in PiTest (despite 3 previous runs with different JDKs)
 		@Test
 		void autoImportsViaDefaultClasspathBundleMapper()
 		{
@@ -304,6 +304,7 @@ public class AsOsgiBundleTest {
 							.named("dependee")
 							.autoImporting())
 					.with(ImportsUnexceptional.class)
+					.with("some/resource.file", "Hello, World".getBytes(UTF_8))
 					.toObjectModel();
 
 			String value = built.manifest().get().getMainAttributes().getValue(IMPORT_PACKAGE.header());

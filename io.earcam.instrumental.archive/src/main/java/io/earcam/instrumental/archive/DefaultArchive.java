@@ -33,6 +33,7 @@ import javax.annotation.WillClose;
 
 import io.earcam.unexceptional.Closing;
 import io.earcam.unexceptional.Exceptional;
+import io.earcam.utilitarian.io.file.RecursiveFiles;
 
 /**
  * <p>
@@ -102,7 +103,7 @@ class DefaultArchive implements Archive {
 	public Path explodeTo(Path directory, boolean merge)
 	{
 		if(!merge && directory.toFile().exists()) {
-			RecursiveDeleteVisitor.delete(directory);
+			Exceptional.accept(RecursiveFiles::delete, directory);
 		}
 		directory.toFile().mkdirs();
 		Path metaInf = directory.resolve("META-INF");

@@ -104,7 +104,6 @@ public class ClasspathBundlesTest {
 
 	private Path writeZip(Path baseDir, String name)
 	{
-
 		return archive()
 				.with("some.txt", "blah blah".getBytes(UTF_8))
 				.explodeTo(baseDir.resolve(name + ".zip"));

@@ -20,6 +20,7 @@ package io.earcam.instrumental.archive.jpms;
 
 import java.util.function.Predicate;
 
+import io.earcam.instrumental.archive.ArchiveConstruction;
 import io.earcam.instrumental.archive.AsJarBuilder;
 import io.earcam.instrumental.archive.jpms.auto.ClasspathModules;
 import io.earcam.instrumental.archive.jpms.auto.JdkModules;
@@ -32,7 +33,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * asJpmsModule.
 	 * </p>
 	 *
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	@Fluent
 	public static AsJpmsModule asJpmsModule()
@@ -42,6 +43,9 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 
 
 	public abstract AsJpmsModule named(String moduleName);
+
+
+	public abstract AsJpmsModule versioned(String moduleVersion);
 
 
 	/**
@@ -61,7 +65,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * @see Predicate#and(Predicate)
 	 * @see Predicate#or(Predicate)
 	 * @see Predicate#negate()
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule exporting(Predicate<String> predicate, String... onlyToModules);
 
@@ -73,7 +77,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 *
 	 * @param predicate a {@link java.util.function.Predicate} object.
 	 * @param onlyToModules a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule opening(Predicate<String> predicate, String... onlyToModules);
 
@@ -84,7 +88,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * </p>
 	 *
 	 * @param moduleName a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule requiring(String moduleName);
 
@@ -96,7 +100,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 *
 	 * @param moduleName a {@link java.lang.String} object.
 	 * @param version a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule requiring(String moduleName, String version);
 
@@ -107,7 +111,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * </p>
 	 *
 	 * @param service a {@link java.lang.Class} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule using(Class<?> service);
 
@@ -118,7 +122,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * </p>
 	 *
 	 * @param service a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule using(String service);
 
@@ -128,19 +132,46 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * listingPackages.
 	 * </p>
 	 *
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 */
 	public abstract AsJpmsModule listingPackages();
 
 
 	/**
 	 * <p>
-	 * autoRequiring.
+	 * Auto-require the JDK modules and classpaths.
 	 * </p>
 	 *
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
+	 * 
+	 * @see #autoRequiringClasspath()
+	 * @see #autoRequiringJdkModules()
 	 */
-	public abstract AsJpmsModule autoRequiring();
+	public default AsJpmsModule autoRequiring()
+	{
+		return autoRequiringJdkModules()
+				.autoRequiringClasspath();
+	}
+
+
+	/**
+	 * <p>
+	 * Auto-require from all available class-paths (inc. module-paths).
+	 * </p>
+	 *
+	 * @return this builder
+	 */
+	public abstract AsJpmsModule autoRequiringClasspath();
+
+
+	/**
+	 * <p>
+	 * Auto-Require from the JDK's modules
+	 * </p>
+	 *
+	 * @return this builder
+	 */
+	public abstract AsJpmsModule autoRequiringJdkModules();
 
 
 	/**
@@ -150,7 +181,7 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * </p>
 	 *
 	 * @param mappers a {@link io.earcam.instrumental.archive.jpms.PackageModuleMapper} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 * 
 	 * @see #autoRequiring()
 	 */
@@ -164,9 +195,40 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * </p>
 	 *
 	 * @param mappers a {@link java.lang.Iterable} object.
-	 * @return a {@link io.earcam.instrumental.archive.jpms.AsJpmsModule} object.
+	 * @return this builder
 	 * 
 	 * @see #autoRequiring()
 	 */
 	public abstract AsJpmsModule autoRequiring(Iterable<PackageModuleMapper> mappers);
+
+
+	/**
+	 * Shorthand for {@code providingFromMetaInfServices(true)}
+	 * 
+	 * @return this builder
+	 * 
+	 * @see #providingFromMetaInfServices(boolean)
+	 */
+	public default AsJpmsModule providingFromMetaInfServices()
+	{
+		return providingFromMetaInfServices(true);
+	}
+
+
+	/**
+	 * <p>
+	 * This option enables support for scanning existing {@code META-INF/service/*} and
+	 * adding any service implementations to the {@code module-info}'s {@code provides}
+	 * entries.
+	 * </p>
+	 * <p>
+	 * Use in conjunction with
+	 * {@link ArchiveConstruction#sourcing(io.earcam.instrumental.archive.ArchiveResourceSource)}
+	 * and e.g. {@link ArchiveConstruction#contentFrom(java.io.File)}
+	 * </p>
+	 * 
+	 * @param enable true to enable, false to disable
+	 * @return this builder
+	 */
+	public abstract AsJpmsModule providingFromMetaInfServices(boolean enable);
 }

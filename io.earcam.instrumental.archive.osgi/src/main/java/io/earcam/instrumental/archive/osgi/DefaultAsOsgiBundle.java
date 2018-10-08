@@ -20,7 +20,6 @@ package io.earcam.instrumental.archive.osgi;
 
 import static io.earcam.instrumental.module.auto.Reader.reader;
 import static java.util.stream.Collectors.toCollection;
-import static javax.tools.JavaFileObject.Kind.CLASS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import io.earcam.instrumental.archive.ArchiveRegistrar;
 import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.archive.ArchiveResourceListener;
 import io.earcam.instrumental.archive.osgi.auto.ClasspathBundles;
-import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.instrumental.module.auto.Reader;
 import io.earcam.instrumental.module.osgi.BundleInfoBuilder;
 import io.earcam.instrumental.module.osgi.ClauseParameters;
@@ -50,7 +48,7 @@ import io.earcam.instrumental.reflect.Types;
  * </p>
  *
  */
-public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> implements AsOsgiBundle, ArchiveResourceListener {
+class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> implements AsOsgiBundle, ArchiveResourceListener {
 
 	private final BundleInfoBuilder builder = BundleInfoBuilder.bundle();
 
@@ -121,20 +119,6 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 	}
 
 
-	/**
-	 * <p>
-	 * asOsgiBundle.
-	 * </p>
-	 *
-	 * @return a {@link io.earcam.instrumental.archive.osgi.DefaultAsOsgiBundle} object.
-	 */
-	@Fluent
-	public static final DefaultAsOsgiBundle asOsgiBundle()
-	{
-		return new DefaultAsOsgiBundle();
-	}
-
-
 	@Override
 	public void attach(ArchiveRegistrar core)
 	{
@@ -148,7 +132,7 @@ public class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> impl
 	{
 		super.added(resource);
 
-		if(autoImporting != null && CLASS.extension.equals(resource.extension())) {
+		if(autoImporting != null && resource.isClass()) {
 			autoImporting.process(resource);
 		}
 

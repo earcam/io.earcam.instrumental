@@ -5,11 +5,16 @@
 #set($h5 = '#####')
 #set($h6 = '######')
 
-In-memory/on-disk support for compilation and archiving, proxing of classes and dynamic instrumentation, supporting JDKs 8, 9 and 10.
-  
-These modules are not quite ready for prime-time, until then, only SNAPSHOT artifacts are published (to Sontatype OSS). Due to issues 
-with Jacoco vs mutli-release JARs, coverage reports are currently only available via [SonarCloud](https://sonarcloud.io/component_measures?id=io.earcam%3Aio.earcam.instrumental&metric=coverage). 
+In-memory/on-disk support for compilation and archiving, power-proxing and dynamic instrumentation, supporting JDKs 8, 9 and 10.
 
+You could:
+
+* Compile from a string, with dependencies from Maven artifact coordinates, stuffed into a signed, in-memory, multi-release JAR, complete 
+with annotations processed, performing bytecode class transformation, an OSGi bundle manifest and a JPMS module-info, then load into current. 
+runtime or publish to a maven repo... 
+* Attach a JavaAgent to a JUnit test without modifying the JVM start-up parameters (i.e. out-of-the-box IDE support)
+* Proxy concrete classes with convenience of vanilla `InvocationHandler`s
+ 
 $h5 Tests as Examples and Examples as Documentation
 
 At this initial stage the aim is to prove minimal documentation through examples extracted from tests.  Currently some modules have no 
@@ -21,3 +26,5 @@ can be found in [lade.jpms](/lade.jpms/#Examples).
 
 Otherwise, a sensible place to start is [instrumental.archive](/archive), which lists the various extension modules, each of
 which has a brief example.
+
+

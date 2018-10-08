@@ -69,7 +69,7 @@ public class AbstractManifestBuilderTest {
 	@Nested
 	class Equality {
 
-		private ManifestInfo a = new TestManifestBuilder()
+		private TestManifestBuilder a = new TestManifestBuilder()
 				.manifestMain(attribute(IMPLEMENTATION_TITLE, "Imps"))
 				.manifestNamed(entry("com.acme.SomeThing").attribute("XYZ-Digest", "xyz=="));
 
@@ -121,6 +121,14 @@ public class AbstractManifestBuilderTest {
 		{
 			Object b = null;
 			assertFalse(a.equals(b));
+		}
+
+
+		@Test
+		void notSameAsNullObject()
+		{
+			TestManifestBuilder b = null;
+			assertFalse(a.same(b));
 		}
 	}
 
@@ -218,5 +226,19 @@ public class AbstractManifestBuilderTest {
 		Manifest rehydrated = Closing.closeAfterApplying(in, Manifest::new);
 
 		assertThat(rehydrated, is(equalTo(manifest)));
+	}
+
+
+	@Test
+	void unhook()
+	{
+		Manifest manifest = createManifest();
+
+		TestManifestBuilder builder = new TestManifestBuilder();
+		builder.mergeFrom(manifest).to(new ByteArrayOutputStream());
+
+		assertThat(builder.hooked, is(true));
+		builder.unhook();
+		assertThat(builder.hooked, is(false));
 	}
 }

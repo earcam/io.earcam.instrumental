@@ -21,6 +21,7 @@ package io.earcam.instrumental.archive.jpms;
 import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.PRE_MANIFEST;
 import static io.earcam.instrumental.module.auto.Reader.reader;
 import static io.earcam.instrumental.module.jpms.RequireModifier.MANDATED;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toSet;
 
@@ -51,7 +52,7 @@ import io.earcam.instrumental.module.jpms.ModuleInfoBuilder;
  * </p>
  *
  */
-public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements AsJpmsModule, ArchiveResourceListener {
+class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements AsJpmsModule, ArchiveResourceListener {
 
 	private final ModuleInfoBuilder builder = ModuleInfo.moduleInfo();
 
@@ -113,6 +114,7 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 
 	private AutoRequiring autoRequiring;
 	private List<PackageModuleMapper> packageModuleMappers = new ArrayList<>();
+	private boolean providingFromMetaInfServices;
 
 
 	DefaultAsJpmsModule()
@@ -140,6 +142,10 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 			for(ExportMatcher matcher : exportMatchers) {
 				matcher.test(resource);
 			}
+		} else if(providingFromMetaInfServices && resource.name().startsWith(SPI_ROOT_PATH)) { // config optional
+			String service = resource.name().substring(SPI_ROOT_PATH.length());
+			String[] implementations = new String(resource.bytes(), UTF_8).split("\r?\n");
+			builder.providing(service, implementations);
 		}
 	}
 
@@ -239,6 +245,13 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	public AsJpmsModule named(String moduleName)
 	{
 		builder.named(moduleName);
+		return this;
+	}
+
+
+	public AsJpmsModule versioned(String moduleVersion)
+	{
+		builder.versioned(moduleVersion);
 		return this;
 	}
 
@@ -359,16 +372,15 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	}
 
 
-	/**
-	 * <p>
-	 * autoRequiring.
-	 * </p>
-	 *
-	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
-	 */
-	public AsJpmsModule autoRequiring()
+	public AsJpmsModule autoRequiringClasspath()
 	{
-		return autoRequiring(new JdkModules(), new ClasspathModules());
+		return autoRequiring(new ClasspathModules());
+	}
+
+
+	public AsJpmsModule autoRequiringJdkModules()
+	{
+		return autoRequiring(new JdkModules());
 	}
 
 
@@ -404,6 +416,13 @@ public class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> impl
 	{
 		autoRequiring = new AutoRequiring();
 		mappers.forEach(packageModuleMappers::add);
+		return this;
+	}
+
+
+	public AsJpmsModule providingFromMetaInfServices(boolean enable)
+	{
+		this.providingFromMetaInfServices = enable;
 		return this;
 	}
 }

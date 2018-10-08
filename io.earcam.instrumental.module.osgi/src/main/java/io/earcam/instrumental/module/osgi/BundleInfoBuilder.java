@@ -21,19 +21,25 @@ package io.earcam.instrumental.module.osgi;
 import static io.earcam.instrumental.module.manifest.ManifestInfoBuilder.attribute;
 import static io.earcam.instrumental.module.osgi.BundleManifestHeaders.BUNDLE_MANIFESTVERSION;
 import static io.earcam.instrumental.module.osgi.ClauseParameters.EMPTY_PARAMETERS;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.BUNDLE_ACTIVATOR;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.BUNDLE_SYMBOLICNAME;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.DYNAMICIMPORT_PACKAGE;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.EXPORT_PACKAGE;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.FRAGMENT_HOST;
+import static io.earcam.instrumental.module.osgi.OsgiManifestHeaderConstants.IMPORT_PACKAGE;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.SortedSet;
+import java.util.function.Predicate;
 import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
-
-import org.osgi.framework.Constants;
 
 import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.instrumental.module.manifest.ManifestInfoBuilder;
 import io.earcam.instrumental.module.osgi.parser.BundleInfoParser;
+import io.earcam.instrumental.reflect.Types;
 import io.earcam.unexceptional.Exceptional;
 
 /**
@@ -127,7 +133,7 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 */
 	public default BundleInfoBuilder symbolicName(CharSequence name, ClauseParameters parameters)
 	{
-		return headerClause(Constants.BUNDLE_SYMBOLICNAME, new Clause(Clause.sortedSet(name.toString()), parameters));
+		return headerClause(BUNDLE_SYMBOLICNAME.value, new Clause(Clause.sortedSet(name.toString()), parameters));
 	}
 
 
@@ -142,7 +148,7 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 */
 	public default BundleInfoBuilder fragmentHost(CharSequence name, ClauseParameters parameters)
 	{
-		return headerClause(Constants.FRAGMENT_HOST, new Clause(Clause.sortedSet(name.toString()), parameters));
+		return headerClause(FRAGMENT_HOST.value, new Clause(Clause.sortedSet(name.toString()), parameters));
 	}
 
 
@@ -215,7 +221,7 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 */
 	public default BundleInfoBuilder exportPackages(SortedSet<String> packages, ClauseParameters parameters)
 	{
-		return headerClause(Constants.EXPORT_PACKAGE, new Clause(packages, parameters));
+		return headerClause(EXPORT_PACKAGE.value, new Clause(packages, parameters));
 	}
 
 
@@ -302,7 +308,7 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 */
 	public default BundleInfoBuilder importPackages(Clause clause)
 	{
-		return headerClause(Constants.IMPORT_PACKAGE, clause);
+		return headerClause(IMPORT_PACKAGE.value, clause);
 	}
 
 
@@ -331,7 +337,7 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 */
 	public default BundleInfoBuilder dynamicImportPackages(Clause clause)
 	{
-		return headerClause(Constants.DYNAMICIMPORT_PACKAGE, clause);
+		return headerClause(DYNAMICIMPORT_PACKAGE.value, clause);
 	}
 
 
@@ -370,10 +376,30 @@ public interface BundleInfoBuilder extends ManifestInfoBuilder<BundleInfoBuilder
 	 * @param className a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.module.osgi.BundleInfoBuilder} object.
 	 */
+	public default BundleInfoBuilder activator(Class<?> activator)
+	{
+		final String iface = "org.osgi.framework.BundleActivator";
+		boolean implementsActivator = Types.allInterfacesOf(activator)
+				.map(Class::getCanonicalName)
+				.anyMatch(Predicate.isEqual(iface));
+		if(!implementsActivator) {
+			throw new IllegalArgumentException(activator.getCanonicalName() + " does not implement " + iface);
+		}
+		return activator(activator.getCanonicalName());
+	}
+
+
+	/**
+	 * <p>
+	 * activator.
+	 * </p>
+	 *
+	 * @param className a {@link java.lang.String} object.
+	 * @return a {@link io.earcam.instrumental.module.osgi.BundleInfoBuilder} object.
+	 */
 	public default BundleInfoBuilder activator(String className)
 	{
-		return headerClause(Constants.BUNDLE_ACTIVATOR,
-				new Clause(className, EMPTY_PARAMETERS));
+		return headerClause(BUNDLE_ACTIVATOR.value, new Clause(className, EMPTY_PARAMETERS));
 	}
 
 

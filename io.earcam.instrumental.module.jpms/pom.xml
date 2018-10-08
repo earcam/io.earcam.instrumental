@@ -22,6 +22,7 @@
 	</distributionManagement>
 
 	<properties>
+		<sonar.exclusions>**/target/generated-sources/**</sonar.exclusions>
 		<!-- FIXME shrink the generated grammar first, otherwise Pitest takes years -->
 		<skip.execution.pitest>true</skip.execution.pitest>
 		<tidy.skip>false</tidy.skip>
@@ -39,6 +40,11 @@
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.utilitarian</groupId>
+			<artifactId>io.earcam.utilitarian.io</artifactId>
 		</dependency>
 
 		<dependency>
@@ -89,6 +95,11 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>java-hamcrest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ops4j.pax.tinybundles</groupId>
+			<artifactId>tinybundles</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -350,8 +350,8 @@ public class ExampleTest {
 		
 		// EARCAM_SNIPPET_BEGIN: run-osgi
 		
-		List<BundleDescriptor> bundleScanner = new ClasspathScanner().scanForBundles(loader);
-		Map<String, Object> config = Collections.singletonMap(BUNDLE_DESCRIPTORS, bundleScanner);
+		List<BundleDescriptor> bundles = new ClasspathScanner().scanForBundles(loader);
+		Map<String, Object> config = Collections.singletonMap(BUNDLE_DESCRIPTORS, bundles);
 
 		PojoServiceRegistry registry = ServiceLoader.load(PojoServiceRegistryFactory.class).iterator()
 				.next()

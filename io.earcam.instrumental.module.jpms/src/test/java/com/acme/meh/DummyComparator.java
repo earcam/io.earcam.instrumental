@@ -1,6 +1,6 @@
 /*-
  * #%L
- * io.earcam.instrumental.archive.jpms
+ * io.earcam.instrumental.module.jpms
  * %%
  * Copyright (C) 2018 earcam
  * %%
@@ -16,24 +16,15 @@
  * </ul>
  * #L%
  */
-package io.earcam.instrumental.archive.jpms.auto;
+package com.acme.meh;
 
-import static io.earcam.instrumental.module.auto.Classpaths.allClasspaths;
+import java.util.Comparator;
 
-import java.nio.file.Path;
-import java.util.stream.Stream;
-
-/**
- * Reads all module-info.class from various system paths, where a manifest with {@value #HEADER_AUTOMATIC_MODULE_NAME}
- * is encountered
- * then it creates a <i>synthetic</i> module exporting all of the associated JARs contents
- *
- */
-public final class ClasspathModules extends FilesystemPackageModuleMapper {
+public class DummyComparator implements Comparator<DummyComparator> {
 
 	@Override
-	protected Stream<Path> paths()
+	public int compare(DummyComparator o1, DummyComparator o2)
 	{
-		return allClasspaths();
+		return 0;
 	}
 }

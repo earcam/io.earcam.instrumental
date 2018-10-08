@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +32,9 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-import java.util.stream.Collectors;
 
 import io.earcam.instrumental.fluent.Fluent;
+import io.earcam.unexceptional.CheckedBiFunction;
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.ExplodedJarInputStream;
 import io.earcam.utilitarian.io.ExplodedJarInputStream.ExplodedJarEntry;
@@ -291,22 +290,28 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	@Fluent
 	public static ArchiveResourceSource contentFrom(JarInputStream inputStream, Predicate<String> filter)
 	{
-		BasicArchiveResourceSource source = new BasicArchiveResourceSource();
-		JarEntry entry;
-		try(JarInputStream jin = inputStream) {
-			while((entry = jin.getNextJarEntry()) != null) {
-				if(!filter.test(entry.getName()) || entry.isDirectory()) {
-					/* noop */
-				} else if(entry instanceof ExplodedJarEntry) {
-					source.with(entry.getName(), new FileInputStream(((ExplodedJarEntry) entry).path().toFile()));
-				} else {
-					source.with(entry.getName(), IoStreams.readAllBytes(jin));
+		CheckedBiFunction<JarInputStream, Predicate<String>, ArchiveResourceSource, IOException> extract = new CheckedBiFunction<JarInputStream, Predicate<String>, ArchiveResourceSource, IOException>() {
+
+			@Override
+			public ArchiveResourceSource apply(JarInputStream t, Predicate<String> u) throws IOException
+			{
+				BasicArchiveResourceSource source = new BasicArchiveResourceSource();
+				JarEntry entry;
+				try(JarInputStream jin = inputStream) {
+					while((entry = jin.getNextJarEntry()) != null) {
+						if(!filter.test(entry.getName()) || entry.isDirectory()) {
+							/* noop */
+						} else if(entry instanceof ExplodedJarEntry) {
+							source.with(entry.getName(), new FileInputStream(((ExplodedJarEntry) entry).path().toFile()));
+						} else {
+							source.with(entry.getName(), IoStreams.readAllBytes(jin));
+						}
+					}
 				}
+				return source;
 			}
-		} catch(IOException e) {
-			throw new UncheckedIOException(e);
-		}
-		return source;
+		};
+		return Exceptional.apply(extract, inputStream, filter);
 	}
 
 

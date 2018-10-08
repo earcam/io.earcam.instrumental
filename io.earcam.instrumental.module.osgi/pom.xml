@@ -22,6 +22,7 @@
 	</distributionManagement>
 
 	<properties>
+		<sonar.exclusions>target/generated-sources/**</sonar.exclusions>
 		<skip.execution.pitest>false</skip.execution.pitest>
 		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>module.osgi</earcam.project.name.short>
@@ -38,6 +39,12 @@
 		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.module.manifest</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.reflect</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -69,6 +76,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

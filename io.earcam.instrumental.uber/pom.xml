@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>io.earcam</groupId>
 		<artifactId>io.earcam.instrumental</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>io.earcam.instrumental</groupId>
 	<artifactId>io.earcam.instrumental.uber</artifactId>
 	<packaging>jar</packaging>
@@ -21,13 +22,14 @@
 	<properties>
 		<version.java.platform>10</version.java.platform>
 		<version.java>10</version.java>
-	
-	
+
+		<forbiddenapis.skip>true</forbiddenapis.skip>
+
 		<skip.execution.pitest>true</skip.execution.pitest>
 		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>OH_NOES-SHOULD_NOT_BE_DEPLOYED</earcam.project.name.short>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
@@ -146,7 +148,7 @@
 			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -214,6 +216,29 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jdk9-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jdk10-test</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<jvm>${java.home.10}/bin/java</jvm>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

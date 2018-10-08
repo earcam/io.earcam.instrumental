@@ -18,16 +18,18 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.INITIAL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +41,7 @@ public class ArchiveConstructionTest {
 		String name = "foo/bah/hum.bug";
 		byte[] content = "fee fi foe thumb".getBytes(UTF_8);
 
-		Path file = Paths.get(".", "target", UUID.randomUUID().toString() + ".test-resource");
+		Path file = Paths.get(".", "target", UUID.randomUUID() + ".test-resource");
 		Files.write(file, content);
 
 		Archive archive = Archive.archive()
@@ -50,4 +52,27 @@ public class ArchiveConstructionTest {
 
 	}
 
+
+	@Test
+	void contentFrom() throws IOException
+	{
+		String name = "foo/bah/hum.bug";
+		byte[] content = "fee fi foe thumb".getBytes(UTF_8);
+
+		Path file = Paths.get(".", "target", UUID.randomUUID() + ".test-resource");
+		Files.write(file, content);
+
+		Archive archive = Archive.archive()
+				.with(name, file)
+				.toObjectModel();
+
+		ArchiveResourceSource resourceSource = ArchiveConstruction.contentFrom(archive);
+
+		List<ArchiveResource> resources = resourceSource.drain(INITIAL).collect(Collectors.toList());
+
+		assertThat(resources, hasSize(1));
+
+		assertThat(resources.get(0).name(), is(equalTo(name)));
+		assertThat(resources.get(0).bytes(), is(equalTo(content)));
+	}
 }

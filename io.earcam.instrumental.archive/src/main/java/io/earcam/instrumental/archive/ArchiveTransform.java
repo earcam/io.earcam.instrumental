@@ -22,7 +22,9 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.SYNC;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
@@ -50,6 +52,15 @@ public interface ArchiveTransform {
 	}
 
 
+	/**
+	 * @return an InputStream (that may be wrapped in a JarInputStream).
+	 */
+	public default InputStream toInputStream()
+	{
+		return new ByteArrayInputStream(toByteArray());
+	}
+
+
 	public abstract <R> R to(Function<Archive, R> transformer);
 
 
@@ -69,8 +80,11 @@ public interface ArchiveTransform {
 	 * {@link java.nio.file.StandardOpenOption#TRUNCATE_EXISTING} and {@link java.nio.file.StandardOpenOption#SYNC}
 	 *
 	 * @param archive the {@link java.nio.file.Path} to write the archive to
-	 * @see #to(Path, OpenOption...)
 	 * @return a {@link java.nio.file.Path} object.
+	 * 
+	 * @see #to(Path, OpenOption...)
+	 * @see #explodeTo(Path)
+	 * @see #explodeTo(Path, boolean)
 	 */
 	public default Path to(Path archive)
 	{
@@ -84,6 +98,10 @@ public interface ArchiveTransform {
 	 * @param archive the {@link java.nio.file.Path} to write the archive to
 	 * @param options optional {@link java.nio.file.OpenOption}s
 	 * @return a {@link java.nio.file.Path} object.
+	 *
+	 * @see #to(Path)
+	 * @see #explodeTo(Path)
+	 * @see #explodeTo(Path, boolean)
 	 */
 	public default Path to(Path archive, OpenOption... options)
 	{

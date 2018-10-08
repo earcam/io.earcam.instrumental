@@ -28,18 +28,15 @@ import java.util.stream.Stream;
 
 /**
  * <p>
- * Classpaths class.
+ * Paths from Classpaths.
  * </p>
  *
  */
 public final class Classpaths {
 
-	/** Constant <code>PROPERTY_CLASS_PATH="java.class.path"</code> */
 	public static final String PROPERTY_CLASS_PATH = "java.class.path";
-	/** Constant <code>PROPERTY_MODULE_PATH="jdk.module.path"</code> */
 	public static final String PROPERTY_MODULE_PATH = "jdk.module.path";
-	/** Constant <code>PROPERTY_MODULE_UPGRADE_PATH="jdk.module.path"</code> */
-	public static final String PROPERTY_MODULE_UPGRADE_PATH = "jdk.module.path";
+	public static final String PROPERTY_MODULE_UPGRADE_PATH = "jdk.module.upgrade.path";
 
 
 	private Classpaths()
@@ -52,6 +49,10 @@ public final class Classpaths {
 	 * </p>
 	 *
 	 * @return a {@link java.util.stream.Stream} object.
+	 * 
+	 * @see #PROPERTY_CLASS_PATH
+	 * @see #PROPERTY_MODULE_PATH
+	 * @see #PROPERTY_MODULE_UPGRADE_PATH
 	 */
 	public static Stream<Path> allClasspaths()
 	{
@@ -61,11 +62,15 @@ public final class Classpaths {
 
 	/**
 	 * <p>
-	 * paths.
+	 * Paths for a given classpath {@code property}.
 	 * </p>
 	 *
-	 * @param property a {@link java.lang.String} object.
-	 * @return a {@link java.util.stream.Stream} object.
+	 * @param property the property name for given classpath
+	 * @return a {@link java.util.stream.Stream} of the paths defined by the classpath property
+	 * 
+	 * @see #PROPERTY_CLASS_PATH
+	 * @see #PROPERTY_MODULE_PATH
+	 * @see #PROPERTY_MODULE_UPGRADE_PATH
 	 */
 	public static Stream<Path> paths(String property)
 	{

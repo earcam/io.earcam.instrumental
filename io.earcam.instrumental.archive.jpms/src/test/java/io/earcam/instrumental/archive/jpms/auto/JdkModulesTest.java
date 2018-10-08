@@ -19,6 +19,7 @@
 package io.earcam.instrumental.archive.jpms.auto;
 
 import static io.earcam.instrumental.archive.jpms.auto.JdkModules.CACHE_FILENAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -26,8 +27,15 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -79,5 +87,49 @@ public class JdkModulesTest {
 				.construct();
 
 		assertThat(modules, hasItem(equalTo(jdeps)));
+	}
+
+
+	@Test
+	void doesNotThrowWhenScriptHasZeroExitCodeAndOutputContainsDone() throws IOException, InterruptedException
+	{
+		Process process = mock(Process.class);
+		when(process.getInputStream()).thenReturn(new ByteArrayInputStream("DONE".getBytes(UTF_8)));
+		when(process.exitValue()).thenReturn(0);
+
+		JdkModules.processOutput(process);
+
+		verify(process, atLeastOnce()).exitValue();
+		verify(process, atLeastOnce()).getInputStream();
+	}
+
+
+	@Test
+	void throwsWhenScriptHasNonZeroExitCode() throws IOException, InterruptedException
+	{
+		Process process = mock(Process.class);
+		when(process.getInputStream()).thenReturn(new ByteArrayInputStream("DONE".getBytes(UTF_8)));
+		when(process.getErrorStream()).thenReturn(new ByteArrayInputStream(new byte[0]));
+		when(process.exitValue()).thenReturn(101);
+
+		try {
+			JdkModules.processOutput(process);
+			fail();
+		} catch(IOException e) {}
+	}
+
+
+	@Test
+	void throwsWhenScriptOutputDoesNotContainDone() throws IOException, InterruptedException
+	{
+		Process process = mock(Process.class);
+		when(process.getInputStream()).thenReturn(new ByteArrayInputStream("OH NOES".getBytes(UTF_8)));
+		when(process.getErrorStream()).thenReturn(new ByteArrayInputStream(new byte[0]));
+		when(process.exitValue()).thenReturn(0);
+
+		try {
+			JdkModules.processOutput(process);
+			fail();
+		} catch(IOException e) {}
 	}
 }

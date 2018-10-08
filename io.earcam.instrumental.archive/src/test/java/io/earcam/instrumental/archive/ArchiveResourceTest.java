@@ -18,11 +18,13 @@
  */
 package io.earcam.instrumental.archive;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import org.junit.jupiter.api.Nested;
@@ -230,5 +232,34 @@ public class ArchiveResourceTest {
 			assertThat(a.knownSize(), is(19L));
 		}
 
+
+		@Test
+		public void byteArrayBackedArchiveResourceIsWritten()
+		{
+			String props = "run=forest\nend=all.good.things.must.come.to.an\nstart=a.fire.we.did.not";
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			ArchiveResource a = new ArchiveResource("acme.properties", props.getBytes(UTF_8));
+
+			a.write(output);
+
+			String read = new String(output.toByteArray(), UTF_8);
+
+			assertThat(read, is(equalTo(props)));
+		}
+
+
+		@Test
+		public void inputStreamBackedArchiveResourceIsWritten()
+		{
+			String props = "run=forest\nend=all.good.things.must.come.to.an\nstart=a.fire.we.did.not";
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			ArchiveResource a = new ArchiveResource("acme.properties", new ByteArrayInputStream(props.getBytes(UTF_8)));
+
+			a.write(output);
+
+			String read = new String(output.toByteArray(), UTF_8);
+
+			assertThat(read, is(equalTo(props)));
+		}
 	}
 }

@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.module.osgi;
 
+import static io.earcam.instrumental.module.osgi.OsgiAttributeConstants.VERSION_ATTRIBUTE;
 import static java.util.Collections.emptyMap;
 
 import java.io.IOException;
@@ -26,8 +27,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
-import org.osgi.framework.Constants;
 
 import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.unexceptional.Exceptional;
@@ -69,7 +68,7 @@ public final class ClauseParameters {
 		public static ClauseParameters version(int major, int minor, int micro)
 		{
 			ClauseParameters parameters = new ClauseParameters();
-			parameters.attribute(Constants.VERSION_ATTRIBUTE, major + "." + minor + "." + micro);
+			parameters.attribute(VERSION_ATTRIBUTE.value, major + "." + minor + "." + micro);
 			return parameters;
 		}
 	}
@@ -159,7 +158,8 @@ public final class ClauseParameters {
 	 */
 	public boolean isEmpty()
 	{
-		return attributes.isEmpty() && directives.isEmpty();
+		return attributes().isEmpty()
+				&& directives().isEmpty();
 	}
 
 
@@ -244,7 +244,14 @@ public final class ClauseParameters {
 			appendage.append(';');
 			for(Iterator<Entry<String, String>> it = source.entrySet().iterator(); it.hasNext();) {
 				Entry<String, String> entry = it.next();
-				appendage.append(entry.getKey()).append(symbol).append(entry.getValue());
+				appendage.append(entry.getKey()).append(symbol);
+
+				if(entry.getValue().indexOf('.') != -1 ||
+						entry.getValue().indexOf(',') != -1) {
+					appendage.append('"').append(entry.getValue()).append('"');
+				} else {
+					appendage.append(entry.getValue());
+				}
 				if(it.hasNext()) {
 					appendage.append(';');
 				}

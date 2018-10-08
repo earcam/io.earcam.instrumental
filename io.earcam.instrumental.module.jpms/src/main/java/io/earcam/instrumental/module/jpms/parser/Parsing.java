@@ -18,9 +18,8 @@
  */
 package io.earcam.instrumental.module.jpms.parser;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
@@ -30,23 +29,12 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import io.earcam.instrumental.module.jpms.parser.Java9Lexer;
-import io.earcam.instrumental.module.jpms.parser.Java9Parser;
 import io.earcam.unexceptional.Exceptional;
 
 final class Parsing {
 
 	private Parsing()
 	{}
-
-
-	static Java9Parser parserFor(InputStream value)
-	{
-		Java9Parser parser = parser(Exceptional.apply(CharStreams::fromStream, value, UTF_8));
-		// Otherwise this prints the error to STDERR
-		parser.removeErrorListeners();
-		return parser;
-	}
 
 
 	private static Java9Parser parser(CharStream input)
@@ -60,6 +48,14 @@ final class Parsing {
 	static Java9Parser failFastParserFor(String value)
 	{
 		Java9Parser parser = parser(CharStreams.fromString(value));
+		parser.setErrorHandler(new BailErrorStrategy());
+		return parser;
+	}
+
+
+	static Java9Parser failFastParserFor(InputStream value, Charset charset)
+	{
+		Java9Parser parser = parser(Exceptional.apply(CharStreams::fromStream, value, charset));
 		parser.setErrorHandler(new BailErrorStrategy());
 		return parser;
 	}

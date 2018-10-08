@@ -3,7 +3,7 @@
 #set($h3 = '###')
 
 
-Programmatically read and write [JPMS][jpms] modules.
+Programmatically, read and write, the source or binary of [JPMS][jpms] modules.
 
 
 **Auto-require** functionality will attempt to write all the necessary `requires` clauses in `module-info`, 

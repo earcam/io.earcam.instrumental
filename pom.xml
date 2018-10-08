@@ -72,7 +72,7 @@
 	</distributionManagement>
 
 	<properties>
-		<version.earcam.utilitarian>1.2.0-SNAPSHOT</version.earcam.utilitarian>
+		<version.earcam.utilitarian>1.2.0</version.earcam.utilitarian>
 		<version.earcam.unexceptional>1.0.0</version.earcam.unexceptional>
 		<version.earcam.maven.plugin>0.0.3-SNAPSHOT</version.earcam.maven.plugin>
 
@@ -113,6 +113,12 @@
 			<dependency>
 				<groupId>io.earcam.utilitarian</groupId>
 				<artifactId>io.earcam.utilitarian.io</artifactId>
+				<version>${version.earcam.utilitarian}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.earcam.utilitarian</groupId>
+				<artifactId>io.earcam.utilitarian.io.file</artifactId>
 				<version>${version.earcam.utilitarian}</version>
 			</dependency>
 
@@ -254,6 +260,13 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>java-hamcrest</artifactId>
 				<version>2.0.0.0</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>2.22.0</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -403,6 +416,22 @@
 									</action>
 								</pluginExecution>
 
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.alexecollins.maven.plugin</groupId>
+										<artifactId>script-maven-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>execute</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnConfiguration>true</runOnConfiguration>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
 
 								<pluginExecution>
 									<pluginExecutionFilter>
@@ -444,7 +473,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.0</version>
 					<configuration>
 						<source>${maven.compiler.source}</source>
 						<target>${maven.compiler.target}</target>
@@ -458,7 +487,7 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.5.1</version>
+					<version>4.0.0</version>
 					<extensions>true</extensions>
 					<configuration>
 						<archive>
@@ -498,7 +527,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.0.2</version>
+					<version>3.1.0</version>
 					<configuration>
 						<archive>
 							<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -606,6 +635,24 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<!--
+		<extensions>
+			<extension>
+				<groupId>io.earcam.maven.plugin</groupId>
+				<artifactId>io.earcam.maven.plugin.ramdisk</artifactId>
+				<version>0.0.3-SNAPSHOT</version>
+			</extension>
+		</extensions>
+		-->
+		<plugins>
+			<plugin>
+				<groupId>io.earcam.maven.plugin</groupId>
+				<artifactId>io.earcam.maven.plugin.ramdisk</artifactId>
+				<version>0.0.3-SNAPSHOT</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<profiles>

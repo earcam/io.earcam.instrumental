@@ -92,7 +92,7 @@ final class BytecodeReader extends ModuleVisitor {
 
 	private String externalName(String paquet)
 	{
-		return (paquet == null) ? null : paquet.replace('/', '.');
+		return paquet.replace('/', '.');
 	}
 
 

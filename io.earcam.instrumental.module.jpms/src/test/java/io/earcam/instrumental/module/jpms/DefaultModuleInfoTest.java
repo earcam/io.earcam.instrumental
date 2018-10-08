@@ -22,29 +22,62 @@ import static io.earcam.instrumental.module.jpms.Access.ACC_MANDATED;
 import static io.earcam.instrumental.module.jpms.Access.ACC_STATIC_PHASE;
 import static io.earcam.instrumental.module.jpms.Access.ACC_SYNTHETIC;
 import static io.earcam.instrumental.module.jpms.Access.ACC_TRANSITIVE;
+import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
 import static io.earcam.instrumental.module.jpms.ModuleModifier.OPEN;
 import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
 import static io.earcam.instrumental.module.jpms.RequireModifier.STATIC;
 import static io.earcam.instrumental.module.jpms.RequireModifier.TRANSITIVE;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.ZoneId.systemDefault;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.objectweb.asm.Opcodes.ASM6;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
+import java.util.UUID;
+import java.util.jar.JarInputStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ModuleVisitor;
+import org.ops4j.pax.tinybundles.core.TinyBundles;
+
+import com.acme.meh.DummyComparator;
+
+import io.earcam.utilitarian.io.IoStreams;
 
 public class DefaultModuleInfoTest {
 
@@ -157,9 +190,22 @@ public class DefaultModuleInfoTest {
 
 
 	@Test
-	public void notEqualWhenUsesDiffer()
+	public void notEqualWhenUseDiffers()
 	{
 		ModuleInfo other = createWithPrimitives().using("some.other.api.Funky").construct();
+
+		assertThat(module, is(not(equalTo(other))));
+	}
+
+
+	@Test
+	public void notEqualWhenUsesDiffer()
+	{
+		TreeSet<String> uses = new TreeSet<>();
+		uses.add("some.other.api.Funky");
+		uses.add("some.other.api.Chicken");
+
+		ModuleInfo other = createWithPrimitives().using(uses).construct();
 
 		assertThat(module, is(not(equalTo(other))));
 	}
@@ -175,9 +221,21 @@ public class DefaultModuleInfoTest {
 
 
 	@Test
-	public void notEqualWhenPackagesDiffers()
+	public void notEqualWhenPackageDiffers()
 	{
 		ModuleInfo other = createWithPrimitives().packaging("some.other").construct();
+
+		assertThat(module, is(not(equalTo(other))));
+	}
+
+
+	@Test
+	public void notEqualWhenPackagesDiffer()
+	{
+		TreeSet<CharSequence> packages = new TreeSet<>();
+		packages.add("some.other");
+		packages.add("and.another");
+		ModuleInfo other = createWithPrimitives().packaging(packages).construct();
 
 		assertThat(module, is(not(equalTo(other))));
 	}
@@ -221,6 +279,15 @@ public class DefaultModuleInfoTest {
 		ModuleInfo rehydrated = ModuleInfo.read(bytecode);
 
 		assertThat(module, is(equalTo(rehydrated)));
+	}
+
+
+	@Test
+	public void deconstructReturnSameInstance()
+	{
+		ModuleInfoBuilder deconstructed = module.deconstruct();
+
+		assertThat(deconstructed, is(sameInstance(module)));
 	}
 
 
@@ -334,6 +401,17 @@ public class DefaultModuleInfoTest {
 
 
 	@Test
+	public void versionIsOptionalFromInputStream() throws IOException
+	{
+		byte[] bytecode = module.versioned(null).construct().toBytecode();
+
+		ModuleInfo rehydrated = ModuleInfo.read(new ByteArrayInputStream(bytecode));
+
+		assertThat(module, is(equalTo(rehydrated)));
+	}
+
+
+	@Test
 	public void modifierIsMappedFromAccess()
 	{
 		ModuleInfo m = createWithCollections().withAccess(ACC_SYNTHETIC).construct();
@@ -432,6 +510,24 @@ public class DefaultModuleInfoTest {
 
 
 	@Test
+	public void requiresFromOtherModule()
+	{
+		ModuleInfo required = moduleInfo()
+				.named("am.required")
+				.versioned("1.2.3")
+				.withAccess(ACC_MANDATED)
+				.construct();
+
+		ModuleInfo requiring = ModuleInfo.moduleInfo()
+				.named("am.requiring")
+				.requiring(required)
+				.construct();
+
+		assertThat(requiring.requires(), contains(new Require(required.name(), required.access(), required.version())));
+	}
+
+
+	@Test
 	public void requiresWithBothTransitiveAndStaticIs()
 	{
 		final String badRequireModule = "not.like.this";
@@ -486,5 +582,147 @@ public class DefaultModuleInfoTest {
 				"}\n";
 
 		assertThat(m, hasToString(equalToIgnoringWhiteSpace(expected)));
+	}
+
+
+	@Test
+	public void extractExisting() throws IOException
+	{
+		String moduleName = "hoohar";
+
+		ModuleInfo existing = moduleInfo()
+				.named(moduleName)
+				.exporting(pkg(DummyComparator.class))
+				.construct();
+
+		InputStream built = TinyBundles.bundle()
+				.symbolicName("not.relevant.right.now")
+				.add(DummyComparator.class)
+				.add("module-info.class", new ByteArrayInputStream(existing.toBytecode()))
+				.build();
+
+		Path jar = Paths.get(".", "target", LocalDateTime.now(systemDefault()) + "_" + UUID.randomUUID() + ".jar");
+		IoStreams.transfer(built, new FileOutputStream(jar.toFile()));
+
+		ModuleInfo extracted = ModuleInfo.extract(jar).orElseThrow(NullPointerException::new);
+
+		assertThat(extracted, is(equalTo(existing)));
+	}
+
+
+	@Test
+	public void extractExistingFromInputStream() throws IOException
+	{
+		String moduleName = "hoohar";
+
+		ModuleInfo existing = moduleInfo()
+				.named(moduleName)
+				.exporting(pkg(DummyComparator.class))
+				.construct();
+
+		InputStream built = TinyBundles.bundle()
+				.symbolicName("not.relevant.right.now")
+				.add(DummyComparator.class)
+				.add("module-info.class", new ByteArrayInputStream(existing.toBytecode()))
+				.build();
+
+		JarInputStream jar = new JarInputStream(built);
+
+		ModuleInfo extracted = ModuleInfo.extract(jar).orElseThrow(NullPointerException::new);
+
+		assertThat(extracted, is(equalTo(existing)));
+	}
+
+
+	@Test
+	public void extractSynthetic() throws IOException
+	{
+		String moduleName = "hoohar";
+
+		InputStream built = TinyBundles.bundle()
+				.symbolicName("not.relevant.right.now")
+				.set("Automatic-Module-Name", moduleName)
+				.add(DummyComparator.class)
+				.add("META-INF/blah-blah/some.resource", new ByteArrayInputStream("blah blah".getBytes(UTF_8)))
+				.add("NoPackageVeryBad.class", new FileInputStream("./target/test-classes/NoPackageVeryBad.class"))
+				.build();
+
+		Path jar = Paths.get(".", "target", LocalDateTime.now(systemDefault()) + "_" + UUID.randomUUID() + ".jar");
+		IoStreams.transfer(built, new FileOutputStream(jar.toFile()));
+
+		ModuleInfo moduleInfo = ModuleInfo.extract(jar).orElseThrow(NullPointerException::new);
+
+		assertThat(moduleInfo.name(), is(equalTo(moduleName)));
+		assertThat(moduleInfo.provides(), is(anEmptyMap()));
+		assertThat(moduleInfo.exports()
+				.stream()
+				.map(Export::paquet)
+				.collect(toList()), contains(pkg(DummyComparator.class)));
+
+	}
+
+
+	private String pkg(Class<?> type)
+	{
+		return type.getPackage().getName();
+	}
+
+
+	private String cn(Class<?> type)
+	{
+		return type.getCanonicalName();
+	}
+
+
+	@Test
+	public void extractSyntheticWithMetaInfServices() throws IOException
+	{
+		String moduleName = "humbug";
+
+		InputStream built = TinyBundles.bundle()
+				.symbolicName("not.relevant.right.now")
+				.set("Automatic-Module-Name", moduleName)
+				.add("META-INF/servicehistory", new ByteArrayInputStream("one careful owner".getBytes(UTF_8)))
+				.add("META-INF/services/java.util.Comparator", new ByteArrayInputStream(cn(DummyComparator.class).getBytes(UTF_8)))
+				.build();
+
+		Path jar = Paths.get(".", "target", LocalDateTime.now(systemDefault()) + "_" + UUID.randomUUID() + ".jar");
+		IoStreams.transfer(built, new FileOutputStream(jar.toFile()));
+
+		ModuleInfo moduleInfo = ModuleInfo.extract(jar).orElseThrow(NullPointerException::new);
+
+		assertThat(moduleInfo.name(), is(equalTo(moduleName)));
+		assertThat(moduleInfo.provides(), allOf(
+				aMapWithSize(1),
+				hasEntry(equalTo(cn(Comparator.class)), arrayContaining(cn(DummyComparator.class)))));
+	}
+
+
+	@Test
+	public void extractNothing() throws IOException
+	{
+		InputStream built = TinyBundles.bundle()
+				.symbolicName("not.relevant.right.now")
+				.add("META-INF/services/java.util.Comparator", new ByteArrayInputStream(cn(DummyComparator.class).getBytes(UTF_8)))
+				.build();
+
+		Path jar = Paths.get(".", "target", LocalDateTime.now(systemDefault()) + "_" + UUID.randomUUID() + ".jar");
+		IoStreams.transfer(built, new FileOutputStream(jar.toFile()));
+
+		Optional<ModuleInfo> found = ModuleInfo.extract(jar);
+
+		assertThat(found.isPresent(), is(false));
+	}
+
+
+	@Test
+	public void extractNothingFromExplodedArchive() throws IOException
+	{
+		Path jar = Paths.get(".", "target", LocalDateTime.now(systemDefault()) + "_" + UUID.randomUUID() + "_empty_exploded_jar");
+		jar.toFile().mkdirs();
+
+		Optional<ModuleInfo> found = ModuleInfo.extract(jar);
+
+		assertThat(found.isPresent(), is(false));
 	}
 }

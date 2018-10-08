@@ -18,9 +18,6 @@
  */
 package io.earcam.instrumental.archive.jpms.auto;
 
-import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
-import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -29,20 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.jar.Attributes.Name;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
-
-import javax.annotation.WillNotClose;
 
 import io.earcam.instrumental.archive.jpms.PackageModuleMapper;
 import io.earcam.instrumental.module.jpms.Export;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
-import io.earcam.instrumental.module.jpms.ModuleInfoBuilder;
 import io.earcam.utilitarian.charstar.CharSequences;
-import io.earcam.utilitarian.io.ExplodedJarInputStream;
-import io.earcam.utilitarian.io.IoStreams;
 
 /**
  * <p>
@@ -50,9 +38,6 @@ import io.earcam.utilitarian.io.IoStreams;
  * </p>
  */
 public abstract class AbstractPackageModuleMapper implements PackageModuleMapper {
-
-	static final Name HEADER_AUTOMATIC_MODULE_NAME = new Name("Automatic-Module-Name");
-
 
 	/**
 	 * <p>
@@ -116,56 +101,13 @@ public abstract class AbstractPackageModuleMapper implements PackageModuleMapper
 	 * </ul>
 	 *
 	 * @param path a {@link Path} to a JAR (zip file or exploded directory).
-	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC}.
+	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC},
+	 * or {@code null} if no module-info can be derived.
+	 * 
 	 * @throws java.io.IOException if thrown by the underlying.
 	 */
 	protected ModuleInfo moduleInfoFrom(Path path) throws IOException
 	{
-		try(JarInputStream jin = ExplodedJarInputStream.jarInputStreamFrom(path)) {
-			return moduleInfoFrom(jin);
-		}
-	}
-
-
-	/**
-	 * @param jin the JAR input stream.
-	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC}.
-	 * @throws java.io.IOException if thrown by the underlying.
-	 * 
-	 * @see #moduleInfoFrom(Path)
-	 */
-	protected ModuleInfo moduleInfoFrom(@WillNotClose JarInputStream jin) throws IOException
-	{
-		Set<String> exports = new HashSet<>();
-
-		String autoName = null;
-		boolean hasAutoName = false;
-		Manifest manifest = jin.getManifest();
-		if(manifest != null) {
-			autoName = manifest.getMainAttributes().getValue(HEADER_AUTOMATIC_MODULE_NAME);
-			hasAutoName = (autoName != null);
-		}
-		JarEntry entry;
-		while((entry = jin.getNextJarEntry()) != null) {
-			String name = entry.getName();
-			if(!entry.isDirectory() && "module-info.class".equals(name)) {
-				return ModuleInfo.read(IoStreams.readAllBytes(jin));
-			}
-			if(hasAutoName && !entry.isDirectory() && name.endsWith(".class")) {
-				int end = name.lastIndexOf('/');
-				if(end != -1) {
-					exports.add(name.substring(0, end).replace('/', '.'));
-				}
-			}
-		}
-
-		if(hasAutoName) {
-			ModuleInfoBuilder builder = moduleInfo()
-					.withAccess(SYNTHETIC.access())
-					.named(autoName);
-			exports.forEach(builder::exporting);
-			return builder.construct();
-		}
-		return null;
+		return ModuleInfo.extract(path).orElse(null);
 	}
 }

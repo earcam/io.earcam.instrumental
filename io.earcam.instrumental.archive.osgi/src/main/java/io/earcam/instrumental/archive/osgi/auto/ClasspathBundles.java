@@ -36,9 +36,8 @@ import io.earcam.utilitarian.io.ExplodedJarInputStream;
 
 /**
  * <p>
- * ClasspathBundles class.
+ * Extract {@link BundleInfo}s from elements of the classpath.
  * </p>
- *
  */
 public class ClasspathBundles extends AbstractPackageBundleMapper {
 

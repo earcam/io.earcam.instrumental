@@ -38,6 +38,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -56,6 +57,7 @@ import io.earcam.acme.WhitespaceIgnorantToStringComparator;
 import io.earcam.acme.other.Other;
 import io.earcam.instrumental.lade.ClassLoaders;
 import io.earcam.instrumental.lade.InMemoryClassLoader;
+import io.earcam.utilitarian.io.IoStreams;
 
 public class AsJarTest {
 
@@ -139,7 +141,7 @@ public class AsJarTest {
 	}
 
 
-	protected static boolean main(String[] ahhargs)
+	public static boolean main(String[] ahhargs)
 	{
 		return false;
 	}
@@ -263,6 +265,29 @@ public class AsJarTest {
 				cn(CaseInsensitiveToStringComparator.class),
 				cn(WhitespaceIgnorantToStringComparator.class)));
 		// EARCAM_SNIPPET_END: jar-spi-classload
+		// @formatter: on
+	}
+
+
+	@Test
+	void singleSpiMultipleImplementationsAsInputStream()
+	{
+		// @formatter: off
+		InputStream input = archive().configured(asJar()
+				.providing(Comparator.class,
+						CaseInsensitiveToStringComparator.class,
+						WhitespaceIgnorantToStringComparator.class))
+				.toInputStream();
+
+		byte[] archive = IoStreams.readAllBytes(input);
+
+		ClassLoader loader = ClassLoaders.inMemoryClassLoader().jar(archive);
+
+		List<String> imps = spiServices(Comparator.class, loader);
+
+		assertThat(imps, containsInAnyOrder(
+				cn(CaseInsensitiveToStringComparator.class),
+				cn(WhitespaceIgnorantToStringComparator.class)));
 		// @formatter: on
 	}
 

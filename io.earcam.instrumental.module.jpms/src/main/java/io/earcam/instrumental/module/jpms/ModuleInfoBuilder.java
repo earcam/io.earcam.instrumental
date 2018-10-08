@@ -303,20 +303,6 @@ public interface ModuleInfoBuilder {
 	 * opening.
 	 * </p>
 	 *
-	 * @param module a {@link io.earcam.instrumental.module.jpms.ModuleInfo} object.
-	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfoBuilder} object.
-	 */
-	public default ModuleInfoBuilder opening(ModuleInfo module)
-	{
-		return opening(module.name(), ACC_MANDATED, module.version());
-	}
-
-
-	/**
-	 * <p>
-	 * opening.
-	 * </p>
-	 *
 	 * @param paquet a {@link java.lang.String} object.
 	 * @param modules a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfoBuilder} object.

@@ -44,6 +44,8 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 
 	private static final long serialVersionUID = 8059255940493321393L;
 	private static final EnumSet<RequireModifier> MUTUALLY_EXCLUSIVE_REQUIRE_MODIFIERS = of(TRANSITIVE, STATIC);
+	private static final String LIST_JOINING_DELIMITER = ",\n\t\t";
+
 	private String name;
 	private String version;
 	private int access;
@@ -297,40 +299,12 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 		output.append(visibleModifiers(modifiers()));
 		output.append("module ").append(name).append(" {\n");
 
-		for(Require require : requires) {
-			addComment(output, "\t", require.modifiers(), require.version());
-			output.append('\t').append("requires ");
-			output.append(visibleModifiers(require.modifiers()));
-			output.append(require.module()).append(";\n");
-		}
+		requiresToString(output);
+		portsToString(output, exports, "exports");
+		portsToString(output, opens, "opens");
+		usesToString(output);
+		providesToString(output);
 
-		final String listJoiningDelimiter = ",\n\t\t";
-		for(Export export : exports) {
-			addComment(output, "\t", export.modifiers());
-			output.append('\t').append("exports ").append(export.paquet());
-			if(export.modules().length > 0) {
-				output.append(stream(export.modules()).collect(joining(listJoiningDelimiter, " to \n\t\t", "")));
-			}
-			output.append(";\n");
-		}
-
-		for(Export export : opens) {
-			addComment(output, "\t", export.modifiers());
-			output.append('\t').append("opens ").append(export.paquet());
-			if(export.modules().length > 0) {
-				output.append(stream(export.modules()).collect(joining(listJoiningDelimiter, " to \n\t\t", "")));
-			}
-			output.append(";\n");
-		}
-		if(!uses.isEmpty()) {
-			output.append(uses.stream().collect(Collectors.joining(";\n\tuses ", "\tuses ", ";\n")));
-		}
-
-		for(Map.Entry<String, String[]> e : provides.entrySet()) {
-			output.append('\t').append("provides ").append(e.getKey())
-					.append(Arrays.stream(e.getValue()).collect(joining(listJoiningDelimiter, " with \n\t\t", "")));
-			output.append(";\n");
-		}
 		return output.append('}').toString();
 	}
 
@@ -362,6 +336,48 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	private static void packagesComment(StringBuilder output, Set<CharSequence> packages)
 	{
 		packages.forEach(p -> output.append(" * @package ").append(p).append('\n'));
+	}
+
+
+	private void requiresToString(StringBuilder output)
+	{
+		for(Require require : requires) {
+			addComment(output, "\t", require.modifiers(), require.version());
+			output.append('\t').append("requires ");
+			output.append(visibleModifiers(require.modifiers()));
+			output.append(require.module()).append(";\n");
+		}
+	}
+
+
+	private void portsToString(StringBuilder output, HashSet<Export> ports, String portsLabel)
+	{
+		for(Export export : ports) {
+			addComment(output, "\t", export.modifiers());
+			output.append('\t').append(portsLabel).append(' ').append(export.paquet());
+			if(export.modules().length > 0) {
+				output.append(stream(export.modules()).collect(joining(LIST_JOINING_DELIMITER, " to \n\t\t", "")));
+			}
+			output.append(";\n");
+		}
+	}
+
+
+	private void usesToString(StringBuilder output)
+	{
+		if(!uses.isEmpty()) {
+			output.append(uses.stream().collect(Collectors.joining(";\n\tuses ", "\tuses ", ";\n")));
+		}
+	}
+
+
+	private void providesToString(StringBuilder output)
+	{
+		for(Map.Entry<String, String[]> e : provides.entrySet()) {
+			output.append('\t').append("provides ").append(e.getKey())
+					.append(Arrays.stream(e.getValue()).collect(joining(LIST_JOINING_DELIMITER, " with \n\t\t", "")));
+			output.append(";\n");
+		}
 	}
 
 

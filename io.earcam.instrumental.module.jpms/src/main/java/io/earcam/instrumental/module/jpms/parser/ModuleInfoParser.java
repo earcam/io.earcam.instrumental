@@ -18,6 +18,9 @@
  */
 package io.earcam.instrumental.module.jpms.parser;
 
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 
 public final class ModuleInfoParser {
@@ -28,11 +31,22 @@ public final class ModuleInfoParser {
 
 	public static ModuleInfo parse(String source)
 	{
-		AntlrParser listener = new AntlrParser();
 		Java9Parser parser = Parsing.failFastParserFor(source);
+		return parse(parser);
+	}
 
+
+	private static ModuleInfo parse(Java9Parser parser)
+	{
+		AntlrParser listener = new AntlrParser();
 		Parsing.walk(parser.modularCompilation(), listener);
-
 		return listener.builder().construct();
+	}
+
+
+	public static ModuleInfo parse(InputStream source, Charset charset)
+	{
+		Java9Parser parser = Parsing.failFastParserFor(source, charset);
+		return parse(parser);
 	}
 }

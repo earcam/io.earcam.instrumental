@@ -19,6 +19,7 @@
 package io.earcam.instrumental.archive;
 
 import static io.earcam.instrumental.archive.ArchiveConstruction.contentFrom;
+import static io.earcam.instrumental.archive.AsJar.asJar;
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.Hamcrest.present;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -35,6 +36,8 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import org.junit.jupiter.api.Test;
 
@@ -239,5 +242,44 @@ public class ArchiveBuilderTest {
 				.to(Function.identity());
 
 		assertThat(archive.content("something.txt").get().bytes(), is(equalTo(bytes("something"))));
+	}
+
+
+	@Test
+	public void mergedManifestWithEntries()
+	{
+		Manifest manifest = new Manifest();
+		Attributes attributes = new Attributes();
+		attributes.putValue("key", "value");
+		manifest.getEntries().put("entry", attributes);
+
+		Archive archive = archive()
+				.configured(asJar().mergingManifest(manifest))
+				.with("something.txt", bytes("something"))
+				.toObjectModel();
+
+		Manifest read = archive.manifest().orElseThrow(NullPointerException::new);
+
+		assertThat(read, is(not(sameInstance(manifest))));
+		assertThat(read.getEntries(), is(equalTo(manifest.getEntries())));
+	}
+
+
+	@Test
+	public void mergedManifestWithMainAttributes()
+	{
+		Manifest manifest = new Manifest();
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+		manifest.getMainAttributes().put(Attributes.Name.IMPLEMENTATION_VERSION, "1.0");
+
+		Archive archive = archive()
+				.configured(asJar().mergingManifest(manifest))
+				.with("something.txt", bytes("something"))
+				.toObjectModel();
+
+		Manifest read = archive.manifest().orElseThrow(NullPointerException::new);
+
+		assertThat(read, is(not(sameInstance(manifest))));
+		assertThat(read, is(equalTo(manifest)));
 	}
 }

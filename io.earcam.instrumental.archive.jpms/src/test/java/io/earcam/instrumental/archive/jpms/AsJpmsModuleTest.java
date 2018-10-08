@@ -21,14 +21,19 @@ package io.earcam.instrumental.archive.jpms;
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.jpms.AsJpmsModule.asJpmsModule;
 import static io.earcam.instrumental.module.jpms.ExportModifier.MANDATED;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -40,8 +45,8 @@ import com.acme.DummyMain;
 import com.acme.ext.Ext;
 import com.acme.internal.DummyInternal;
 
-import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.archive.Archive;
+import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.module.jpms.Export;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 import io.earcam.instrumental.module.jpms.Require;
@@ -54,10 +59,14 @@ public class AsJpmsModuleTest {
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
-						.named("foo"))
+						.named("foo")
+						.versioned("0.42.1"))
 				.toObjectModel();
 
 		ModuleInfo moduleInfo = moduleInfoFrom(archive);
+
+		assertThat(moduleInfo.name(), is("foo"));
+		assertThat(moduleInfo.version(), is("0.42.1"));
 
 		assertThat(moduleInfo.mainClass(), is(nullValue()));
 		assertThat(moduleInfo.packages(), is(empty()));
@@ -253,5 +262,42 @@ public class AsJpmsModuleTest {
 		ModuleInfo moduleInfo = moduleInfoFrom(archive);
 
 		assertThat(moduleInfo.packages(), containsInAnyOrder(pkg(DummyIntComparator.class), pkg(Ext.class)));
+	}
+
+
+	@Test
+	void providingFromMetaInfServices()
+	{
+		Archive archive = archive()
+				.configured(asJpmsModule()
+						.named("foo")
+						.providingFromMetaInfServices())
+				.with(DummyIntComparator.class)
+				.with("META-INF/services/java.util.Comparator", cn(DummyIntComparator.class).getBytes(UTF_8))
+				.with("META-INF/servicehistory", "one careful owner".getBytes(UTF_8))
+				.toObjectModel();
+
+		ModuleInfo moduleInfo = moduleInfoFrom(archive);
+
+		assertThat(moduleInfo.provides(), allOf(
+				aMapWithSize(1),
+				hasEntry(equalTo("java.util.Comparator"), arrayContaining(cn(DummyIntComparator.class)))));
+	}
+
+
+	@Test
+	void notProvidingFromMetaInfServices()
+	{
+		Archive archive = archive()
+				.configured(asJpmsModule()
+						.named("foo"))
+				.with(DummyIntComparator.class)
+				.with("META-INF/services/java.util.Comparator", cn(DummyIntComparator.class).getBytes(UTF_8))
+				.with("META-INF/servicehistory", "one careful owner".getBytes(UTF_8))
+				.toObjectModel();
+
+		ModuleInfo moduleInfo = moduleInfoFrom(archive);
+
+		assertThat(moduleInfo.provides(), is(anEmptyMap()));
 	}
 }

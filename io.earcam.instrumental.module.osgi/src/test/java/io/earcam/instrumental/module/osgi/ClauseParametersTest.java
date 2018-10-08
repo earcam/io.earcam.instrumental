@@ -124,4 +124,56 @@ public class ClauseParametersTest {
 			assertThat(value, is(equalTo("value")));
 		}
 	}
+
+	@Nested
+	public class ToString {
+
+		@Test
+		void simpleAttributeToString() throws Exception
+		{
+			assertThat(attribute("key", "value"), hasToString(";key=value"));
+		}
+
+
+		@Test
+		void simpleDirectiveToString() throws Exception
+		{
+			assertThat(directive("key", "value"), hasToString(";key:=value"));
+		}
+
+
+		@Test
+		void whenDirectiveValueContainsPeriodThenRequiresQuotesForToString() throws Exception
+		{
+			assertThat(directive("key", "val.ue"), hasToString(";key:=\"val.ue\""));
+		}
+
+
+		@Test
+		void whenAttributeValueContainsCommaThenRequiresQuotesForToString() throws Exception
+		{
+			assertThat(attribute("key", "val,ue"), hasToString(";key=\"val,ue\""));
+		}
+	}
+
+
+	@Test
+	void isInitiallyEmpty()
+	{
+		assertThat(new ClauseParameters().isEmpty(), is(true));
+	}
+
+
+	@Test
+	void notEmptyWhenAttributePresent()
+	{
+		assertThat(new ClauseParameters().attribute("attr", "ibute").isEmpty(), is(false));
+	}
+
+
+	@Test
+	void notEmptyWhenDirectivePresent()
+	{
+		assertThat(new ClauseParameters().directive("dir", "ective").isEmpty(), is(false));
+	}
 }

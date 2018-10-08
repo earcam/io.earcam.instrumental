@@ -20,9 +20,19 @@ package io.earcam.instrumental.module.jpms.parser;
 
 import static io.earcam.instrumental.module.jpms.RequireModifier.TRANSITIVE;
 import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.is;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -232,6 +242,24 @@ public class AntlrParserTest {
 					new Export("com.acme.guts", "com.acme.grunt")));
 		}
 
+
+		@Test
+		void multipleExportsViaInputStream()
+		{
+			// @formatter:off
+			String source =
+					"module com.acme.base {                        \n" +
+					"   exports com.acme.api;                      \n" +
+					"   exports com.acme.guts to com.acme.grunt;   \n" +
+					"}                                             \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(new ByteArrayInputStream(source.getBytes(UTF_8)), UTF_8);
+
+			assertThat(moduleInfo.exports(), containsInAnyOrder(
+					new Export("com.acme.api"),
+					new Export("com.acme.guts", "com.acme.grunt")));
+		}
 	}
 
 	@Nested

@@ -199,7 +199,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	private static void processOutput(Process process) throws IOException, InterruptedException
+	static void processOutput(Process process) throws IOException, InterruptedException
 	{
 		process.waitFor();
 		String output = new String(inputStreamToBytes(process.getInputStream()), UTF_8);

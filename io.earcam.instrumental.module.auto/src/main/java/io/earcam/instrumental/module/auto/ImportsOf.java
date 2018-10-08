@@ -91,12 +91,8 @@ class ImportsOf extends Remapper {
 
 	void addInternalType(String internal)
 	{
-		if(internal == null) {
-			return; // TODO why? @see AsJpmsModuleAutoRequireIntegrationTest
-		}
 		Type type = Type.getObjectType(internal);
 		addInternalType(type);
-
 	}
 
 

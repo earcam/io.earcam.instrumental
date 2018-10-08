@@ -22,7 +22,7 @@ import static io.earcam.instrumental.module.osgi.ClauseParameters.EMPTY_PARAMETE
 import static io.earcam.instrumental.module.osgi.ClauseParameters.ClauseParameter.attribute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -102,6 +102,15 @@ public class ClauseTest {
 		Object b = null;
 
 		assertFalse(a.equals(b));
+	}
+
+
+	@Test
+	public void singleToString()
+	{
+		Clause clause = new Clause(Clause.sortedSet("x.a", "x.b", "x.c"), ClauseParameter.attribute("at", "rib").directive("dire", "ct"));
+
+		assertThat(clause, hasToString("x.a;x.b;x.c;at=rib;dire:=ct"));
 	}
 
 

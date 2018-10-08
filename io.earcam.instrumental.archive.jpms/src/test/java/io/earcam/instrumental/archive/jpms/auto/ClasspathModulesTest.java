@@ -18,7 +18,7 @@
  */
 package io.earcam.instrumental.archive.jpms.auto;
 
-import static io.earcam.instrumental.archive.jpms.auto.ClasspathModules.HEADER_AUTOMATIC_MODULE_NAME;
+import static io.earcam.instrumental.archive.jpms.auto.ArchivePackageModuleMapperTest.HEADER_AUTOMATIC_MODULE_NAME;
 import static io.earcam.instrumental.module.auto.Classpaths.PROPERTY_CLASS_PATH;
 import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
 import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;

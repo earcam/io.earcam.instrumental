@@ -59,4 +59,21 @@ public class AntlrParserTest {
 
 		assertThat(bundleInfo.mainAttribute("Arbitrary-Header"), is(equalTo("some.value")));
 	}
+
+
+	@Test
+	void parseBundleActivatorFromManifestString()
+	{
+		String manifest = "Manifest-Version: 1.0\n" +
+				"Bundle-ManifestVersion: 2\n" +
+				"Bundle-Activator: com.acme.foo.Activator\n" +
+				"Bundle-SymbolicName: com.acme.sym.nom\n" +
+				"\n";
+
+		BundleInfoBuilder parsed = BundleInfoParser.parse(manifest);
+
+		BundleInfo bundleInfo = parsed.construct();
+
+		assertThat(bundleInfo.activator(), is(equalTo("com.acme.foo.Activator")));
+	}
 }

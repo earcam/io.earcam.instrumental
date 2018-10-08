@@ -21,11 +21,17 @@ package io.earcam.instrumental.archive;
 import static io.earcam.instrumental.archive.Archive.archive;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 
+import java.io.ByteArrayInputStream;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
+
+import io.earcam.instrumental.lade.ClassLoaders;
+import io.earcam.utilitarian.io.IoStreams;
 
 public class DefaultArchiveTest {
 
@@ -39,5 +45,21 @@ public class DefaultArchiveTest {
 		Archive transformed = archive.to(Function.identity());
 
 		assertThat(transformed, is(sameInstance(archive)));
+	}
+
+
+	@Test
+	public void addInputStreamEntry()
+	{
+		byte[] content = "something".getBytes(UTF_8);
+		String name = "something.txt";
+
+		byte[] bytes = archive()
+				.with(name, new ByteArrayInputStream(content))
+				.toByteArray();
+
+		byte[] read = IoStreams.readAllBytes(ClassLoaders.inMemoryClassLoader().jar(bytes).getResourceAsStream(name));
+
+		assertThat(read, is(equalTo(content)));
 	}
 }

@@ -79,7 +79,6 @@ public class DefaultBundleInfoTest {
 		@Test
 		void equal()
 		{
-
 			BundleInfo b = createBundleA();
 
 			assertThat(a, is(equalTo(b)));
@@ -90,12 +89,11 @@ public class DefaultBundleInfoTest {
 		@Test
 		void notEqualWhenSymbolicNamesDiffer()
 		{
-			BundleInfo b = bundle()
+			BundleInfo b = (BundleInfo) bundle()
 					.symbolicName("org.sample.example")
 					.exportPackages(sortedSet("com.acme.foo", "com.acme.bar"), version(0, 1, 42).attribute("foo", "bar"))
 					.exportPackages("com.acme.hoo", "com.acme.hum")
-					.importPackages("com.acme.base")
-					.construct();
+					.importPackages("com.acme.base");
 
 			assertThat(a, is(not(equalTo(b))));
 		}
@@ -104,12 +102,20 @@ public class DefaultBundleInfoTest {
 		@Test
 		void notEqualWhenClausesDiffer()
 		{
-			BundleInfo b = bundle()
-					.symbolicName("org.sample.example")
-					.exportPackages(sortedSet("com.acme.foo"), version(9, 99, 999))
-					.exportPackages("com.acme.hoo", "com.acme.hum")
-					.importPackages("com.acme.base")
-					.construct();
+			BundleInfo b = (BundleInfo) bundle()
+					.symbolicName("com.acme.sym.nom")
+					.exportPackages(sortedSet("com.acme.foo", "com.acme.bar"), version(9, 99, 999))
+					.exportPackages("com.acme.hoo", version(9, 99, 999))
+					.importPackages("com.acme.base");
+
+			assertThat(a, is(not(equalTo(b))));
+		}
+
+
+		@Test
+		void notEqualWhenOneIsConstructed()
+		{
+			BundleInfo b = ((BundleInfoBuilder) createBundleA()).construct();
 
 			assertThat(a, is(not(equalTo(b))));
 		}
@@ -128,7 +134,7 @@ public class DefaultBundleInfoTest {
 		void notEqualToSimilarBuilderOfDifferentType()
 		{
 			AnotherManifestBuilder b = new AnotherManifestBuilder();
-			assertThat(a, is(not(equalTo(b))));
+			assertThat(a.equals(b), is(false));
 		}
 
 
@@ -163,11 +169,13 @@ public class DefaultBundleInfoTest {
 					.construct()
 					.deconstruct()
 					.exportPackages(sortedSet("com.acme.b"), version(4, 5, 6))
+					.exportPackages(sortedSet("com.acme.c"))
 					.construct();
 
 			assertThat(reconstructed.exportPackage(), contains(
 					clause("com.acme.a", version(1, 2, 3)),
-					clause("com.acme.b", version(4, 5, 6))));
+					clause("com.acme.b", version(4, 5, 6)),
+					clause("com.acme.c")));
 		}
 	}
 
@@ -198,31 +206,60 @@ public class DefaultBundleInfoTest {
 
 
 	@Test
-	void bundleToStringManifest()
+	void bundleToStringManifestExports()
 	{
 		Manifest manifest = bundle()
 				.symbolicName("com.acme.sym.nom")
 				.exportPackages(sortedSet("com.acme.a", "com.acme.b"), directive("hoo", "har"))
 				.exportPackages(sortedSet("com.acme.c"), attribute("fee", "fi"))
+				.exportPackages(sortedSet("com.acme.d"))
 				.importPackages("com.acme.base")
 				.toManifest();
 
 		Attributes attributes = manifest.getMainAttributes();
-		assertThat(attributes.getValue("Export-Package"), equalTo("com.acme.a;com.acme.b;hoo:=har,com.acme.c;fee=fi"));
+		String expectedExports = "com.acme.a;com.acme.b;hoo:=har,com.acme.c;fee=fi,com.acme.d";
+
+		assertThat(attributes.getValue("Export-Package"), equalTo(expectedExports));
+	}
+
+
+	@Test
+	void bundleToStringManifestImports()
+	{
+		Manifest manifest = bundle()
+				.symbolicName("com.acme.sym.nom")
+				.importPackages(sortedSet("com.acme.base", "com.acme.xyz"))
+				.importPackages("org.osgi.framework", attribute("version", "[1.5,2)").directive("resolution", "optional"))
+				.toManifest();
+
+		Attributes attributes = manifest.getMainAttributes();
+		String expectedImports = "com.acme.base;com.acme.xyz,org.osgi.framework;version=\"[1.5,2)\";resolution:=optional";
+
+		assertThat(attributes.getValue("Import-Package"), equalTo(expectedImports));
 	}
 
 
 	@Test
 	void activator()
 	{
-		String activatorName = DummyActivator.class.getCanonicalName();
-
 		BundleInfo bundle = bundle()
 				.symbolicName("com.acme.sym.nom")
-				.activator(activatorName)
+				.activator(DummyActivator.class)
 				.construct();
 
-		assertThat(bundle.activator(), is(equalTo(activatorName)));
+		assertThat(bundle.activator(), is(equalTo(DummyActivator.class.getCanonicalName())));
+	}
+
+
+	@Test
+	void invalidActivator()
+	{
+		try {
+			bundle()
+					.symbolicName("com.acme.sym.nom")
+					.activator(DefaultBundleInfoTest.class);
+			fail();
+		} catch(IllegalArgumentException e) {}
 	}
 
 

@@ -20,11 +20,12 @@ package io.earcam.instrumental.archive.jpms.auto;
 
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.AsJar.asJar;
-import static io.earcam.instrumental.archive.jpms.auto.AbstractPackageModuleMapper.HEADER_AUTOMATIC_MODULE_NAME;
 import static io.earcam.instrumental.module.jpms.ModuleInfo.moduleInfo;
 import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+
+import java.util.jar.Attributes.Name;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,9 @@ import io.earcam.instrumental.archive.Archive;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 
 public class ArchivePackageModuleMapperTest {
+
+	static final Name HEADER_AUTOMATIC_MODULE_NAME = new Name("Automatic-Module-Name");
+
 
 	@Test
 	void maps()

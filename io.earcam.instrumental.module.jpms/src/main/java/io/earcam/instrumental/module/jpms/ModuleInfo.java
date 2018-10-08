@@ -21,151 +21,25 @@ package io.earcam.instrumental.module.jpms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.jar.JarInputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.WillClose;
 import javax.annotation.WillNotClose;
 
 /**
- * <p>
- * ModuleInfo interface.
- * </p>
  *
  */
 public interface ModuleInfo extends Serializable {
 
 	/**
-	 * <p>
-	 * name.
-	 * </p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public abstract @Nonnull String name();
-
-
-	/**
-	 * <p>
-	 * version.
-	 * </p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public abstract @Nullable String version();
-
-
-	/**
-	 * <p>
-	 * access.
-	 * </p>
-	 *
-	 * @return a int.
-	 */
-	public abstract int access();
-
-
-	/**
-	 * <p>
-	 * modifiers.
-	 * </p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public default Set<ModuleModifier> modifiers()
-	{
-		return Access.modifiers(ModuleModifier.class, access());
-	}
-
-
-	/**
-	 * <p>
-	 * packages.
-	 * </p>
-	 *
-	 * @return a {@link java.util.SortedSet} object.
-	 */
-	public abstract SortedSet<CharSequence> packages();
-
-
-	/**
-	 * <p>
-	 * uses.
-	 * </p>
-	 *
-	 * @return a {@link java.util.SortedSet} object.
-	 */
-	public abstract SortedSet<String> uses();
-
-
-	/**
-	 * <p>
-	 * provides.
-	 * </p>
-	 *
-	 * @return a {@link java.util.Map} object.
-	 */
-	public abstract Map<String, String[]> provides();
-
-
-	/**
-	 * <p>
-	 * mainClass.
-	 * </p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public abstract String mainClass();
-
-
-	/**
-	 * <p>
-	 * requires.
-	 * </p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public abstract Set<Require> requires();
-
-
-	/**
-	 * <p>
-	 * exports.
-	 * </p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public abstract Set<Export> exports();
-
-
-	/**
-	 * <p>
-	 * opens.
-	 * </p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public abstract Set<Export> opens();
-
-
-	/**
-	 * <p>
-	 * toBytecode.
-	 * </p>
-	 *
-	 * @return an array of {@link byte} objects.
-	 */
-	public abstract byte[] toBytecode();
-
-
-	/**
-	 * <p>
-	 * moduleInfo.
-	 * </p>
-	 *
-	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfoBuilder} object.
+	 * @return a new {@link ModuleInfoBuilder}.
 	 */
 	public static ModuleInfoBuilder moduleInfo()
 	{
@@ -175,10 +49,10 @@ public interface ModuleInfo extends Serializable {
 
 	/**
 	 * <p>
-	 * read.
+	 * Read a {@code module-info.class}
 	 * </p>
 	 *
-	 * @param bytecode an array of {@link byte} objects.
+	 * @param bytecode the binary for {@code module-info.class}
 	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfo} object.
 	 */
 	public static ModuleInfo read(byte[] bytecode)
@@ -189,11 +63,13 @@ public interface ModuleInfo extends Serializable {
 
 	/**
 	 * <p>
-	 * read.
+	 * Read a {@code module-info.class}. The InputStream will not be closed, allowing
+	 * use coding inspecting {@link JarInputStream} entries.
 	 * </p>
 	 *
-	 * @param bytecode a {@link java.io.InputStream} object.
+	 * @param bytecode the {@link InputStream}, which at current point contains {@code module-info.class}
 	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfo} object.
+	 * 
 	 * @throws java.io.IOException if any.
 	 */
 	public static ModuleInfo read(@WillNotClose InputStream bytecode) throws IOException
@@ -203,11 +79,112 @@ public interface ModuleInfo extends Serializable {
 
 
 	/**
-	 * <p>
-	 * deconstruct.
-	 * </p>
-	 *
-	 * @return a {@link io.earcam.instrumental.module.jpms.ModuleInfoBuilder} object.
+	 * Extracts a {@code module-info} from a JAR (zip or directory-as-exploded-JAR)
+	 * 
+	 * @param jar path to the JAR
+	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC},
+	 * or {@link Optional#empty()} if no module-info can be derived.
+	 * @throws IOException
+	 * 
+	 * @see {@link #read(byte[])} to just read a {@code module-info.class} file
+	 */
+	public static Optional<ModuleInfo> extract(Path jar) throws IOException
+	{
+		return ModuleInfoExtractor.extract(jar);
+	}
+
+
+	/**
+	 * Extracts a {@code module-info} from a {@link JarInputStream}.
+	 * 
+	 * @param jar the JAR input stream.
+	 * @return a {@link ModuleInfo} instance, possibly {@link SYNTHETIC},
+	 * or {@link Optional#empty()} if no module-info can be derived.
+	 * @throws IOException
+	 */
+	public static Optional<ModuleInfo> extract(@WillClose JarInputStream jar) throws IOException
+	{
+		return ModuleInfoExtractor.extract(jar);
+	}
+
+
+	/**
+	 * @return the module's name.
+	 */
+	public abstract @Nonnull String name();
+
+
+	/**
+	 * @return the module's version.
+	 */
+	public abstract @Nullable String version();
+
+
+	/**
+	 * @return the module's access flags.
+	 */
+	public abstract int access();
+
+
+	/**
+	 * @return the module's modifiers.
+	 */
+	public default Set<ModuleModifier> modifiers()
+	{
+		return Access.modifiers(ModuleModifier.class, access());
+	}
+
+
+	/**
+	 * @return the module's packages.
+	 */
+	public abstract SortedSet<CharSequence> packages();
+
+
+	/**
+	 * @return the module's <b>uses</b>.
+	 */
+	public abstract SortedSet<String> uses();
+
+
+	/**
+	 * @return the module's <b>provides</b>.
+	 */
+	public abstract Map<String, String[]> provides();
+
+
+	/**
+	 * @return the module's main-class to launch.
+	 */
+	public abstract String mainClass();
+
+
+	/**
+	 * @return the module's <b>requires</b>.
+	 */
+	public abstract Set<Require> requires();
+
+
+	/**
+	 * @return the module's <b>exports</b>.
+	 */
+	public abstract Set<Export> exports();
+
+
+	/**
+	 * @return the module's <b>opens</b>.
+	 */
+	public abstract Set<Export> opens();
+
+
+	/**
+	 * @return convert this model to bytecode.
+	 */
+	public abstract byte[] toBytecode();
+
+
+	/**
+	 * @return a mutable version of this model.
 	 */
 	public abstract ModuleInfoBuilder deconstruct();
 }

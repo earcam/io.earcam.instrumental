@@ -25,6 +25,8 @@
 		<skip.execution.pitest>false</skip.execution.pitest>
 		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>archive.jpms</earcam.project.name.short>
+		
+		<instrumental.jdk.home>${java.home.10}</instrumental.jdk.home>
 	</properties>
 
 	<dependencies>
@@ -113,6 +115,11 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>java-hamcrest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
 		</dependency>
 
 		<dependency>
@@ -226,6 +233,7 @@
 						<configuration>
 							<executable>${java.home.10}/bin/java</executable>
 							<arguments>
+								<argument>-Dinstrumental.jdk.home=${instrumental.jdk.home}</argument>
 								<argument>-Duser.dir=${project.basedir}</argument>
 								<argument>-Dorg.slf4j.simpleLogger.defaultLogLevel=trace</argument>
 								<argument>-cp</argument>
