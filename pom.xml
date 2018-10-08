@@ -97,6 +97,7 @@
 		<skip.execution.pitest>true</skip.execution.pitest>
 		<!-- failing on root pom -->
 		<tidy.skip>true</tidy.skip>
+		<revapi.skip>true</revapi.skip><!-- not committing to semver til v1.0.0 -->
 
 		<java.home.9>/usr/lib/jvm/java-9-oracle</java.home.9>
 		<java.home.10>/usr/lib/jvm/java-10-oracle</java.home.10>
