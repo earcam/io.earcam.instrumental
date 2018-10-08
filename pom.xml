@@ -10,7 +10,7 @@
 
 	<groupId>io.earcam</groupId>
 	<artifactId>io.earcam.instrumental</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>pom</packaging>
 
 	<description>Utility tooling for instrumentation, test scaffolding, etc</description>
@@ -54,7 +54,7 @@
 		<connection>scm:git:git://bitbucket.org/${coordinate.username.project}.git</connection>
 		<developerConnection>scm:git:ssh://bitbucket.org:${coordinate.username.project}.git</developerConnection>
 		<url>https://bitbucket.org/${coordinate.username.project}/tree/master</url>
-		<tag>HEAD</tag>
+		<tag>v0.1.0</tag>
 	</scm>
 	<issueManagement>
 		<system>BitBucket</system>
@@ -89,7 +89,7 @@
 		<version.sun.tools.attach>1.8.0_jdk8u172-b11</version.sun.tools.attach>
 
 		<site.url>https://instrumental.earcam.io/</site.url>
-		<earcam.project.name.short></earcam.project.name.short>
+		<earcam.project.name.short />
 		
 		<earcam.project.root.artifactId>io.earcam.instrumental</earcam.project.root.artifactId>
 		<coordinate.username.project>earcam/${earcam.project.root.artifactId}</coordinate.username.project>
