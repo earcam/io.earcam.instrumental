@@ -103,12 +103,17 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<inherited>false</inherited>
 				<configuration>
 					<release>9</release>
 					<jdkToolchain>
 						<vendor>oracle</vendor>
 						<version>9</version>
 					</jdkToolchain>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<compilerArgument>-Xlint:all</compilerArgument>
 				</configuration>
 			</plugin>
 
