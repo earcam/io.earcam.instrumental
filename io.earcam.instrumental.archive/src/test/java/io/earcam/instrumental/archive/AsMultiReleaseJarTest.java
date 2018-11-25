@@ -121,12 +121,17 @@ public class AsMultiReleaseJarTest {
 					archive()
 						.with(name, whichVersionByteCode( 8))
 				)
-				.release(9, archive()
+				.release(9, 
+					archive()
 						.with(name, whichVersionByteCode( 9))
 				)
 				.release(10,
 					archive()
 						.with(name, whichVersionByteCode(10))
+				)
+				.release(11,
+					archive()
+						.with(name, whichVersionByteCode(11))
 				)
 		).configured(
 			asJar()
@@ -141,7 +146,7 @@ public class AsMultiReleaseJarTest {
 			
 			Object response = method.invoke(null);
 
-			// This test is run with JDK 8, 9 and 10
+			// This test is run with JDK 8, 9 and 11
 			assertThat(response, is(equalTo(SourceVersion.latestSupported().ordinal())));
 		}
 	}
@@ -289,6 +294,10 @@ public class AsMultiReleaseJarTest {
 				).release(10,
 					archive()
 							.with(mainName, mainByteCode(10))
+				)
+				.release(11,
+					archive()
+							.with(mainName, mainByteCode(11))
 				)
 		).configured(
 			asJar()

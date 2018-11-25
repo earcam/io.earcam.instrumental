@@ -49,7 +49,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	public static final String PROPERTY_JDK_HOME = "instrumental.jdk.home";
 
 	static final Path DEFAULT_DIRECTORY = Paths.get("target", "classes", META_INF);
-	static final String JDK_HOME = "/usr/lib/jvm/java-10-oracle/";
+	static final String JDK_HOME = "/usr/lib/jvm/java-11-oracle/";
 
 	private static volatile List<ModuleInfo> modules;
 

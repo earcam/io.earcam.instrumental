@@ -140,7 +140,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>jdk10-test</id>
+						<id>jdk11-test</id>
 						<goals>
 							<goal>test</goal>
 						</goals>

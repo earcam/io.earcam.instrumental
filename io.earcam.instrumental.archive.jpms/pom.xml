@@ -26,7 +26,7 @@
 		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>archive.jpms</earcam.project.name.short>
 		
-		<instrumental.jdk.home>${java.home.10}</instrumental.jdk.home>
+		<instrumental.jdk.home>${java.home.11}</instrumental.jdk.home>
 	</properties>
 
 	<dependencies>
@@ -231,7 +231,7 @@
 						</goals>
 						<phase>process-classes</phase>
 						<configuration>
-							<executable>${java.home.10}/bin/java</executable>
+							<executable>${instrumental.jdk.home}/bin/java</executable>
 							<arguments>
 								<argument>-Dinstrumental.jdk.home=${instrumental.jdk.home}</argument>
 								<argument>-Duser.dir=${project.basedir}</argument>

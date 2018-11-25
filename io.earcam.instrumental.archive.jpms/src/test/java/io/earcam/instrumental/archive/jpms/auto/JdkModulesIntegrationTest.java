@@ -167,14 +167,14 @@ public class JdkModulesIntegrationTest {
 		String nonJdkModule = "com.acme.not.in.jdk";
 		Set<String> packages = new HashSet<>();
 		packages.add(nonJdkModule);
-		packages.add("com.sun.xml.internal.bind.v2.model.nav");
+		packages.add("javax.swing.plaf.basic");
 
-		Set<String> modules = mapper.moduleOpenedFor("java.xml.ws", packages.iterator())
+		Set<String> modules = mapper.moduleOpenedFor("jdk.jconsole", packages.iterator())
 				.stream()
 				.map(ModuleInfo::name)
 				.collect(toSet());
 
-		assertThat(modules, contains("java.xml.bind"));
+		assertThat(modules, contains("java.desktop"));
 		assertThat(packages, contains(nonJdkModule));
 	}
 

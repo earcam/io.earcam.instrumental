@@ -75,7 +75,7 @@ public class ResourcesTest {
 
 
 	@Test
-	void sourceOfResourceIsATheFileSystem()
+	void sourceOfResourceIsAClassFile()
 	{
 		// EARCAM_SNIPPET_BEGIN: source-dir
 		String resource = Resources.sourceOfResource(ResourcesTest.class);

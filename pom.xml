@@ -100,7 +100,7 @@
 		<revapi.skip>true</revapi.skip><!-- not committing to semver til v1.0.0 -->
 
 		<java.home.9>/usr/lib/jvm/java-9-oracle</java.home.9>
-		<java.home.10>/usr/lib/jvm/java-10-oracle</java.home.10>
+		<java.home.11>/usr/lib/jvm/java-11-oracle</java.home.11>
 	</properties>
 
 	<dependencyManagement>
@@ -558,12 +558,12 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>jdk10-test</id>
+							<id>jdk11-test</id>
 							<goals>
 								<goal>test</goal>
 							</goals>
 							<configuration>
-								<jvm>${java.home.10}/bin/java</jvm>
+								<jvm>${java.home.11}/bin/java</jvm>
 							</configuration>
 						</execution>
 					</executions>

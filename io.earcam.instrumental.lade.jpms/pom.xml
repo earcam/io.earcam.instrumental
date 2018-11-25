@@ -143,12 +143,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>jdk10-test</id>
+						<id>jdk11-test</id>
 						<goals>
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<jvm>${java.home.10}/bin/java</jvm>
+							<jvm>${java.home.11}/bin/java</jvm>
 						</configuration>
 					</execution>
 				</executions>

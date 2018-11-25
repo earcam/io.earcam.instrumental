@@ -10,7 +10,7 @@ sudo: required
 cache:
   directories:
   - "$HOME/.m2"
-  - "$HOME/apache-maven-3.5.4"
+  - "$HOME/apache-maven-3.6.0"
   - ''
 addons:
   apt:
@@ -23,12 +23,12 @@ addons:
 before_install:
 - sudo add-apt-repository ppa:linuxuprising/java -y
 - sudo apt-get update -q
-- sudo apt-get install oracle-java9-installer oracle-java10-installer -y
+- sudo apt-get install oracle-java9-installer oracle-java11-installer -y
 - export JAVA_8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=${JAVA_8_HOME}
 - mkdir -p $HOME/.m2
-- export M2_HOME=$HOME/apache-maven-3.5.4
-- if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz | tar zxf - -C $HOME; fi
+- export M2_HOME=$HOME/apache-maven-3.6.0
+- if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz | tar zxf - -C $HOME; fi
 - export PATH=$M2_HOME/bin:$PATH
 install:
 - chmod go-rwx -R $HOME/.m2
@@ -37,6 +37,7 @@ before_script:
 - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.configuration/src/main/resources/settings.xml  -O $HOME/ci-settings.xml
 - mvn -v
 script:
+- export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 - mvn --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
 - #mvn --settings $HOME/ci-settings.xml org.eluder.coveralls:coveralls-maven-plugin:report
 - #mvn --settings $HOME/ci-settings.xml org.jacoco:jacoco-maven-plugin:report-aggregate -Djacoco.excludes=**/InstrumentationWrapper.*

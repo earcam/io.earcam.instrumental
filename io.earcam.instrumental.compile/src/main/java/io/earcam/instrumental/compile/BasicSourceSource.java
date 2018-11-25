@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.instrumental.reflect.Resources;
 import io.earcam.utilitarian.io.IoStreams;
 
@@ -40,7 +39,6 @@ final class BasicSourceSource {
 	{}
 
 
-	@Fluent
 	public static SourceSource foundFor(Class<?> type)
 	{
 		Path resource = Paths.get(Resources.sourceOfResource(type));
@@ -57,6 +55,7 @@ final class BasicSourceSource {
 			} else {
 				throw new IllegalStateException("Cannot determine source for file " + type.getCanonicalName());
 			}
+
 			Path source = resource.getParent().getParent().resolve(middle).resolve(tail);
 			requireExistingFile(source);
 			return s -> s.sink(source);
