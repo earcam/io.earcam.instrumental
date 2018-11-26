@@ -23,10 +23,6 @@ import java.nio.file.Path;
 
 import io.earcam.instrumental.fluent.Fluent;
 
-/**
- * TODO add a foundUnder(Path) method using a recursive file visitor to find all
- * source classes, and bytecode may contain a SourceFile attribute, find it and try it.
- */
 @FunctionalInterface
 public interface SourceSource {
 

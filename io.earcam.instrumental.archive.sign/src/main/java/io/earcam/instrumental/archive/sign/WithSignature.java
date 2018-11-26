@@ -38,16 +38,15 @@ import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.archive.ArchiveResourceListener;
 import io.earcam.instrumental.archive.ArchiveResourceSource;
 import io.earcam.instrumental.archive.ManifestProcessor;
+import io.earcam.instrumental.fluent.Fluent;
 import io.earcam.unexceptional.Closing;
 import io.earcam.utilitarian.security.OpenedKeyStore;
 import io.earcam.utilitarian.security.Signatures;
 
-// TODO file extension for DSA and make sure this can run if WithDigest invoked separately previously
 /**
  * <p>
- * WithSignature archive extension
+ * RSA Jar signing archive extension.
  * </p>
- *
  */
 public class WithSignature extends WithDigest implements ArchiveConfigurationPlugin, ManifestProcessor, ArchiveResourceSource, ArchiveResourceListener {
 
@@ -71,11 +70,12 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 
 	/**
 	 * <p>
-	 * withSignature.
+	 * Create new {@link WithSignature}.
 	 * </p>
 	 *
-	 * @return a {@link io.earcam.instrumental.archive.sign.WithSignature} object.
+	 * @return a new {@link WithSignature} archive extension.
 	 */
+	@Fluent
 	public static WithSignature withSignature()
 	{
 		return new WithSignature();
@@ -213,7 +213,7 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	 * The store containing the key and cert(s)
 	 *
 	 * @param store the key store
-	 * @return this plugin
+	 * @return this builder.
 	 */
 	public WithSignature store(KeyStore store)
 	{
@@ -225,8 +225,8 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	/**
 	 * The alias for the key in store
 	 *
-	 * @param alias by which the key shall be known
-	 * @return this plugin
+	 * @param alias by which the key shall be known.
+	 * @return this builder.
 	 */
 	public WithSignature alias(String alias)
 	{
@@ -236,10 +236,10 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 
 
 	/**
-	 * The password for the key in store
+	 * The password for the key in store.
 	 *
-	 * @param password an array of {@link char} objects.
-	 * @return this plugin
+	 * @param password the alias password to use for the keystore.
+	 * @return this builder.
 	 */
 	public WithSignature password(char[] password)
 	{
@@ -249,10 +249,16 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 
 
 	/**
-	 * Defaults to {@value DEFAULT_SIGNATURE_FILENAME} if not set
+	 * <p>
+	 * The filename <b>without</b> suffix.
+	 * </p>
+	 * 
+	 * <p>
+	 * Defaults to {@value #DEFAULT_SIGNATURE_FILENAME} if not set.
+	 * </p>
 	 *
-	 * @param signatureFilename a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.sign.WithSignature} object.
+	 * @param signatureFilename the filename.
+	 * @return this builder.
 	 */
 	public WithSignature signatureFileName(String signatureFilename)
 	{
@@ -266,8 +272,8 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	 * signatureAlgorithm.
 	 * </p>
 	 *
-	 * @param algorithm a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.sign.WithSignature} object.
+	 * @param algorithm the signature algorithm.
+	 * @return this builder.
 	 */
 	public WithSignature signatureAlgorithm(StandardSignatureAlgorithms algorithm)
 	{
@@ -280,8 +286,10 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	 * signatureAlgorithm.
 	 * </p>
 	 *
-	 * @param algorithm a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.sign.WithSignature} object.
+	 * @param algorithm the signature algorithm.
+	 * @return this builder.
+	 * 
+	 * @see #signatureAlgorithm(StandardSignatureAlgorithms)
 	 */
 	public WithSignature signatureAlgorithm(String algorithm)
 	{
@@ -295,8 +303,8 @@ public class WithSignature extends WithDigest implements ArchiveConfigurationPlu
 	 * createdBy.
 	 * </p>
 	 *
-	 * @param author a {@link java.lang.String} object.
-	 * @return a {@link io.earcam.instrumental.archive.sign.WithSignature} object.
+	 * @param author the signature author.
+	 * @return this builder.
 	 */
 	public WithSignature createdBy(String author)
 	{

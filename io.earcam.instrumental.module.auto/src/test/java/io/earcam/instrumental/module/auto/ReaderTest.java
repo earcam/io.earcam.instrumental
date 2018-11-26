@@ -27,6 +27,7 @@ import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import io.earcam.acme.AcmeAnnotation;
 import io.earcam.acme.Annotated;
+import io.earcam.acme.Generics;
 import io.earcam.acme.ImportsSlf4jApi;
 import io.earcam.instrumental.module.auto.Reader;
 import io.earcam.instrumental.reflect.Resources;
@@ -200,6 +202,30 @@ public class ReaderTest {
 						cn(Class.class),
 						cn(StringBuilder.class),
 						cn(String.class))));
+			}
+
+
+			@Test
+			void generics() throws IOException
+			{
+				Map<String, Set<String>> imports = new HashMap<>();
+
+				InputStream jar = bundle()
+						.add(Generics.class)
+						.build();
+
+				reader()
+						.addImportListener(imports::put)
+						.processJar(jar);
+
+				assertThat(imports, is(aMapWithSize(1)));
+
+				assertThat(imports, hasEntry(equalTo(cn(Generics.class)), containsInAnyOrder(
+						cn(UncheckedIOException.class),
+						cn(Comparable.class),
+						cn(Object.class),
+						cn(Number.class),
+						cn(Serializable.class))));
 			}
 
 

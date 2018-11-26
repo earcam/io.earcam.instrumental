@@ -36,8 +36,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.earcam.instrumental.proxy.Proxies;
 import io.earcam.instrumental.proxy.handler.AroundInvocationHandler.Invocation;
@@ -45,8 +43,6 @@ import io.earcam.utilitarian.log.slf4j.Logging;
 
 @NotThreadSafe
 public class LoggingInvocationHandlerTest {
-
-	private static final Logger LOG = LoggerFactory.getLogger(LoggingInvocationHandlerTest.class);
 
 	private static interface Api {
 		String something(int number);
@@ -80,8 +76,6 @@ public class LoggingInvocationHandlerTest {
 	{
 		Logging.logging().defaultLevel(INFO)
 				.log(LoggingInvocationHandler.class).at(TRACE);
-
-		LOG.trace("need to seed logging - but you won't see this");  // FIXME move necessity to seed logging into io.earcam.utilitarian.log.slf4j.Logging
 	}
 
 

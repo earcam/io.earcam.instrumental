@@ -64,6 +64,12 @@
 
 		<dependency>
 			<groupId>io.earcam.instrumental</groupId>
+			<artifactId>io.earcam.instrumental.fluent</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.earcam.instrumental</groupId>
 			<artifactId>io.earcam.instrumental.lade</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>

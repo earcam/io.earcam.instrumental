@@ -30,11 +30,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Remapper;
 
 /**
- * TODO
- * <ol>
- * <li>Optionally skip imports found only in annotations and the annotations themselves</li>
- * <li>Tests for Generic types/methods, lambdas, etc - override mapDesc and take a peek</li>
- * </ol>
+ * Determine the imported types of a given ASM construct.
  */
 class ImportsOf extends Remapper {
 
@@ -46,7 +42,7 @@ class ImportsOf extends Remapper {
 
 	/**
 	 * <p>
-	 * Constructor for ImportsOf.
+	 * Create with the specified consumer ({@link ImportsOf} holds no state)
 	 * </p>
 	 *
 	 * @param importConsumer a {@link Consumer} of imported types.

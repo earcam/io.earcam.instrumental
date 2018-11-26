@@ -289,6 +289,7 @@ public final class Methods {
 	}
 
 
+	@SuppressWarnings("squid:S3011")
 	private static MethodHandle java8HandleFor(Method method) throws ReflectiveOperationException
 	{
 		Class<?> targetClass = method.getDeclaringClass();

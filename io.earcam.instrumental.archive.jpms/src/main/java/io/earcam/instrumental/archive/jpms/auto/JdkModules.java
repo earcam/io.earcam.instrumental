@@ -183,6 +183,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
+	@SuppressWarnings("squid:S4721")
 	private static Process launchJShell(Path jdk9Home) throws IOException
 	{
 		Path jshell = jdk9Home.resolve(Paths.get("bin", "jshell"));

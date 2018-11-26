@@ -262,7 +262,6 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	@Override
 	public ModuleInfo construct()
 	{
-		// TODO check validate - expose a separate method? javax.validation?
 		Objects.requireNonNull(name, "name");
 
 		List<Require> erroneousRequires = requires.stream()

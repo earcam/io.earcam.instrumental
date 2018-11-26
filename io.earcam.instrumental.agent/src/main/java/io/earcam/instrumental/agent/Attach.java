@@ -76,6 +76,7 @@ final class Attach {
 	{
 		List<String> cmd = buildCommand(jar, agentArguments);
 
+		@SuppressWarnings("squid:S4721")
 		ProcessBuilder pb = new ProcessBuilder(cmd)
 				.directory(new File(System.getProperty("user.dir")));
 

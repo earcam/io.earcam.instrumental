@@ -231,7 +231,7 @@ public class Reader {
 	 * reader.
 	 * </p>
 	 *
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public static Reader reader()
 	{
@@ -244,7 +244,7 @@ public class Reader {
 	 * method reference then it will reduce imported types to packages.
 	 *
 	 * @param importedTypeReducer a {@link java.util.function.UnaryOperator} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader setImportedTypeReducer(UnaryOperator<String> importedTypeReducer)
 	{
@@ -258,7 +258,7 @@ public class Reader {
 	 * method reference then it will reduce imported types to packages.
 	 *
 	 * @param importingTypeReducer a {@link java.util.function.UnaryOperator} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader setImportingTypeReducer(UnaryOperator<String> importingTypeReducer)
 	{
@@ -282,6 +282,11 @@ public class Reader {
 	}
 
 
+	/**
+	 * Ignore annotations and their contents
+	 * 
+	 * @return this reader
+	 */
 	public Reader ignoreAnnotations()
 	{
 		ignoreAnnotations = true;
@@ -295,7 +300,7 @@ public class Reader {
 	 * not when invoking {@link #processClass(byte[])}
 	 *
 	 * @param listener a {@link java.util.function.Consumer} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader addByteCodeListener(Consumer<byte[]> listener)
 	{
@@ -308,7 +313,7 @@ public class Reader {
 	 * For entries other than classes and Manifest
 	 *
 	 * @param listener a {@link java.util.function.BiConsumer} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader setJarEntryListener(BiConsumer<JarEntry, InputStream> listener)
 	{
@@ -323,7 +328,7 @@ public class Reader {
 	 * </p>
 	 *
 	 * @param listener a {@link java.util.function.Consumer} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader addManifestListener(Consumer<Manifest> listener)
 	{
@@ -338,7 +343,7 @@ public class Reader {
 	 * </p>
 	 *
 	 * @param listener a {@link java.util.function.BiConsumer} object.
-	 * @return a {@link io.earcam.instrumental.module.auto.Reader} object.
+	 * @return this reader
 	 */
 	public Reader addImportListener(BiConsumer<String, Set<String>> listener)
 	{
