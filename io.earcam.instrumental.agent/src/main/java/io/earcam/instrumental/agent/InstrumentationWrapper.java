@@ -22,6 +22,7 @@ import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarFile;
 
 /**
@@ -32,7 +33,7 @@ import java.util.jar.JarFile;
  */
 public class InstrumentationWrapper implements Instrumentation {
 
-	private volatile Instrumentation delegate;
+	private final AtomicReference<Instrumentation> delegate = new AtomicReference<>();
 
 
 	/**
@@ -44,7 +45,7 @@ public class InstrumentationWrapper implements Instrumentation {
 	 */
 	protected void setDelegate(Instrumentation delegate)
 	{
-		this.delegate = delegate;
+		this.delegate.set(delegate);
 	}
 
 
@@ -57,112 +58,112 @@ public class InstrumentationWrapper implements Instrumentation {
 	 */
 	protected Instrumentation getDelegate()
 	{
-		return delegate;
+		return delegate.get();
 	}
 
 
 	@Override
 	public void addTransformer(ClassFileTransformer transformer, boolean canRetransform)
 	{
-		delegate.addTransformer(transformer, canRetransform);
+		delegate.get().addTransformer(transformer, canRetransform);
 	}
 
 
 	@Override
 	public void addTransformer(ClassFileTransformer transformer)
 	{
-		delegate.addTransformer(transformer);
+		delegate.get().addTransformer(transformer);
 	}
 
 
 	@Override
 	public boolean removeTransformer(ClassFileTransformer transformer)
 	{
-		return delegate.removeTransformer(transformer);
+		return delegate.get().removeTransformer(transformer);
 	}
 
 
 	@Override
 	public boolean isRetransformClassesSupported()
 	{
-		return delegate.isRetransformClassesSupported();
+		return delegate.get().isRetransformClassesSupported();
 	}
 
 
 	@Override
 	public void retransformClasses(Class<?>... classes) throws UnmodifiableClassException
 	{
-		delegate.retransformClasses(classes);
+		delegate.get().retransformClasses(classes);
 	}
 
 
 	@Override
 	public boolean isRedefineClassesSupported()
 	{
-		return delegate.isRedefineClassesSupported();
+		return delegate.get().isRedefineClassesSupported();
 	}
 
 
 	@Override
 	public void redefineClasses(ClassDefinition... definitions) throws ClassNotFoundException, UnmodifiableClassException
 	{
-		delegate.redefineClasses(definitions);
+		delegate.get().redefineClasses(definitions);
 	}
 
 
 	@Override
 	public boolean isModifiableClass(Class<?> theClass)
 	{
-		return delegate.isModifiableClass(theClass);
+		return delegate.get().isModifiableClass(theClass);
 	}
 
 
 	@Override
 	public Class<?>[] getAllLoadedClasses()
 	{
-		return delegate.getAllLoadedClasses();
+		return delegate.get().getAllLoadedClasses();
 	}
 
 
 	@Override
 	public Class<?>[] getInitiatedClasses(ClassLoader loader)
 	{
-		return delegate.getInitiatedClasses(loader);
+		return delegate.get().getInitiatedClasses(loader);
 	}
 
 
 	@Override
 	public long getObjectSize(Object objectToSize)
 	{
-		return delegate.getObjectSize(objectToSize);
+		return delegate.get().getObjectSize(objectToSize);
 	}
 
 
 	@Override
 	public void appendToBootstrapClassLoaderSearch(JarFile jarfile)
 	{
-		delegate.appendToBootstrapClassLoaderSearch(jarfile);
+		delegate.get().appendToBootstrapClassLoaderSearch(jarfile);
 	}
 
 
 	@Override
 	public void appendToSystemClassLoaderSearch(JarFile jarfile)
 	{
-		delegate.appendToSystemClassLoaderSearch(jarfile);
+		delegate.get().appendToSystemClassLoaderSearch(jarfile);
 	}
 
 
 	@Override
 	public boolean isNativeMethodPrefixSupported()
 	{
-		return delegate.isNativeMethodPrefixSupported();
+		return delegate.get().isNativeMethodPrefixSupported();
 	}
 
 
 	@Override
 	public void setNativeMethodPrefix(ClassFileTransformer transformer, String prefix)
 	{
-		delegate.setNativeMethodPrefix(transformer, prefix);
+		delegate.get().setNativeMethodPrefix(transformer, prefix);
 	}
 
 }

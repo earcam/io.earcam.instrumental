@@ -39,6 +39,6 @@ public final class FakeAgent {
 	@SuppressWarnings("unused")
 	public static void agentmain(String agentArgs, Instrumentation instrumentation)
 	{
-		InstrumentationServiceProvider.instance = instrumentation;
+		InstrumentationServiceProvider.instance.set(instrumentation);
 	}
 }

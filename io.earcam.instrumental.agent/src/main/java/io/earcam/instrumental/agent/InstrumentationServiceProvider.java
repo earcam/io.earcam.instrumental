@@ -21,6 +21,7 @@ package io.earcam.instrumental.agent;
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.earcam.unexceptional.Exceptional;
 
@@ -32,7 +33,7 @@ import io.earcam.unexceptional.Exceptional;
  */
 public final class InstrumentationServiceProvider extends InstrumentationWrapper {
 
-	static volatile Instrumentation instance;
+	static final AtomicReference<Instrumentation> instance = new AtomicReference<>();
 
 
 	/**
@@ -43,17 +44,17 @@ public final class InstrumentationServiceProvider extends InstrumentationWrapper
 	public InstrumentationServiceProvider()
 	{
 		attach();
-		setDelegate(instance);
+		setDelegate(instance.get());
 	}
 
 
 	private static void attach()
 	{
-		if(instance == null) {
+		if(instance.get() == null) {
 			Path agentJar = StubAgentJar.stubAgentJar("fake-agent-", FakeAgent.class);
 			Exceptional.accept(Attach::attach, agentJar.toUri(), "");
 
-			Objects.requireNonNull(instance);
+			Objects.requireNonNull(instance.get());
 		}
 	}
 }
