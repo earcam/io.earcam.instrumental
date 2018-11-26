@@ -32,8 +32,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import io.earcam.instrumental.module.osgi.BundleManifestHeaders;
-import io.earcam.instrumental.module.osgi.parser.ManifestLexer;
-import io.earcam.instrumental.module.osgi.parser.ManifestParser;
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.ReplaceAllInputStream;
 

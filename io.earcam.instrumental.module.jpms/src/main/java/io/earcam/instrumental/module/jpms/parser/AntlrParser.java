@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 import io.earcam.instrumental.module.jpms.ModuleInfoBuilder;
 import io.earcam.instrumental.module.jpms.RequireModifier;
-import io.earcam.instrumental.module.jpms.parser.Java9BaseListener;
 import io.earcam.instrumental.module.jpms.parser.Java9Parser.ExportsDirectiveContext;
 import io.earcam.instrumental.module.jpms.parser.Java9Parser.ModuleDeclarationContext;
 import io.earcam.instrumental.module.jpms.parser.Java9Parser.ModuleNameContext;

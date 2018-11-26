@@ -118,7 +118,7 @@ public abstract class AbstractManifestBuilder<T extends ManifestInfoBuilder<T>> 
 	@Override
 	public T mergeFrom(Manifest manifest)
 	{
-		for(Object entry : manifest.getMainAttributes().entrySet()) {
+		for(Entry<?, ?> entry : manifest.getMainAttributes().entrySet()) {
 			@SuppressWarnings("unchecked")
 			Entry<Name, String> x = (Entry<Name, String>) entry;
 			manifestMain(x);

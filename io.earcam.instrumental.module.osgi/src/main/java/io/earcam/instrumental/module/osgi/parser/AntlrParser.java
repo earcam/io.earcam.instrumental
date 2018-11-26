@@ -27,8 +27,6 @@ import java.util.function.BiConsumer;
 import io.earcam.instrumental.module.manifest.ManifestInfoBuilder;
 import io.earcam.instrumental.module.osgi.BundleInfoBuilder;
 import io.earcam.instrumental.module.osgi.ClauseParameters;
-import io.earcam.instrumental.module.osgi.parser.ManifestBaseListener;
-import io.earcam.instrumental.module.osgi.parser.ManifestParser;
 import io.earcam.instrumental.module.osgi.parser.ManifestParser.*;
 
 class AntlrParser extends ManifestBaseListener {
