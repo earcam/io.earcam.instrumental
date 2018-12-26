@@ -25,7 +25,7 @@ before_install:
 - sudo apt-get update -q
 - echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections
 - echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections
-- sudo apt-get install oracle-java9-installer oracle-java10-installer oracle-java11-installer -y -q
+- sudo apt-get install oracle-java9-installer oracle-java11-installer -y -q
 - export JAVA_8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=${JAVA_8_HOME}
 - mkdir -p $HOME/.m2
