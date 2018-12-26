@@ -435,9 +435,9 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 
 
 	@Override
-	public byte[] toBytecode()
+	public byte[] toBytecode(int jdkVersion)
 	{
-		return BytecodeWriter.toBytecode(this);
+		return BytecodeWriter.toBytecode(jdkVersion, this);
 	}
 
 

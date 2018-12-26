@@ -242,6 +242,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param moduleName a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule named(String moduleName)
 	{
 		builder.named(moduleName);
@@ -249,6 +250,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	}
 
 
+	@Override
 	public AsJpmsModule versioned(String moduleVersion)
 	{
 		builder.versioned(moduleVersion);
@@ -276,6 +278,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @see Predicate#negate()
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule exporting(Predicate<String> predicate, String... onlyToModules)
 	{
 		exportMatchers.add(new ExportMatcher(builder::exporting, predicate, onlyToModules));
@@ -292,6 +295,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param onlyToModules a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule opening(Predicate<String> predicate, String... onlyToModules)
 	{
 		exportMatchers.add(new ExportMatcher(builder::opening, predicate, onlyToModules));
@@ -307,6 +311,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param moduleName a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule requiring(String moduleName)
 	{
 		return requiring(moduleName, null);
@@ -322,6 +327,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param version a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule requiring(String moduleName, String version)
 	{
 		builder.requiring(moduleName, EnumSet.of(MANDATED), version);
@@ -337,6 +343,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param service a {@link java.lang.Class} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule using(Class<?> service)
 	{
 		return using(service.getCanonicalName());
@@ -351,6 +358,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * @param service a {@link java.lang.String} object.
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule using(String service)
 	{
 		builder.using(service);
@@ -365,6 +373,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 *
 	 * @return a {@link io.earcam.instrumental.archive.jpms.DefaultAsJpmsModule} object.
 	 */
+	@Override
 	public AsJpmsModule listingPackages()
 	{
 		listingPackages = true;
@@ -372,15 +381,17 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	}
 
 
+	@Override
 	public AsJpmsModule autoRequiringClasspath()
 	{
 		return autoRequiring(new ClasspathModules());
 	}
 
 
-	public AsJpmsModule autoRequiringJdkModules()
+	@Override
+	public AsJpmsModule autoRequiringJdkModules(int jdkVersion)
 	{
-		return autoRequiring(new JdkModules());
+		return autoRequiring(new JdkModules(jdkVersion));
 	}
 
 
@@ -395,6 +406,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * 
 	 * @see #autoRequiring()
 	 */
+	@Override
 	public AsJpmsModule autoRequiring(PackageModuleMapper... mappers)
 	{
 		return autoRequiring(Arrays.asList(mappers));
@@ -412,6 +424,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	 * 
 	 * @see #autoRequiring()
 	 */
+	@Override
 	public AsJpmsModule autoRequiring(Iterable<PackageModuleMapper> mappers)
 	{
 		autoRequiring = new AutoRequiring();
@@ -420,6 +433,7 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	}
 
 
+	@Override
 	public AsJpmsModule providingFromMetaInfServices(boolean enable)
 	{
 		this.providingFromMetaInfServices = enable;

@@ -20,6 +20,8 @@ package io.earcam.instrumental.archive.jpms;
 
 import java.util.function.Predicate;
 
+import javax.lang.model.SourceVersion;
+
 import io.earcam.instrumental.archive.ArchiveConstruction;
 import io.earcam.instrumental.archive.AsJarBuilder;
 import io.earcam.instrumental.archive.jpms.auto.ClasspathModules;
@@ -137,6 +139,12 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	public abstract AsJpmsModule listingPackages();
 
 
+	public default AsJpmsModule autoRequiring(SourceVersion jdkVersion)
+	{
+		return autoRequiring(jdkVersion.ordinal());
+	}
+
+
 	/**
 	 * <p>
 	 * Auto-require the JDK modules and classpaths.
@@ -145,11 +153,12 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 * @return this builder
 	 * 
 	 * @see #autoRequiringClasspath()
-	 * @see #autoRequiringJdkModules()
+	 * @see #autoRequiringJdkModules(SourceVersion)
+	 * @see #autoRequiringJdkModules(int)
 	 */
-	public default AsJpmsModule autoRequiring()
+	public default AsJpmsModule autoRequiring(int jdkVersion)
 	{
-		return autoRequiringJdkModules()
+		return autoRequiringJdkModules(jdkVersion)
 				.autoRequiringClasspath();
 	}
 
@@ -171,19 +180,36 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 *
 	 * @return this builder
 	 */
-	public abstract AsJpmsModule autoRequiringJdkModules();
+	public default AsJpmsModule autoRequiringJdkModules(SourceVersion jdkVersion)
+	{
+		return autoRequiringJdkModules(jdkVersion.ordinal());
+	}
+
+
+	/**
+	 * <p>
+	 * Auto-Require from the JDK's modules
+	 * </p>
+	 *
+	 * @param version dictate which version of modules JDK to use.
+	 * @return this builder
+	 */
+	public abstract AsJpmsModule autoRequiringJdkModules(int version);
 
 
 	/**
 	 * <p>
 	 * Note: if you also want the default {@link PackageModuleMapper} ({@link JdkModules} and {@link ClasspathModules})
-	 * then you must also invoke {@link #autoRequiring()} or add them manually here
+	 * then you must also invoke {@link #autoRequiring(int)} or add them manually here
 	 * </p>
 	 *
-	 * @param mappers a {@link io.earcam.instrumental.archive.jpms.PackageModuleMapper} object.
+	 * @param mappers an array of {@link io.earcam.instrumental.archive.jpms.PackageModuleMapper}s.
 	 * @return this builder
 	 * 
-	 * @see #autoRequiring()
+	 * @see #autoRequiring(int)
+	 * @see #autoRequiring(SourceVersion)
+	 * @see #autoRequiringJdkModules(SourceVersion)
+	 * @see #autoRequiringClasspath()
 	 */
 	public abstract AsJpmsModule autoRequiring(PackageModuleMapper... mappers);
 

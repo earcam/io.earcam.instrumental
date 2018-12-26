@@ -57,7 +57,7 @@ public class JdkModulesIntegrationTest {
 	{
 		synchronized(JdkModules.class) {
 
-			Path cache = JdkModules.DEFAULT_DIRECTORY.resolve(JdkModules.CACHE_FILENAME);
+			Path cache = JdkModules.DEFAULT_DIRECTORY.resolve(JdkModules.substituteVersion(JdkModules.CACHE_FILENAME, 9));
 			Files.deleteIfExists(cache);
 
 			JdkModules.main(new String[0]);

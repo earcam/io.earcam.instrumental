@@ -51,7 +51,7 @@ public class AsJpmsModuleIntegrationTest {
 		Archive jpmsed = archive()
 				.configured(
 						asJpmsModule()
-								.autoRequiring()
+								.autoRequiringJdkModules(11)
 								.exporting(p -> true)
 								.named(Exceptional.class.getPackage().getName()))
 				.sourcing(contentFrom(jar, filter))

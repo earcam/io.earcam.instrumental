@@ -20,8 +20,6 @@ package io.earcam.instrumental.module.auto;
 
 import static org.objectweb.asm.Opcodes.ASM6;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -245,6 +243,8 @@ public class Reader {
 	 *
 	 * @param importedTypeReducer a {@link java.util.function.UnaryOperator} object.
 	 * @return this reader
+	 * 
+	 * @see #typeToPackageReducer(String)
 	 */
 	public Reader setImportedTypeReducer(UnaryOperator<String> importedTypeReducer)
 	{
@@ -259,6 +259,8 @@ public class Reader {
 	 *
 	 * @param importingTypeReducer a {@link java.util.function.UnaryOperator} object.
 	 * @return this reader
+	 * 
+	 * @see #typeToPackageReducer(String)
 	 */
 	public Reader setImportingTypeReducer(UnaryOperator<String> importingTypeReducer)
 	{
@@ -272,13 +274,13 @@ public class Reader {
 	 * typeToPackageReducer.
 	 * </p>
 	 *
-	 * @param type a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param type a FQN classname
+	 * @return the package for given FQN
 	 */
 	public static String typeToPackageReducer(String type)
 	{
 		int index = type.lastIndexOf('.');
-		return (index == -1) ? type : type.substring(0, index);
+		return (index == -1) ? "" : type.substring(0, index);
 	}
 
 
@@ -363,16 +365,9 @@ public class Reader {
 	 */
 	public void processJar(Path jar) throws IOException
 	{
-		try(JarInputStream input = createJarInputStream(jar.toFile())) {
+		try(JarInputStream input = ExplodedJarInputStream.jarInputStreamFrom(jar)) {
 			processJar(input);
 		}
-	}
-
-
-	private JarInputStream createJarInputStream(File jar) throws IOException
-	{
-		return (jar.isDirectory()) ? new JarInputStream(new FileInputStream(jar))
-				: ExplodedJarInputStream.explodedJar(jar);
 	}
 
 
@@ -386,7 +381,8 @@ public class Reader {
 	 */
 	public void processJar(@WillNotClose InputStream input) throws IOException
 	{
-		JarInputStream jin = (input instanceof JarInputStream) ? ((JarInputStream) input) : new JarInputStream(input);
+		JarInputStream jin = (input instanceof JarInputStream) ? ((JarInputStream) input)
+				: new JarInputStream(input);
 		processJar(jin);
 	}
 

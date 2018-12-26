@@ -20,7 +20,6 @@ package io.earcam.instrumental.module.jpms;
 
 import static org.objectweb.asm.Opcodes.ACC_MODULE;
 import static org.objectweb.asm.Opcodes.ASM6;
-import static org.objectweb.asm.Opcodes.V9;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -50,10 +49,11 @@ class BytecodeWriter extends ModuleVisitor {
 	}
 
 
-	static byte[] toBytecode(ModuleInfo module)
+	static byte[] toBytecode(int jdkVersion, ModuleInfo module)
 	{
+		int asmJdkVersion = 0 << 16 | (44 + jdkVersion);
 		ClassWriter writer = new ClassWriter(ASM6);
-		writer.visit(V9, ACC_MODULE, "module-info", null, null, null);
+		writer.visit(asmJdkVersion, ACC_MODULE, "module-info", null, null, null);
 		BytecodeWriter visitor = new BytecodeWriter(writer.visitModule(module.name(), module.access(), module.version()));
 		if(module.mainClass() != null) {
 			visitor.visitMainClass(module.mainClass());

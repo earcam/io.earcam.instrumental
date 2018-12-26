@@ -55,7 +55,7 @@ public class JdkModulesTest {
 
 		JdkModules.main(new String[] { directory.toString() });
 
-		Path cache = directory.resolve(CACHE_FILENAME);
+		Path cache = directory.resolve(JdkModules.substituteVersion(CACHE_FILENAME, 11));
 
 		assertThat("expecting " + cache, cache.toFile(), is(anExistingFile()));
 
@@ -64,7 +64,7 @@ public class JdkModulesTest {
 		// completely arbitrary, previous observed JDK9 module counts have been 96 and 99
 		assertThat(modules, hasSize(greaterThan(50)));
 
-		String jdkVersion = modules.get(0).version();   // makes the test less fragile
+		String jdkVersion = modules.get(0).version();   // makes the test less fragile ... and less accurate
 
 		ModuleInfo jdeps = ModuleInfo.moduleInfo().named("jdk.jdeps")
 				.versioned(jdkVersion)

@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -183,23 +184,54 @@ public final class Maven {
 
 
 	/**
+	 * <p>
 	 * Resolves compile-scoped dependencies (including transitive)
+	 * </p>
+	 * <p>
+	 * Use this form if you need the downloaded files as Archives.
+	 * </p>
 	 * 
 	 * @param gavs the groupId:artifactId:version:type:classifier coordinates for Maven artifacts
 	 * @return the dependencies converted to {@link Archive} instances
+	 * 
+	 * @see #dependencyFiles(String...)
 	 */
 	public Map<MavenArtifact, Archive> dependencies(String... gavs)
 	{
-		List<ArtifactResult> response = resolve(gavs);
+		Function<ArtifactResult, Archive> mapper = v -> archive().sourcing(contentFrom(v.getArtifact().getFile().toPath())).toObjectModel();
+		return dependencies(mapper, gavs);
+	}
 
-		Map<MavenArtifact, Archive> archives = new HashMap<>();
+
+	private <T> Map<MavenArtifact, T> dependencies(Function<ArtifactResult, T> mapper, String... gavs)
+	{
+		List<ArtifactResult> response = resolve(gavs);
+		Map<MavenArtifact, T> archives = new HashMap<>();
 
 		for(ArtifactResult result : response) {
-			File artifactFile = result.getArtifact().getFile();
-			Archive archive = archive().sourcing(contentFrom(artifactFile)).toObjectModel();
-			archives.put(new MavenArtifact(result.getArtifact()), archive);
+			archives.put(new MavenArtifact(result.getArtifact()), mapper.apply(result));
 		}
 		return archives;
+	}
+
+
+	/**
+	 * <p>
+	 * Resolves compile-scoped dependencies (including transitive)
+	 * </p>
+	 * <p>
+	 * Use this form if you only need the files (not Archives).
+	 * </p>
+	 * 
+	 * @param gavs the groupId:artifactId:version:type:classifier coordinates for Maven artifacts
+	 * @return the dependencies converted to {@link File} instances
+	 * 
+	 * @see #dependency(String...)
+	 */
+	public Map<MavenArtifact, Path> dependencyFiles(String... gavs)
+	{
+		Function<ArtifactResult, Path> mapper = v -> v.getArtifact().getFile().toPath();
+		return dependencies(mapper, gavs);
 	}
 
 
@@ -235,17 +267,15 @@ public final class Maven {
 
 	public void install(MavenArtifact artifact, Archive archive, MavenArtifact... dependencies)
 	{
-		Path artifactPath = local.getBasedir().toPath()
-				.resolve(Paths.get(".", artifact.groupId().split("\\.")))
-				.resolve(Paths.get(artifact.artifactId(), artifact.baseVersion()));
-
-		String fileName = artifact.artifactId() + '-' + artifact.baseVersion();
+		Path localRepo = local.getBasedir().toPath();
+		Path artifactPath = localRepo.resolve(artifact.relativeRepositoryDirectory());
 
 		// We get away with writing JAR directly into local repo,
 		// but attempting same trick with POM results in overwrite of zero bytes
+		// so we just tack on a ".X" for now
 
-		Path jar = artifactPath.resolve(fileName + ".jar");
-		Path pom = artifactPath.resolve(fileName + ".pom.X");
+		Path jar = artifactPath.resolve(artifact.filename());
+		Path pom = artifactPath.resolve(artifact.pomFilename() + ".X");
 
 		archive.to(jar);
 

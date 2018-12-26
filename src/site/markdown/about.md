@@ -19,9 +19,9 @@ When modifying the code beware/be-aware the build will fail if Maven POMs, licen
 according to conventions (Apache Maven's standards for POMs, my own undocumented formatting for source).  To auto-format the lot, simply run 
 `mvn -P '!strict,tidy'`.
 
-To run PiTest use `mvn -P analyze clean install`
+To run PiTest use `mvn -P analyse clean install`
 
-To run against SonarQube use `mvn -P analyze,report,sonar`
+To run against SonarQube use `mvn -P analyse,report,sonar`
 
 ## SCA Metrics
 

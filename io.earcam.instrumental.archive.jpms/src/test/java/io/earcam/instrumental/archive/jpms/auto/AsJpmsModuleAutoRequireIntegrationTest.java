@@ -45,7 +45,7 @@ public class AsJpmsModuleAutoRequireIntegrationTest {
 				.configured(
 						asJpmsModule()
 								.named("empty")
-								.autoRequiring())
+								.autoRequiringJdkModules(9))
 				.toObjectModel();
 
 		Set<String> required = moduleInfoFrom(archive).requires().stream()
@@ -64,7 +64,7 @@ public class AsJpmsModuleAutoRequireIntegrationTest {
 						asJpmsModule()
 								.named("foo")
 								.exporting(x -> true)
-								.autoRequiring())
+								.autoRequiringJdkModules(9))
 				.with(DummyIntComparator.class)
 				.toObjectModel();
 

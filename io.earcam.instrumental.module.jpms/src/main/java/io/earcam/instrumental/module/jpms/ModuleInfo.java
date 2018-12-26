@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.WillClose;
 import javax.annotation.WillNotClose;
+import javax.lang.model.SourceVersion;
 
 /**
  *
@@ -178,9 +179,38 @@ public interface ModuleInfo extends Serializable {
 
 
 	/**
+	 * The generated class file with a major version (53) set for JDK9
+	 * 
 	 * @return convert this model to bytecode.
+	 * 
+	 * @see #toBytecode(int)
+	 * @see #toBytecode(SourceVersion)
 	 */
-	public abstract byte[] toBytecode();
+	public default byte[] toBytecode()
+	{
+		return toBytecode(9);
+	}
+
+
+	/**
+	 * You may choose to use {@link SourceVersion#latest()} on JDKs &ge; 9
+	 * 
+	 * @return convert this model to bytecode.
+	 * 
+	 * @see #toBytecode(int)
+	 */
+	public default byte[] toBytecode(SourceVersion jdkVersion)
+	{
+		return toBytecode(jdkVersion.ordinal());
+	}
+
+
+	/**
+	 * @return convert this model to bytecode.
+	 * 
+	 * @see #toBytecode(SourceVersion)
+	 */
+	public abstract byte[] toBytecode(int jdkVersion);
 
 
 	/**

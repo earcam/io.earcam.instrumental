@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.fluency;
 
+import static java.time.ZoneId.systemDefault;
 import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -28,6 +29,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.time.ZonedDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +57,7 @@ import io.earcam.instrumental.fluent.Fluent;
 
 /**
  * <p>
- * FluencyProcessor; processes {@link Fluent}ly annotated class members.
+ * <b>EXPERIMENTAL (NOT CURRENTLY FOR REUSE)</B>: FluencyProcessor; processes {@link Fluent}ly annotated class members.
  * </p>
  *
  */
@@ -62,6 +65,11 @@ import io.earcam.instrumental.fluent.Fluent;
 public class FluencyProcessor extends AbstractProcessor {
 
 	static final String OPTION_NAME = "name";
+	static final String OPTION_ADD_GENERATED_ONLY = "add.generated.only";
+	static final String OPTION_ADD_GENERATED_FULL = "add.generated.full";
+
+	private boolean addGeneratedOnly;
+	private boolean addGeneratedFull;
 
 	/*
 	 * TODO
@@ -204,6 +212,8 @@ public class FluencyProcessor extends AbstractProcessor {
 		super.init(processingEnv);
 
 		name = processingEnv.getOptions().getOrDefault(OPTION_NAME, "FluentApi");
+		addGeneratedOnly = processingEnv.getOptions().containsKey(OPTION_ADD_GENERATED_ONLY);
+		addGeneratedFull = processingEnv.getOptions().containsKey(OPTION_ADD_GENERATED_FULL);
 	}
 
 
@@ -243,27 +253,57 @@ public class FluencyProcessor extends AbstractProcessor {
 		try {
 			jfo = processingEnv.getFiler().createSourceFile(fqn);
 			try(BufferedWriter bw = new BufferedWriter(jfo.openWriter())) {
-				bw.append("package ").append(paquet).append(";\n\n");
-
-				// TODO date must be optional (as otherwise "different" source each time)
-				// JAVA9 FAILS due to split package issues with `javax.annotation`
-				// bw.append('@').append("javax.annotation.Generated")
-				// .append("(value=\"").append(FluencyProcessor.class.getCanonicalName()).append('"')
-				// .append(")\n")
-
-				bw.append("public final class ").append(name).append(" {\n\n");
-
-				for(FluentMethod method : methods) {
-					method.appendTo(bw);
-				}
-
-				bw.append("\n}\n");
+				appendPackage(paquet, bw);
+				appendGeneratedAnnotation(bw);
+				appendOpenClass(bw);
+				appendMethods(bw);
+				appendCloseClass(bw);
 			}
 		} catch(IOException e) {
 			StringWriter writer = new StringWriter();
 			e.printStackTrace(new PrintWriter(writer));
 			processingEnv.getMessager().printMessage(Kind.ERROR, writer.toString());
 		}
+	}
+
+
+	private void appendPackage(String paquet, BufferedWriter bw) throws IOException
+	{
+		bw.append("package ").append(paquet).append(";\n\n");
+	}
+
+
+	private void appendOpenClass(BufferedWriter bw) throws IOException
+	{
+		bw.append("public final class ").append(name).append(" {\n\n");
+	}
+
+
+	// What about `javax.annotation.processing.Generated` ? since JDK9 pfft
+	private void appendGeneratedAnnotation(BufferedWriter bw) throws IOException
+	{
+		if(addGeneratedOnly || addGeneratedFull) {
+			bw.append('@').append("javax.annotation.Generated");
+			bw.append("(value = \"").append(FluencyProcessor.class.getCanonicalName()).append('"');
+			if(addGeneratedFull) {
+				bw.append(", date = \"").append(ZonedDateTime.now(systemDefault()).toString()).append('"');
+			}
+			bw.append(")\n");
+		}
+	}
+
+
+	private void appendMethods(BufferedWriter bw) throws IOException
+	{
+		for(FluentMethod method : methods) {
+			method.appendTo(bw);
+		}
+	}
+
+
+	private Writer appendCloseClass(BufferedWriter bw) throws IOException
+	{
+		return bw.append("\n}\n");
 	}
 
 

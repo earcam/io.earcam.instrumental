@@ -31,31 +31,63 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.WillClose;
+import javax.lang.model.SourceVersion;
+
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 import io.earcam.unexceptional.Closing;
 
 /**
  * <p>
- * JdkModules class.
+ * This is <b>not</b> a public API, subject to change without notice.
  * </p>
- *
+ * <p>
+ * Future versions will most likely generate cache in e.g. JSON, which
+ * will be version-controlled; avoiding the necessity of access to
+ * all older JDK versions to build the project.
+ * </p>
+ * 
  */
 public final class JdkModules extends AbstractPackageModuleMapper {
 
 	private static final String META_INF = "META-INF";
 
-	public static final String CACHE_FILENAME = "jpms.cache";
+	private static final String VERSION_PLACEHOLDER = "$$$";
+	public static final String CACHE_FILENAME = "$$$.jpms.cache";
 
-	public static final String PROPERTY_JDK_HOME = "instrumental.jdk.home";
+	/**
+	 * A path to a JDK >= 9, where '$$$' will be replaced by '9', '10', '11', ...
+	 */
+	public static final String PROPERTY_JDK_HOME_PATTERN = "instrumental.jdk.home";
 
 	static final Path DEFAULT_DIRECTORY = Paths.get("target", "classes", META_INF);
-	static final String JDK_HOME = "/usr/lib/jvm/java-11-oracle/";
+	static final String JDK_HOME = "/usr/lib/jvm/java-" + VERSION_PLACEHOLDER + "-oracle/";
 
 	private static List<ModuleInfo> modules;
 
+	private final int version;
+
+
+	public JdkModules(int version)
+	{
+		this.version = version;
+	}
+
 
 	/**
-	 * Note: JDK 9+ home may be set via system property, see {@link #PROPERTY_JDK_HOME}
+	 * @deprecated stoopid idea to have this as a default
+	 */
+	@Deprecated
+	public JdkModules()
+	{
+		this(Math.max(SourceVersion.latest().ordinal(), 9));
+	}
+
+
+	/**
+	 * <p>
+	 * Generate the necessary cache files.
+	 * </p>
 	 *
 	 * @param args single optional argument; the output directory
 	 * @throws java.io.IOException
@@ -63,18 +95,24 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
-		Path outputFile = outputFile(args);
-		Path jdk9Home = jdk9Home();
-		String script = runnableScript(outputFile);
-		execute(jdk9Home, script);
+		int maxVersion = Math.max(20, SourceVersion.latest().ordinal());
+
+		for(int version = 9; version < maxVersion; version++) {
+			Path outputFile = outputFile(args, version);
+			Path jdkHome = jdkHome(version);
+			if(jdkHome.toFile().isDirectory()) {
+				String script = runnableScript(outputFile);
+				execute(jdkHome, script);
+			}
+		}
 	}
 
 
-	private static Path outputFile(String[] args)
+	private static Path outputFile(String[] args, int version)
 	{
 		Path output = outputDirectory(args);
 		output.toFile().mkdirs();
-		return output.resolve(CACHE_FILENAME);
+		return output.resolve(substituteVersion(CACHE_FILENAME, version));
 	}
 
 
@@ -84,9 +122,16 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	private static Path jdk9Home()
+	private static Path jdkHome(int version)
 	{
-		return Paths.get(System.getProperty(PROPERTY_JDK_HOME, JDK_HOME));
+		String jdkPattern = System.getProperty(PROPERTY_JDK_HOME_PATTERN, JDK_HOME);
+		return Paths.get(substituteVersion(jdkPattern, version));
+	}
+
+
+	static String substituteVersion(String property, int version)
+	{
+		return property.replace(VERSION_PLACEHOLDER, Integer.toString(version));
 	}
 
 
@@ -175,9 +220,9 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	private static void execute(Path jdk9Home, String script) throws IOException, InterruptedException
+	private static void execute(Path jdkHome, String script) throws IOException, InterruptedException
 	{
-		Process process = launchJShell(jdk9Home);
+		Process process = launchJShell(jdkHome);
 		executeScript(script, process);
 		processOutput(process);
 	}
@@ -232,10 +277,10 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	private static synchronized void loadCache()
+	private synchronized void loadCache()
 	{
 		if(modules == null) {
-			String resource = META_INF + '/' + CACHE_FILENAME;
+			String resource = META_INF + '/' + substituteVersion(CACHE_FILENAME, version);
 			InputStream serial = JdkModules.class.getClassLoader().getResourceAsStream(resource);
 			Objects.requireNonNull(serial, "Unable to load " + resource);
 			modules = deserialize(serial);
@@ -244,7 +289,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 
 
 	@SuppressWarnings("unchecked")
-	static List<ModuleInfo> deserialize(InputStream in)
+	static List<ModuleInfo> deserialize(@WillClose InputStream in)
 	{
 		return List.class.cast(Closing.closeAfterApplying(ObjectInputStream::new, in, ObjectInputStream::readObject));
 	}

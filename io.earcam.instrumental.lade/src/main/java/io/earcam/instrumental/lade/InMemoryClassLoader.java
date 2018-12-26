@@ -316,7 +316,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 
 	private static String classToResourceName(String name)
 	{
-		return name.replaceAll("\\.", "/") + ".class";
+		return name.replace('.', '/') + ".class";
 	}
 
 

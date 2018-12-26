@@ -64,7 +64,7 @@ public class InMemoryModuleFinderTest {
 						.configured(
 								asJpmsModule()
 										.named("a")
-										.autoRequiring())
+										.autoRequiring(9))
 						.toByteArray())
 				.jar(archive()
 						.configured(
@@ -75,7 +75,7 @@ public class InMemoryModuleFinderTest {
 						.configured(
 								asJpmsModule()
 										.named("c")
-										.autoRequiring())
+										.autoRequiring(9))
 						.toByteArray());
 
 		InMemoryModuleFinder finder = new InMemoryModuleFinder(loader);
@@ -100,7 +100,7 @@ public class InMemoryModuleFinderTest {
 				asJpmsModule()
 					.named("api")
 					.exporting(s -> true)
-					.autoRequiring()
+					.autoRequiring(9)
 			)
 			.with(AcmeApi.class)
 			.toObjectModel();
@@ -109,7 +109,7 @@ public class InMemoryModuleFinderTest {
 				.configured(
 					asJpmsModule()
 						.named("app")
-						.autoRequiring()
+						.autoRequiring(9)
 						.autoRequiring(fromArchives(api))
 						.exporting(s -> true)
 						.using(AcmeApi.class)
@@ -121,7 +121,7 @@ public class InMemoryModuleFinderTest {
 				.configured(
 					asJpmsModule()
 						.named("imp")
-						.autoRequiring()
+						.autoRequiring(9)
 						.autoRequiring(fromArchives(api))
 						.providing(AcmeApi.class, AcmeImp.class)
 				).toObjectModel();
@@ -196,7 +196,7 @@ public class InMemoryModuleFinderTest {
 						.configured(
 								asJpmsModule()
 										.named("a")
-										.autoRequiring())
+										.autoRequiring(9))
 						.toByteArray());
 
 		InMemoryModuleFinder finder = new InMemoryModuleFinder(loader);

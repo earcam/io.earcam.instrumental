@@ -288,6 +288,24 @@ public class MavenTest {
 	}
 
 
+	@Test
+	void dependencyFiles() throws Exception
+	{
+		Map<MavenArtifact, Path> dependencies = maven()
+				.usingCentral()
+				.usingLocal(Paths.get(".", "target", "repo-resolve-files"))
+				.dependencyFiles("junit:junit:4.12");
+
+		MavenArtifact junit = new MavenArtifact("junit", "junit", "4.12", "jar", "");
+		MavenArtifact hamcrest = new MavenArtifact("org.hamcrest", "hamcrest-core", "1.3", "jar", "");
+
+		assertThat(dependencies, allOf(
+				aMapWithSize(2),
+				hasKey(junit),
+				hasKey(hamcrest)));
+	}
+
+
 	@SuppressWarnings("unchecked")
 	@Test
 	void dependenciesToClassPath() throws Exception

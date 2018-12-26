@@ -18,12 +18,7 @@
  */
 package io.earcam.instrumental.module.auto;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableSet;
-import static java.util.stream.Collectors.toSet;
-
 import java.util.Arrays;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.objectweb.asm.Type;
@@ -33,9 +28,6 @@ import org.objectweb.asm.commons.Remapper;
  * Determine the imported types of a given ASM construct.
  */
 class ImportsOf extends Remapper {
-
-	private static final Set<String> PRIMITIVES = namesOf(
-			short.class, int.class, long.class, float.class, double.class, char.class, byte.class, boolean.class, void.class);
 
 	private Consumer<String> importConsumer;
 
@@ -50,20 +42,6 @@ class ImportsOf extends Remapper {
 	public ImportsOf(Consumer<String> importConsumer)
 	{
 		this.importConsumer = importConsumer;
-	}
-
-
-	private static Set<String> namesOf(Class<?>... items)
-	{
-		return unmodifiableSet(asList(items).stream()
-				.map(Class::getCanonicalName)
-				.collect(toSet()));
-	}
-
-
-	static boolean isPrimitive(String type)
-	{
-		return PRIMITIVES.contains(type);
 	}
 
 
@@ -85,22 +63,29 @@ class ImportsOf extends Remapper {
 	}
 
 
+	/**
+	 * The null guard below needed as {@link org.objectweb.asm.commons.ClassRemapper}
+	 * invokes {@link #mapType(String)} with the {@code superName} which is {@code null}
+	 * when the class name is {@code module-info}
+	 * 
+	 * @param internal
+	 */
 	void addInternalType(String internal)
 	{
-		Type type = Type.getObjectType(internal);
-		addInternalType(type);
+		if(internal != null) {
+			Type type = Type.getObjectType(internal);
+			addInternalType(type);
+		}
 	}
 
 
 	void addInternalType(Type type)
 	{
 		if(Type.ARRAY == type.getSort()) {
-			return;// element/component type will be mapped later
+			return; // element/component type will be mapped later
 		}
 		String name = externalName(type);
-		if(!isPrimitive(name)) {
-			importConsumer.accept(name);
-		}
+		importConsumer.accept(name);
 	}
 
 

@@ -21,7 +21,12 @@ package io.earcam.instrumental.module.auto;
 import static io.earcam.instrumental.module.auto.Reader.reader;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 
 import java.io.ByteArrayInputStream;
@@ -29,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -38,7 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.function.BiConsumer;
+import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
 import org.hamcrest.Matchers;
@@ -47,14 +58,18 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.signature.SignatureReader;
+import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.simple.SimpleLogger;
+import org.slf4j.simple.SimpleLoggerFactory;
 
 import io.earcam.acme.AcmeAnnotation;
 import io.earcam.acme.Annotated;
 import io.earcam.acme.Generics;
+import io.earcam.acme.HasArrays;
 import io.earcam.acme.ImportsSlf4jApi;
-import io.earcam.instrumental.module.auto.Reader;
+import io.earcam.acme.PrimitiveMethodArguments;
 import io.earcam.instrumental.reflect.Resources;
 import io.earcam.utilitarian.charstar.CharSequences;
 
@@ -62,13 +77,13 @@ import io.earcam.utilitarian.charstar.CharSequences;
 public class ReaderTest {
 
 	// EARCAM_SNIPPET_BEGIN: test-support
-	private static String cn(Class<?> type)
+	public static String cn(Class<?> type)
 	{
 		return type.getCanonicalName();
 	}
 
 
-	private static String pkg(Class<?> type)
+	public static String pkg(Class<?> type)
 	{
 		return type.getPackage().getName();
 	}
@@ -169,6 +184,40 @@ public class ReaderTest {
 				// EARCAM_SNIPPET_END: imports-simple-class
 			}
 
+
+			@Test
+			void primitiveMethodArguments() throws IOException
+			{
+				Map<String, Set<String>> imports = new HashMap<>();
+
+				reader()
+						.addImportListener(imports::put)
+						.processClass(Resources.classAsBytes(PrimitiveMethodArguments.class));
+
+				assertThat(imports, is(aMapWithSize(1)));
+
+				assertThat(imports, hasEntry(equalTo(cn(PrimitiveMethodArguments.class)), containsInAnyOrder(
+						cn(Object.class))));
+			}
+
+
+			@Test
+			void arrays() throws IOException
+			{
+				Map<String, Set<String>> imports = new HashMap<>();
+
+				reader()
+						.addImportListener(imports::put)
+						.processClass(Resources.classAsBytes(HasArrays.class));
+
+				assertThat(imports, is(aMapWithSize(1)));
+
+				assertThat(imports, hasEntry(equalTo(cn(HasArrays.class)), containsInAnyOrder(
+						cn(Object.class),
+						cn(Number.class),
+						cn(Comparable.class),
+						cn(AtomicLongArray.class))));
+			}
 		}
 	}
 
@@ -179,17 +228,26 @@ public class ReaderTest {
 		class Simple {
 
 			@Test
-			void importListenerOnly() throws IOException
+			void listeners() throws IOException
 			{
 				Map<String, Set<String>> imports = new HashMap<>();
 
+				Set<String> nonClassEntries = new HashSet<>();
+
+				String fileA = "directory.class/fileA.txt";
+				String fileB = "directory.class/fileB.txt";
+				String fileC = "irrelevant/file.txt";
+
 				InputStream jar = bundle()
 						.add(ImportsSlf4jApi.class)
-						.add("irrelevant/file.txt", new ByteArrayInputStream("hello".getBytes(UTF_8)))
+						.add(fileA, new ByteArrayInputStream("hello".getBytes(UTF_8)))
+						.add(fileB, new ByteArrayInputStream("hello".getBytes(UTF_8)))
+						.add(fileC, new ByteArrayInputStream("hello".getBytes(UTF_8)))
 						.build();
 
 				reader()
 						.addImportListener(imports::put)
+						.setJarEntryListener((e, i) -> nonClassEntries.add(e.getName()))
 						.processJar(jar);
 
 				assertThat(imports, is(aMapWithSize(1)));
@@ -202,6 +260,8 @@ public class ReaderTest {
 						cn(Class.class),
 						cn(StringBuilder.class),
 						cn(String.class))));
+
+				assertThat(nonClassEntries, containsInAnyOrder(fileA, fileB, fileC));
 			}
 
 
@@ -255,13 +315,15 @@ public class ReaderTest {
 						.add("irrelevant/file.txt", new ByteArrayInputStream("hello".getBytes(UTF_8)))
 						.build();
 
+				InputStream jarJar = new JarInputStream(jar);
+
 				Map<String, Set<String>> imports = new HashMap<>();
 				List<byte[]> listener = new ArrayList<>();
 
 				reader()
 						.addImportListener(imports::put)
 						.addByteCodeListener(listener::add)
-						.processJar(jar);
+						.processJar(jarJar);
 
 				assertThat(listener, hasSize(1));
 			}
@@ -300,6 +362,38 @@ public class ReaderTest {
 				assertThat(imports, hasEntry(equalTo(pkg(ImportsSlf4jApi.class)), equalTo(expected)));
 				// EARCAM_SNIPPET_END: map-jar-reduced-to-packages
 			}
+		}
+
+		@Nested
+		class Library {
+
+			/**
+			 * This loads a Jar with module-info.class, which allows us to test a branch of a null
+			 * guard in {@link ImportsOf}
+			 */
+			@Test
+			void slf4jSimple() throws IOException
+			{
+				Map<String, Set<String>> imports = new HashMap<>();
+
+				Path slf4jSimpleJar = Paths.get(Resources.sourceOfResource(SimpleLogger.class));
+
+				reader()
+						.addImportListener(imports::put)
+						.processJar(slf4jSimpleJar);
+
+				assertThat(imports, is(aMapWithSize(9)));
+
+				assertThat(imports, hasEntry(equalTo(cn(SimpleLoggerFactory.class)), containsInAnyOrder(
+						cn(Logger.class),
+						cn(ConcurrentHashMap.class),
+						cn(Object.class),
+						cn(SimpleLogger.class),
+						cn(String.class),
+						cn(ILoggerFactory.class),
+						cn(ConcurrentMap.class))));
+			}
+
 		}
 	}
 }

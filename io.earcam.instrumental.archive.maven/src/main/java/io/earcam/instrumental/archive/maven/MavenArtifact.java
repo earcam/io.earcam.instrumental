@@ -18,6 +18,8 @@
  */
 package io.earcam.instrumental.archive.maven;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import org.eclipse.aether.artifact.Artifact;
@@ -117,5 +119,42 @@ public final class MavenArtifact {
 	public int hashCode()
 	{
 		return Objects.hash(groupId, artifactId, baseVersion, extension, classifier);
+	}
+
+
+	/**
+	 * @return the relative path that this artifact would occupy in a repository
+	 * 
+	 * @see #filename()
+	 * @see #pomFilename()
+	 */
+	public Path relativeRepositoryDirectory()
+	{
+		return Paths.get(".", groupId().split("\\.")).resolve(Paths.get(artifactId(), baseVersion()));
+	}
+
+
+	/**
+	 * @return the filename of this artifact (as it would appear in a repository)
+	 * 
+	 * @see #relativeRepositoryDirectory()
+	 * @see #pomFilename()
+	 */
+	public String filename()
+	{
+		return artifactId() + '-' + baseVersion() + ("".equals(classifier()) ? "" : '-' + classifier()) + '.' + extension();
+	}
+
+
+	/**
+	 * @return the POM filename of this artifact (as it would appear in a repository, <br/>
+	 * i.e {@code artifactId + "-" + version + ".pom"})
+	 * 
+	 * @see #relativeRepositoryDirectory()
+	 * @see #filename()
+	 */
+	public String pomFilename()
+	{
+		return artifactId() + '-' + baseVersion() + ".pom";
 	}
 }

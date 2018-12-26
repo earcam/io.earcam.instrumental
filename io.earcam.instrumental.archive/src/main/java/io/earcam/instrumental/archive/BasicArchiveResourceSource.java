@@ -74,11 +74,11 @@ public class BasicArchiveResourceSource implements ArchiveResourceSource {
 
 	/**
 	 * <p>
-	 * with.
+	 * Add a resource to this resource source
 	 * </p>
 	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param resource a {@link java.io.InputStream} object.
+	 * @param name the resource name (including relative path)
+	 * @param contents the resource contents
 	 */
 	public void with(String name, InputStream resource)
 	{
@@ -88,11 +88,11 @@ public class BasicArchiveResourceSource implements ArchiveResourceSource {
 
 	/**
 	 * <p>
-	 * with.
+	 * Add a resource to this resource source
 	 * </p>
 	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param contents an array of {@link byte} objects.
+	 * @param name the resource name (including relative path)
+	 * @param contents the resource contents
 	 */
 	public void with(String name, byte[] contents)
 	{
