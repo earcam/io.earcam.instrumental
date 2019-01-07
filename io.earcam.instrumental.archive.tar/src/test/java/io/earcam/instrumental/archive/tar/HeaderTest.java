@@ -197,15 +197,19 @@ public class HeaderTest {
 
 			Path baseDir = Paths.get("src", "test", "resources");
 			String linkTarget = "links/hard-link-to-d.txt";
-			Path path = baseDir.resolve(linkTarget);
-
-			header.from(baseDir, path);
+			Path firstPath = baseDir.resolve(linkTarget);
 
 			String fileName = "links/a/b/c/d.txt";
-			path = baseDir.resolve(fileName);
+			Path path = baseDir.resolve(fileName);
+
+			// HACK: we need to ensure hardlink exists on filesystem after git checkout
+			// FIXME: resolve by replacing src/test/resources with dynamically generated content in target
+			Files.delete(firstPath);
+			Files.createLink(firstPath, path);
+
+			header.from(baseDir, firstPath);
 
 			byte[] bytes = header.from(baseDir, path).toBytes();
-			Files.write(Paths.get("/", "tmp", "arsecakery.header"), bytes);
 			String fullOfNulls = new String(bytes, UTF_8);
 
 			assertThat(fullOfNulls.length(), is(HEADER_SIZE));

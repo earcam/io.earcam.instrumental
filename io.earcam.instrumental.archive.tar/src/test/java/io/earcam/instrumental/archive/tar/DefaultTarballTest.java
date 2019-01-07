@@ -132,10 +132,17 @@ public class DefaultTarballTest {
 	private static void assertSameTarballContents(Path tarFile, Path directory) throws IOException, InterruptedException
 	{
 		Path cwd = (".".equals(directory.getFileName().toString())) ? directory.getParent() : directory;
-		Process process = new ProcessBuilder("tar", "-f", tarFile.toAbsolutePath().toString(), "-d")
+		// @formatter:off
+		Process process = new ProcessBuilder(
+						"tar", 
+						"--no-same-owner", 
+						"--no-same-permissions", 
+						"-f", tarFile.toAbsolutePath().toString(), 
+						"-d")
 				.directory(cwd.toFile())
 				.redirectErrorStream(true)
 				.start();
+		// @formatter:on
 
 		int exitCode = process.waitFor();
 		String output = new String(IoStreams.readAllBytes(process.getInputStream()), UTF_8);
@@ -158,10 +165,17 @@ public class DefaultTarballTest {
 		unpacked.toFile().mkdirs();
 
 		Path cwd = unpacked;
-		Process process = new ProcessBuilder("tar", "--hard-dereference", "-xf", tarFile.toAbsolutePath().toString())
+		// @formatter:off
+		Process process = new ProcessBuilder(
+						"tar", 
+						"--no-same-owner", 
+						"--no-same-permissions", 
+						"--hard-dereference", 
+						"-xf", tarFile.toAbsolutePath().toString())
 				.directory(cwd.toFile())
 				.redirectErrorStream(true)
 				.start();
+		// @formatter:on
 
 		int exitCode = process.waitFor();
 		String output = new String(IoStreams.readAllBytes(process.getInputStream()), UTF_8);
