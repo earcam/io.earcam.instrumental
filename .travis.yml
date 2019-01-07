@@ -33,14 +33,14 @@ before_install:
 - if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz | tar zxf - -C $HOME; fi
 - export PATH=$M2_HOME/bin:$PATH
 install:
-- chmod go-rwx -R $HOME/.m2
+- sudo chmod go-rwx -R $HOME/.m2
 before_script:
 - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.toolchain/src/main/resources/toolchain/continuous-integration-hotspot-linux-debian-amd64.xml  -O  ~/.m2/toolchains.xml
 - wget https://bitbucket.org/earcam/io.earcam.maven/raw/master/io.earcam.maven.configuration/src/main/resources/settings.xml  -O $HOME/ci-settings.xml
 - mvn -v
 script:
 - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-- mvn --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
+- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
 - #mvn --settings $HOME/ci-settings.xml org.eluder.coveralls:coveralls-maven-plugin:report
 - #mvn --settings $HOME/ci-settings.xml org.jacoco:jacoco-maven-plugin:report-aggregate -Djacoco.excludes=**/InstrumentationWrapper.*
 after_success: bash <(curl -s https://codecov.io/bash)
