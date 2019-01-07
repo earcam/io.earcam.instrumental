@@ -382,13 +382,6 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 
 
 	@Override
-	public AsJpmsModule autoRequiringClasspath()
-	{
-		return autoRequiring(new ClasspathModules());
-	}
-
-
-	@Override
 	public AsJpmsModule autoRequiringJdkModules(int jdkVersion)
 	{
 		return autoRequiring(new JdkModules(jdkVersion));

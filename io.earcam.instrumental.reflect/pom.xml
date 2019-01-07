@@ -46,7 +46,6 @@
 		<dependency>
 			<groupId>io.earcam.utilitarian</groupId>
 			<artifactId>io.earcam.utilitarian.io</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

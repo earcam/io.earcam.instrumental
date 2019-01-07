@@ -56,7 +56,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	public static final String CACHE_FILENAME = "$$$.jpms.cache";
 
 	/**
-	 * A path to a JDK >= 9, where '$$$' will be replaced by '9', '10', '11', ...
+	 * A path to a JDK &ge; 9, where '$$$' will be replaced by '9', '10', '11', ...
 	 */
 	public static final String PROPERTY_JDK_HOME_PATTERN = "instrumental.jdk.home";
 

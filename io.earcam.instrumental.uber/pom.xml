@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.earcam</groupId>
 		<artifactId>io.earcam.instrumental</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>io.earcam.instrumental</groupId>
@@ -191,7 +191,7 @@
 				<configuration>
 					<toolchains>
 						<jdk>
-							<version>10</version>
+							<version>11</version>
 							<vendor>oracle</vendor>
 						</jdk>
 					</toolchains>
@@ -231,11 +231,17 @@
 					</execution>
 					<execution>
 						<id>jdk10-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jdk11-test</id>
 						<goals>
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<jvm>${java.home.10}/bin/java</jvm>
+							<jvm>${java.home.11}/bin/java</jvm>
 						</configuration>
 					</execution>
 				</executions>

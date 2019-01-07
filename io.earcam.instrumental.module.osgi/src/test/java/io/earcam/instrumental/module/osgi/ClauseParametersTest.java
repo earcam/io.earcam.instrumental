@@ -136,6 +136,27 @@ public class ClauseParametersTest {
 
 
 		@Test
+		void quotedAttributeToString() throws Exception
+		{
+			assertThat(attribute("key", "\"value\""), hasToString(";key=\"value\""));
+		}
+
+
+		@Test
+		void givenAttributeWithPeriodWhenToStringThenQuoted() throws Exception
+		{
+			assertThat(attribute("key", "val.ue"), hasToString(";key=\"val.ue\""));
+		}
+
+
+		@Test
+		void givenDirectiveWithCommaWhenToStringThenQuoted() throws Exception
+		{
+			assertThat(directive("key", "val,ue"), hasToString(";key:=\"val,ue\""));
+		}
+
+
+		@Test
 		void simpleDirectiveToString() throws Exception
 		{
 			assertThat(directive("key", "value"), hasToString(";key:=value"));
@@ -153,6 +174,30 @@ public class ClauseParametersTest {
 		void whenAttributeValueContainsCommaThenRequiresQuotesForToString() throws Exception
 		{
 			assertThat(attribute("key", "val,ue"), hasToString(";key=\"val,ue\""));
+		}
+	}
+
+	@Nested
+	public class Quoted {
+
+		@Test
+		void isAQuotedStringWhenStartsAndEndsWithQuote()
+		{
+			assertThat(ClauseParameters.isQuoted("\"fully quoted\""), is(true));
+		}
+
+
+		@Test
+		void isNotAQuotedStringWhenDoesNotEndWithQuote()
+		{
+			assertThat(ClauseParameters.isQuoted("\"not fully quoted"), is(false));
+		}
+
+
+		@Test
+		void isNotAQuoteStringWhenDoesNotStartWithQuote()
+		{
+			assertThat(ClauseParameters.isQuoted("not fully quoted\""), is(false));
 		}
 	}
 

@@ -192,7 +192,7 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 	}
 
 
-	private static boolean isEmpty(Manifest manifest)
+	static boolean isEmpty(Manifest manifest)
 	{
 		return manifest.getMainAttributes().isEmpty()
 				&& manifest.getEntries().isEmpty();

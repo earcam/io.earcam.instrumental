@@ -39,6 +39,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singleton;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static org.apache.felix.connect.launch.PojoServiceRegistryFactory.BUNDLE_DESCRIPTORS;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.PrintWriter;
 import java.lang.module.Configuration;
@@ -65,6 +66,7 @@ import io.earcam.instrumental.lade.ClassLoaders;
 import io.earcam.instrumental.lade.Handler;
 import io.earcam.instrumental.lade.InMemoryClassLoader;
 import io.earcam.instrumental.lade.jpms.InMemoryModuleFinder;
+import io.earcam.instrumental.module.osgi.ClauseParameters;
 import io.earcam.instrumental.reflect.Methods;
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.IoStreams;
@@ -81,6 +83,14 @@ public class ExampleTest {
 	private final String SUBJECT = "subject";
 	private final KeyStore keyStore = keyStore(alias, password, keys, certificate(keys, SUBJECT).toX509());
 
+	
+	
+	@Test
+	void testName() throws Exception
+	{
+		ClauseParameters cp = attribute("version", "1.0.0");
+		System.out.println(cp);
+	}
 
 	@Test
 	void chunkyExample() throws Exception
@@ -118,7 +128,7 @@ public class ExampleTest {
 				asJpmsModule()
 					.named(moduleNameApi)
 					.exporting(s -> true)
-					.autoRequiring()
+					.autoRequiring(11)
 			)
 			.configured(
 				withSignature()
@@ -196,7 +206,7 @@ public class ExampleTest {
 			.configured(
 				asJpmsModule()
 					.named(moduleNameImp)
-					.autoRequiring()
+					.autoRequiring(11)
 					.autoRequiring(fromArchives(apiJar))
 					.providing(moduleNameApi + ".Greet", 
 							singleton(moduleNameImp + ".HelloService")))
@@ -254,7 +264,7 @@ public class ExampleTest {
 				"      Greet implementation = StreamSupport               \n" +
 				"               .stream(services.spliterator(), false)    \n" + 
 				"               .findFirst()                              \n" + 
-				"               .orElseThrow();                           \n" + 
+				"               .orElseThrow(NullPointerException::new);  \n" + 
 
 				"      String msg = implementation.greeting(args[0]);     \n" + 
 				"      System.out.println(module + \": \" + msg);         \n" + 
@@ -271,7 +281,7 @@ public class ExampleTest {
 				asJpmsModule()
 					.named(moduleNameApp)
 					.exporting(s -> s.startsWith("com.acme"))   // launch main
-					.autoRequiring()
+					.autoRequiring(11)
 					.autoRequiring(fromArchives(apiJar, impJar))
 					.launching("com.acme.app.App")
 					.using("com.acme.api.Greet")
@@ -315,7 +325,7 @@ public class ExampleTest {
 		
 		// EARCAM_SNIPPET_BEGIN: run-vanilla
 		Class<?> main = loader.loadClass("com.acme.app.App");
-		Method method = Methods.getMethod(main, "main", String[].class).orElseThrow();
+		Method method = Methods.getMethod(main, "main", String[].class).orElseThrow(NullPointerException::new);
 
 		Runnable run = Exceptional.uncheckRunnable(
 				() -> method.invoke(null, new Object[] {new String[] {"Vanilla"}}));
@@ -339,7 +349,7 @@ public class ExampleTest {
 
 		Class<?> mainClass = layer.findLoader(moduleNameApp).loadClass("com.acme.app.App");
 
-		Method mainMethod = Methods.getMethod(mainClass, "main", String[].class).orElseThrow();
+		Method mainMethod = Methods.getMethod(mainClass, "main", String[].class).orElseThrow(NullPointerException::new);
 		mainMethod.invoke(null, new Object[] {new String[] {"In-memory"}});
 
 		// EARCAM_SNIPPET_END: run-jpms-inmemory

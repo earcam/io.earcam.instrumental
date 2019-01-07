@@ -19,15 +19,11 @@
 
 import static io.earcam.instrumental.reflect.Names.typeToResourceName;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.net.URI;
 
-import javax.annotation.WillClose;
-
 import io.earcam.unexceptional.Exceptional;
+import io.earcam.utilitarian.io.IoStreams;
 
 /**
  * <p>
@@ -43,41 +39,29 @@ public final class Resources {
 
 	/**
 	 * <p>
-	 * classAsBytes.
+	 * Load the bytecode for a given class
 	 * </p>
 	 *
-	 * @param type a {@link java.lang.Class} object.
-	 * @return an array of {@link byte} objects.
+	 * @param type the subject class.
+	 * @return the bytecode as an array.
+	 * 
+	 * @see #classAsStream(Class)
 	 */
 	public static byte[] classAsBytes(Class<?> type)
 	{
-		return readAllBytes(classAsStream(type));
-	}
-
-
-	static byte[] readAllBytes(@WillClose InputStream input)
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		int read;
-		try(InputStream in = input) {
-			while((read = in.read()) != -1) {
-				baos.write(read);
-			}
-		} catch(IOException e) {
-			throw new UncheckedIOException(e);
-		}
-		return baos.toByteArray();
+		return IoStreams.readAllBytes(classAsStream(type));
 	}
 
 
 	/**
 	 * <p>
-	 * classAsStream.
+	 * Load a class' bytecode as an InputStream.
 	 * </p>
 	 *
-	 * @param type a {@link java.lang.Class} object.
-	 * @return a {@link java.io.InputStream} object.
+	 * @param type the subject class.
+	 * @return the bytecode as an InputStream.
+	 * 
+	 * @see #classAsBytes(Class)
 	 */
 	public static InputStream classAsStream(Class<?> type)
 	{
@@ -87,11 +71,17 @@ public final class Resources {
 
 	/**
 	 * <p>
-	 * sourceOfResource.
+	 * Find the origin of a given class (typically a path to a JAR or class file).
 	 * </p>
+	 * <p>
+	 * <p>
+	 * Uses the {@code type} arguments ClassLoader.
+	 * <p>
 	 *
-	 * @param type a {@link java.lang.Class} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param type the subject class.
+	 * @return the location source of the resource class.
+	 * 
+	 * @see #sourceOfResource(Class, ClassLoader)
 	 */
 	public static String sourceOfResource(Class<?> type)
 	{
@@ -102,12 +92,14 @@ public final class Resources {
 
 	/**
 	 * <p>
-	 * sourceOfResource.
+	 * Find the origin of a given class (typically a path to a JAR or class file).
 	 * </p>
 	 *
-	 * @param type a {@link java.lang.Class} object.
-	 * @param classLoader a {@link java.lang.ClassLoader} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param type the subject class.
+	 * @param classLoader the ClassLoader to load from.
+	 * @return the location source of the resource class.
+	 * 
+	 * @see #sourceOfResource(Class)
 	 */
 	public static String sourceOfResource(Class<?> type, ClassLoader classLoader)
 	{
@@ -121,11 +113,14 @@ public final class Resources {
 
 	/**
 	 * <p>
-	 * removeJarUrlDecoration.
+	 * Remove JAR URL decoration. Specifically the "jar" and "file" protocols, as well as the <i>separator</i>
+	 * ({@code !/}).
 	 * </p>
 	 *
 	 * @param jar a {@link java.net.URI} object.
 	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @see java.net.JarURLConnection
 	 */
 	public static String removeJarUrlDecoration(URI jar)
 	{

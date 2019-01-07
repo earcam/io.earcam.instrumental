@@ -17,12 +17,10 @@
  * #L%
  */package io.earcam.instrumental.reflect;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,16 +32,6 @@ import org.junit.jupiter.api.Test;
 import io.earcam.utilitarian.io.IoStreams;
 
 public class ResourcesTest {
-
-	@Test
-	void readsAllBytesAlbeitOneAtATime()
-	{
-		byte[] bytes = "blah blah blah".getBytes(UTF_8);
-		byte[] read = Resources.readAllBytes(new ByteArrayInputStream(bytes));
-
-		assertThat(read, is(equalTo(bytes)));
-	}
-
 
 	@Test
 	void classAsBytes() throws IOException

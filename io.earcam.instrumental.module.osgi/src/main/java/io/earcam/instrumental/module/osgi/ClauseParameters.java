@@ -245,18 +245,24 @@ public final class ClauseParameters {
 			for(Iterator<Entry<String, String>> it = source.entrySet().iterator(); it.hasNext();) {
 				Entry<String, String> entry = it.next();
 				appendage.append(entry.getKey()).append(symbol);
-
-				if(entry.getValue().indexOf('.') != -1 ||
-						entry.getValue().indexOf(',') != -1) {
-					appendage.append('"').append(entry.getValue()).append('"');
+				String value = entry.getValue();
+				if(!isQuoted(value) && (value.indexOf('.') != -1 || value.indexOf(',') != -1)) {
+					appendage.append('"').append(value).append('"');
 				} else {
-					appendage.append(entry.getValue());
+					appendage.append(value);
 				}
 				if(it.hasNext()) {
 					appendage.append(';');
 				}
 			}
 		}
+	}
+
+
+	static boolean isQuoted(String text)
+	{
+		return text.charAt(0) == '"'
+				&& text.charAt(text.length() - 1) == '"';
 	}
 
 

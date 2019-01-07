@@ -39,6 +39,7 @@
 		<module>io.earcam.instrumental.archive.sign</module>
 		<module>io.earcam.instrumental.archive.glue</module>
 		<module>io.earcam.instrumental.archive.maven</module>
+		<module>io.earcam.instrumental.archive.tar</module>
 
 		<module>io.earcam.instrumental.proxy</module>
 		<module>io.earcam.instrumental.proxy.concrete</module>
@@ -72,14 +73,14 @@
 	</distributionManagement>
 
 	<properties>
-		<version.earcam.utilitarian>1.2.1</version.earcam.utilitarian>
+		<version.earcam.utilitarian>1.3.0-SNAPSHOT</version.earcam.utilitarian>
 		<version.earcam.unexceptional>1.0.0</version.earcam.unexceptional>
 		<version.earcam.maven.plugin>0.0.4</version.earcam.maven.plugin>
 
 		<version.cglib>3.2.7</version.cglib>
 		<version.objenesis>2.6</version.objenesis>
 		<version.asm>6.2</version.asm>
-		<version.antlr>4.7.1</version.antlr>
+		<version.antlr>4.7.2</version.antlr>
 		<version.bouncy.castle>1.60</version.bouncy.castle>
 		<version.slf4j>1.7.25</version.slf4j>
 		<version.junit4>4.12</version.junit4>
@@ -99,6 +100,7 @@
 
 		<java.home.9>/usr/lib/jvm/java-9-oracle</java.home.9>
 		<java.home.11>/usr/lib/jvm/java-11-oracle</java.home.11>
+		<java.home.latest>${java.home.11}</java.home.latest>
 	</properties>
 
 	<dependencyManagement>
@@ -467,7 +469,6 @@
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
 					<version>4.1.0</version>
-					<!-- <version>4.1.1-CASPAR</version> -->
 					<extensions>true</extensions>
 					<configuration>
 						<archive>
@@ -507,7 +508,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.1.1</version>
 					<configuration>
 						<archive>
 							<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -564,7 +565,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.0.0-M2</version>
 				</plugin>
 
 				<plugin>

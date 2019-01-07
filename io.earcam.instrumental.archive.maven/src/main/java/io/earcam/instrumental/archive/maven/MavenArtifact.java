@@ -142,7 +142,8 @@ public final class MavenArtifact {
 	 */
 	public String filename()
 	{
-		return artifactId() + '-' + baseVersion() + ("".equals(classifier()) ? "" : '-' + classifier()) + '.' + extension();
+		return artifactId() + '-' + baseVersion() + ("".equals(classifier()) ? ""
+				: '-' + classifier()) + '.' + extension();
 	}
 
 

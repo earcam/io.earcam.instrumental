@@ -27,6 +27,10 @@ import static org.hamcrest.Matchers.hasItem;
 
 import java.util.Set;
 
+import javax.lang.model.SourceVersion;
+
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.acme.DummyIntComparator;
@@ -86,4 +90,28 @@ public class AsJpmsModuleAutoRequireIntegrationTest {
 		return moduleInfo;
 	}
 
+	@Nested
+	public class UsingLatestSourceVersion {
+
+		@Test
+		void aSimpleModuleRequiresJavaBase()
+		{
+			Assumptions.assumeTrue(SourceVersion.latest().ordinal() > 8, "Test requires JDK > 8");
+
+			Archive archive = archive()
+					.configured(
+							asJpmsModule()
+									.named("foo")
+									.exporting(x -> true)
+									.autoRequiringJdkModules(SourceVersion.latest()))
+					.with(DummyIntComparator.class)
+					.toObjectModel();
+
+			Set<String> required = moduleInfoFrom(archive).requires().stream()
+					.map(Require::module)
+					.collect(toSet());
+
+			assertThat(required, hasItem(equalTo("java.base")));
+		}
+	}
 }

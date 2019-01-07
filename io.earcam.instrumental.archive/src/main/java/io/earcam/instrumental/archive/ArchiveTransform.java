@@ -22,6 +22,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.SYNC;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -107,7 +108,7 @@ public interface ArchiveTransform {
 	{
 		archive.getParent().toFile().mkdirs();
 		OutputStream outputStream = Exceptional.apply(Files::newOutputStream, archive, options);
-		to(outputStream);
+		to(new BufferedOutputStream(outputStream));
 		return archive;
 	}
 

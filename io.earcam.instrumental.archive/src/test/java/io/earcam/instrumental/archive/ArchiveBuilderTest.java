@@ -39,6 +39,7 @@ import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class ArchiveBuilderTest {
@@ -281,5 +282,42 @@ public class ArchiveBuilderTest {
 
 		assertThat(read, is(not(sameInstance(manifest))));
 		assertThat(read, is(equalTo(manifest)));
+	}
+
+	@Nested
+	public class EmptyManifest {
+
+		@Test
+		public void isEmpty()
+		{
+			assertThat(ArchiveBuilder.isEmpty(new Manifest()), is(true));
+		}
+
+
+		@Test
+		public void notEmptyWhenMainAttributePresent()
+		{
+			Manifest manifest = new Manifest();
+			manifest.getMainAttributes().putValue("hello", "world");
+			assertThat(ArchiveBuilder.isEmpty(manifest), is(false));
+		}
+
+
+		/**
+		 * This test exists to complete test coverage - in practice we
+		 * don't create a manifest with only entries, it would always
+		 * have at least the Manifest-Version main attribute.
+		 */
+		@Test
+		public void notEmptyWhenEntryPresent()
+		{
+			Manifest manifest = new Manifest();
+			Attributes attributes = new Attributes();
+			attributes.putValue("tu", "le monde");
+			attributes.putValue("to", "the world");
+			attributes.putValue("there", "you!");
+			manifest.getEntries().put("hello", attributes);
+			assertThat(ArchiveBuilder.isEmpty(manifest), is(false));
+		}
 	}
 }

@@ -170,7 +170,10 @@ public interface AsJpmsModule extends AsJarBuilder<AsJpmsModule> {
 	 *
 	 * @return this builder
 	 */
-	public abstract AsJpmsModule autoRequiringClasspath();
+	public default AsJpmsModule autoRequiringClasspath()
+	{
+		return autoRequiring(new ClasspathModules());
+	}
 
 
 	/**

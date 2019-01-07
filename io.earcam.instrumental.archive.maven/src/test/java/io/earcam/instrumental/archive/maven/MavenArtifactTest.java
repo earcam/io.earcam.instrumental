@@ -132,4 +132,29 @@ public class MavenArtifactTest {
 			}
 		}
 	}
+
+	@Nested
+	public class Filename {
+
+		@Test
+		void gav() throws Exception
+		{
+			MavenArtifact mavenArtifact = new MavenArtifact("gid", "art", "1.2.3", "tgz", null);
+
+			String filename = mavenArtifact.filename();
+
+			assertThat(filename, is(equalTo("art-1.2.3.tgz")));
+		}
+
+
+		@Test
+		void gavc() throws Exception
+		{
+			MavenArtifact mavenArtifact = new MavenArtifact("groupie", "aid", "0.24.7", "ear", "classifier");
+
+			String filename = mavenArtifact.filename();
+
+			assertThat(filename, is(equalTo("aid-0.24.7-classifier.ear")));
+		}
+	}
 }
