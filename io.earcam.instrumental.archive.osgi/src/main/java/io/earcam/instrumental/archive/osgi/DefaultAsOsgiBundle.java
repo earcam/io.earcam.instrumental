@@ -33,7 +33,6 @@ import java.util.jar.Manifest;
 import org.osgi.framework.BundleActivator;
 
 import io.earcam.instrumental.archive.AbstractAsJarBuilder;
-import io.earcam.instrumental.archive.ArchiveRegistrar;
 import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.archive.ArchiveResourceListener;
 import io.earcam.instrumental.archive.osgi.auto.ClasspathBundles;
@@ -120,14 +119,6 @@ class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> implements 
 
 
 	@Override
-	public void attach(ArchiveRegistrar core)
-	{
-		super.attach(core);
-		core.registerResourceListener(this);
-	}
-
-
-	@Override
 	public void added(ArchiveResource resource)
 	{
 		super.added(resource);
@@ -137,11 +128,8 @@ class DefaultAsOsgiBundle extends AbstractAsJarBuilder<AsOsgiBundle> implements 
 		}
 
 		for(ExportMatcher matcher : exportMatchers) {
-			if(resource.isQualifiedClass()) {
-				matcher.test(resource);
-				if(matcher.test(resource)) {
-					break;
-				}
+			if(resource.isQualifiedClass() && matcher.test(resource)) {
+				break;
 			}
 		}
 	}

@@ -41,8 +41,6 @@ import io.earcam.unexceptional.Exceptional;
 
 public interface Tarball {
 
-	// TODO test adding files as sourceDirectories
-
 	public static Tarball tar()
 	{
 		return new DefaultTarball();

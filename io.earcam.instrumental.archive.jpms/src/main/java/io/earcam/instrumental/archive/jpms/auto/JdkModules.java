@@ -20,7 +20,6 @@ package io.earcam.instrumental.archive.jpms.auto;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -36,6 +35,7 @@ import javax.lang.model.SourceVersion;
 
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 import io.earcam.unexceptional.Closing;
+import io.earcam.utilitarian.io.IoStreams;
 
 /**
  * <p>
@@ -149,6 +149,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"import java.io.File; \n" +
 				"import java.io.FileOutputStream; \n" +
 				"import java.io.IOException; \n" +
+				"import java.io.BufferedOutputStream; \n" +
 				"import java.io.ObjectOutputStream; \n" +
 				"import java.io.UncheckedIOException; \n" +
 				"import java.lang.module.ModuleFinder; \n" +
@@ -208,7 +209,8 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"			}) \n" +
 				"		    .collect(java.util.stream.Collectors.toList()); \n" +
 				"\n" +
-				"	try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(\"" + output.toAbsolutePath() + "\")))) { \n" +
+				"	try(ObjectOutputStream oos = new ObjectOutputStream( \n" +
+				"				new BufferedOutputStream(new FileOutputStream(new File(\"" + output.toAbsolutePath() + "\"))))) { \n" +
 				"	    oos.writeObject(l); \n" +
 				"	} catch(IOException ioe) { \n" +
 				"	    throw new UncheckedIOException(ioe); \n" +
@@ -248,24 +250,12 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	static void processOutput(Process process) throws IOException, InterruptedException
 	{
 		process.waitFor();
-		String output = new String(inputStreamToBytes(process.getInputStream()), UTF_8);
+
+		String output = new String(IoStreams.readAllBytes(process.getInputStream()), UTF_8);
 		if(process.exitValue() != 0 || !output.contains("DONE")) {
-			String error = new String(inputStreamToBytes(process.getErrorStream()), UTF_8);
+			String error = new String(IoStreams.readAllBytes(process.getErrorStream()), UTF_8);
 			throw new IOException("output: " + output + "\nerror: " + error);
 		}
-	}
-
-
-	private static byte[] inputStreamToBytes(InputStream input) throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		int read = input.read();
-		while(read != -1) {
-			baos.write(read);
-			read = input.read();
-		}
-		return baos.toByteArray();
 	}
 
 

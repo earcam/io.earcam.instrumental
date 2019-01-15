@@ -66,14 +66,12 @@ import io.earcam.instrumental.lade.ClassLoaders;
 import io.earcam.instrumental.lade.Handler;
 import io.earcam.instrumental.lade.InMemoryClassLoader;
 import io.earcam.instrumental.lade.jpms.InMemoryModuleFinder;
-import io.earcam.instrumental.module.osgi.ClauseParameters;
 import io.earcam.instrumental.reflect.Methods;
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.IoStreams;
 import io.earcam.utilitarian.security.Keys;
 
 
-//@Disabled
 public class ExampleTest {
 	// @formatter:off
 
@@ -83,14 +81,6 @@ public class ExampleTest {
 	private final String SUBJECT = "subject";
 	private final KeyStore keyStore = keyStore(alias, password, keys, certificate(keys, SUBJECT).toX509());
 
-	
-	
-	@Test
-	void testName() throws Exception
-	{
-		ClauseParameters cp = attribute("version", "1.0.0");
-		System.out.println(cp);
-	}
 
 	@Test
 	void chunkyExample() throws Exception

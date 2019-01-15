@@ -94,7 +94,7 @@ final class DefaultTarball implements Tarball {
 				};
 				Files.walkFileTree(source, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE, visitor);
 			}
-			// write N???? blank records to end ???
+
 			byte[] emptyRecord = new byte[512];
 			int writtenBlocks = blocks.get();
 			int blocksToWrite = blocksToWrite(writtenBlocks);
@@ -137,5 +137,4 @@ final class DefaultTarball implements Tarball {
 			}
 		}
 	}
-
 }

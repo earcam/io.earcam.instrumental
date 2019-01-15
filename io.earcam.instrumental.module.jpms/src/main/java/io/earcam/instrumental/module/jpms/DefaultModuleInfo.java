@@ -50,7 +50,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	private String version;
 	private int access;
 
-	private TreeSet<CharSequence> packages = new TreeSet<>();
+	private TreeSet<String> packages = new TreeSet<>();
 	private TreeSet<String> uses = new TreeSet<>();
 	private HashMap<String, String[]> provides = new HashMap<>();
 	private String mainClass;
@@ -131,7 +131,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 
 
 	@Override
-	public SortedSet<CharSequence> packages()
+	public SortedSet<String> packages()
 	{
 		return packages;
 	}
@@ -332,7 +332,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	private static void packagesComment(StringBuilder output, Set<CharSequence> packages)
+	private static void packagesComment(StringBuilder output, Set<String> packages)
 	{
 		packages.forEach(p -> output.append(" * @package ").append(p).append('\n'));
 	}

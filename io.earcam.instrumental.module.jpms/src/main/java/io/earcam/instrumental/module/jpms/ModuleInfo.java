@@ -139,7 +139,7 @@ public interface ModuleInfo extends Serializable {
 	/**
 	 * @return the module's packages.
 	 */
-	public abstract SortedSet<CharSequence> packages();
+	public abstract SortedSet<String> packages();
 
 
 	/**

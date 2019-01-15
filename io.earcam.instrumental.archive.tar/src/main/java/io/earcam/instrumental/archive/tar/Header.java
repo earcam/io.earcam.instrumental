@@ -94,7 +94,7 @@ public final class Header {
 		deviceMajor = deviceMinor = 0;
 		userName = groupName = null;
 
-		filename = baseDir.relativize(path).toString();  // TODO for individual files as sourceDirectories
+		filename = baseDir.relativize(path).toString();
 		if("".equals(filename)) {
 			return this;
 		}
@@ -241,7 +241,7 @@ public final class Header {
 	{
 		int read = input.read(buffer);
 		if(read != HEADER_SIZE) {
-			throw new IllegalStateException(); // TODO
+			throw new IllegalStateException("Unable to read block of " + HEADER_SIZE + ", only read " + read);
 		}
 		return read();
 	}

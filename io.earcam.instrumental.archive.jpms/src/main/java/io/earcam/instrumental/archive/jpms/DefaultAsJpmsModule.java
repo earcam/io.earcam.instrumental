@@ -37,7 +37,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import io.earcam.instrumental.archive.AbstractAsJarBuilder;
-import io.earcam.instrumental.archive.ArchiveRegistrar;
 import io.earcam.instrumental.archive.ArchiveResource;
 import io.earcam.instrumental.archive.ArchiveResourceListener;
 import io.earcam.instrumental.archive.jpms.auto.ClasspathModules;
@@ -180,14 +179,6 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 		if(validate() && !imports.isEmpty()) {
 			throw new IllegalStateException("For module '" + name + "' unresolved imports remain: " + imports);
 		}
-	}
-
-
-	@Override
-	public void attach(ArchiveRegistrar core)
-	{
-		super.attach(core);
-		core.registerResourceListener(this);
 	}
 
 
