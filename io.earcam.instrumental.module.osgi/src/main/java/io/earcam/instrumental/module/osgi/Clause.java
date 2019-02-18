@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import io.earcam.instrumental.fluent.Fluent;
@@ -145,8 +146,7 @@ public class Clause {
 	 * @param that a {@link io.earcam.instrumental.module.osgi.Clause} object.
 	 * @return a boolean.
 	 */
-	@SuppressWarnings("squid:S2589")  // SonarQube false positive - "that" could clearly be null
-	public boolean equals(Clause that)
+	public boolean equals(@Nullable Clause that)
 	{
 		return that != null
 				// && that.uniqueNames().equals(this.uniqueNames)

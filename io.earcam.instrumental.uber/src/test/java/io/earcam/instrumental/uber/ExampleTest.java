@@ -39,7 +39,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singleton;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static org.apache.felix.connect.launch.PojoServiceRegistryFactory.BUNDLE_DESCRIPTORS;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.PrintWriter;
 import java.lang.module.Configuration;
@@ -57,7 +56,6 @@ import java.util.Set;
 
 import org.apache.felix.connect.launch.BundleDescriptor;
 import org.apache.felix.connect.launch.ClasspathScanner;
-import org.apache.felix.connect.launch.PojoServiceRegistry;
 import org.apache.felix.connect.launch.PojoServiceRegistryFactory;
 import org.junit.jupiter.api.Test;
 
@@ -188,7 +186,7 @@ public class ExampleTest {
 			)
 			.configured(
 				asOsgiBundle()
-					.named(moduleNameImp)
+					.named(moduleNameImp, attribute("version", versionImp))
 					.autoImporting()
 					.autoImporting(byMappingBundleArchives(apiJar))
 					.withActivator(moduleNameImp + ".Activator")
@@ -196,6 +194,7 @@ public class ExampleTest {
 			.configured(
 				asJpmsModule()
 					.named(moduleNameImp)
+					.versioned(versionImp)
 					.autoRequiring(11)
 					.autoRequiring(fromArchives(apiJar))
 					.providing(moduleNameApi + ".Greet", 
@@ -270,6 +269,7 @@ public class ExampleTest {
 			.configured(
 				asJpmsModule()
 					.named(moduleNameApp)
+					.versioned(versionApp)
 					.exporting(s -> s.startsWith("com.acme"))   // launch main
 					.autoRequiring(11)
 					.autoRequiring(fromArchives(apiJar, impJar))
@@ -278,7 +278,7 @@ public class ExampleTest {
 			)
 			.configured(
 				asOsgiBundle()
-					.named(moduleNameApp)
+					.named(moduleNameApp, attribute("version", versionApp))
 					.autoImporting()
 					.autoImporting(byMappingBundleArchives(apiJar, impJar))
 					.withManifestHeader("Service-Component", "/OSGI-INF/scr.xml")
@@ -353,7 +353,7 @@ public class ExampleTest {
 		List<BundleDescriptor> bundles = new ClasspathScanner().scanForBundles(loader);
 		Map<String, Object> config = Collections.singletonMap(BUNDLE_DESCRIPTORS, bundles);
 
-		PojoServiceRegistry registry = ServiceLoader.load(PojoServiceRegistryFactory.class).iterator()
+		ServiceLoader.load(PojoServiceRegistryFactory.class).iterator()
 				.next()
 				.newPojoServiceRegistry(config);
 		// EARCAM_SNIPPET_END: run-osgi
