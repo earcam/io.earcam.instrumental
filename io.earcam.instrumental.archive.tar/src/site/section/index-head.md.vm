@@ -1,0 +1,26 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+
+
+
+$h3 Current State
+
+This is just a first-stab effort, it: 
+
+* Simply creates or extracts content - only to/from filesystem
+* Isn't integrated with other modules
+* Doesn't validate
+* Likely doesn't completely conform to standards, e.g. GNU Tar
+* Has OS dependent tests; requiring GNU tar compatible executable 
+
+$h3 Future plans
+
+The goal of future development is to fully integrate with the pluggable [archive][archive], bringing it
+on a par with existing JAR/ZIP functionality.
+
+* Non-JAR archive target
+* Ability to source (filtered) archive content from existing tarballs 
+
+
+[archive]: /archive
