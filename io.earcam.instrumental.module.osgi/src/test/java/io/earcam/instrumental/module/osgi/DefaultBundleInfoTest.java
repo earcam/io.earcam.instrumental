@@ -130,6 +130,7 @@ public class DefaultBundleInfoTest {
 		}
 
 
+		@SuppressWarnings("unlikely-arg-type")
 		@Test
 		void notEqualToSimilarBuilderOfDifferentType()
 		{

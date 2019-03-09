@@ -20,8 +20,8 @@
 	</distributionManagement>
 
 	<properties>
-		<version.java.platform>10</version.java.platform>
-		<version.java>10</version.java>
+		<version.java.platform>11</version.java.platform>
+		<version.java>11</version.java>
 
 		<forbiddenapis.skip>true</forbiddenapis.skip>
 
