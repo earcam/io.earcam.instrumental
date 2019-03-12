@@ -129,7 +129,7 @@ public class DynamicAgentTest {
 	public void loadAgentFromClassByCreatingStubJar() throws IOException
 	{
 		// EARCAM_SNIPPET_BEGIN: agent-class
-		
+
 		// Typically you'd need to launch the JVM with "-javaagent:<jarpath>[=<options>]"
 		String agentArguments = "arbitrary.arguments=go.here";
 		Path stubJar = DynamicAgent.loadAgent(StubAgent.class, agentArguments);
