@@ -47,7 +47,7 @@ public class DefaultTarballTest {
 		{
 			Path tarFile = Paths.get(".", "target", "simple-created.tar");
 			Path directory = Paths.get(".", "src", "test", "resources", "simple", ".");
-			
+
 			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
@@ -203,7 +203,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSimple() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "simple.tar");
 				Path extract = Paths.get(".", "target", "simple-extracted");
 				tar().read(tarFile, extract);
@@ -215,7 +214,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSimpleInputStream() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "simple.tar");
 				Path extract = Paths.get(".", "target", "simple-extracted-inputstream");
 				tar().read(new BufferedInputStream(new FileInputStream(tarFile.toFile())), extract);
@@ -227,7 +225,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSoftLinks() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "soft-links.tar");
 				Path extract = Paths.get(".", "target", "soft-links-extracted");
 				tar().read(tarFile, extract);
@@ -239,7 +236,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractHardLinks() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "hard-links.tar");
 				Path extract = Paths.get(".", "target", "hard-links-extracted");
 				tar().read(tarFile, extract);
@@ -251,7 +247,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractLinks() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "links.tar");
 				Path extract = Paths.get(".", "target", "links-extracted");
 				tar().read(tarFile, extract);
@@ -263,7 +258,6 @@ public class DefaultTarballTest {
 			@Test
 			public void extractRootfs() throws Exception
 			{
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "rootfs.tar");
 				Path extract = Paths.get(".", "target", "rootfs-extracted");
 				tar().read(tarFile, extract);
@@ -277,7 +271,6 @@ public class DefaultTarballTest {
 			{
 				assumeTrue("root".equals(System.getProperty("user.name")));
 
-	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "rootfs.tar");
 				Path extract = Paths.get(".", "target", "rootfs-extracted-as-root");
 				tar().read(tarFile, extract);
