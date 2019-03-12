@@ -5,7 +5,6 @@
 #
 #
 language: java
-jdk: oraclejdk8
 sudo: required
 cache:
   directories:
@@ -21,11 +20,12 @@ addons:
     token:
       secure: "RqaojDK2dxZ2CTTeNdL+6U8SO8qOvcvQb09xnt+Jcvw5j2+SQCLx3RoKckPOMdV90Hkx/raO9dACqCY2YJpGTpJersoz02DuphrvkkqBAxasJg29P/Rxw+Rc0z5fpErcj2uxIceRum50iPz+RqwezxGaNNz7MSDxDWx9WZsjus9fEsflk2aGWNr6k8lMtKuBjYV//iZcLYZEv5UTw4TtQnAU2rPxU5tqr3oxuO+Oj+ziM1bgPIQzPE3ipejuPCRBsm9+DFNKiTI+n7AIp6/aabfGP+bQRPuc1joFusLvMBoDducLZ+LRdQ7vllqPXtqDpA2AofJFXPSu3IhgoaSSRw9N2pN71j9lhosf08m+6lkeqEZsNH61PXSCxW+EZLzY2XMzGdaBi9KGlekfTpBymgirvjKOxVtTgL1bNT3nsh4fuM79m9Mr4ZC3gjgN8hMeZKDypEjVf0/jDecc6s8yPfBttkGqNgdKMoLm3jy4IiNK7XTu2ZxotUs2WVaBPdlK3/KIEI7COUkQFhWFSknk6tb6lIdpDRUdW+inNJ/VQNXkkptbrXDKXMGTTi+RD2Ulm+z4Mgo/xVWJmndS+XOk0tMdCAXSaZynv8hf1Xp0OyVhtORRrhTWlFhXicvJdgahBIh+QbraIbP3H2TzZmQskPSxevhF1xZ5I4ZrYw7YbO4="
 before_install:
+- sudo add-apt-repository ppa:webupd8team/java -y
 - sudo add-apt-repository ppa:linuxuprising/java -y
 - sudo apt-get update -q
 - echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections
 - echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections
-- sudo apt-get install oracle-java9-installer oracle-java11-installer -y -q
+- sudo apt-get install oracle-java8-installer oracle-java9-installer oracle-java11-installer -y -q
 - export JAVA_8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=${JAVA_8_HOME}
 - mkdir -p $HOME/.m2
