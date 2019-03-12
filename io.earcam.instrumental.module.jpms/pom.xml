@@ -23,7 +23,7 @@
 
 	<properties>
 		<sonar.exclusions>**/target/generated-sources/**</sonar.exclusions>
-		<!-- FIXME shrink the generated grammar first, otherwise Pitest takes years -->
+		<!-- TODO shrink the generated grammar first, otherwise Pitest takes years -->
 		<skip.execution.pitest>true</skip.execution.pitest>
 		<tidy.skip>false</tidy.skip>
 		<earcam.project.name.short>module.jpms</earcam.project.name.short>

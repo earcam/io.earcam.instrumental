@@ -40,7 +40,7 @@ before_script:
 - mvn -v
 script:
 - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -U -P analyse,report,sonar  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
+- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -U -P 'analyse,report,sonar,jdk-oracle'  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
 - #mvn --settings $HOME/ci-settings.xml org.eluder.coveralls:coveralls-maven-plugin:report
 - #mvn --settings $HOME/ci-settings.xml org.jacoco:jacoco-maven-plugin:report-aggregate -Djacoco.excludes=**/InstrumentationWrapper.*
 after_success: bash <(curl -s https://codecov.io/bash)

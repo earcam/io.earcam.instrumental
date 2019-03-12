@@ -113,7 +113,7 @@
 								<bundledSignature>jdk-deprecated</bundledSignature>
 								<bundledSignature>jdk-non-portable</bundledSignature>
 								<bundledSignature>jdk-system-out</bundledSignature>
-								<!-- <bundledSignature>jdk-reflection</bundledSignature> -->
+								<!-- jdk-reflection -->
 							</bundledSignatures>
 						</configuration>
 					</execution>

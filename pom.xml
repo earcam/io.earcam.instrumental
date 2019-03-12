@@ -48,7 +48,7 @@
 		<module>io.earcam.instrumental.agent.junit</module>
 		<module>io.earcam.instrumental.agent.defy</module>
 
-		<!-- <module>io.earcam.instrumental.uber</module> -->
+		<module>io.earcam.instrumental.uber</module>
 	</modules>
 
 	<scm>
@@ -98,6 +98,7 @@
 		<tidy.skip>true</tidy.skip>
 		<revapi.skip>true</revapi.skip><!-- not committing to semver til v1.0.0 -->
 
+		<java.home.8>/usr/lib/jvm/java-8-oracle</java.home.8>
 		<java.home.9>/usr/lib/jvm/java-9-oracle</java.home.9>
 		<java.home.11>/usr/lib/jvm/java-11-oracle</java.home.11>
 		<java.home.latest>${java.home.11}</java.home.latest>
@@ -528,6 +529,9 @@
 							<goals>
 								<goal>test</goal>
 							</goals>
+							<configuration>
+								<jvm>${java.home.8}/bin/java</jvm>
+							</configuration>
 						</execution>
 						<execution>
 							<id>jdk9-test</id>
@@ -617,20 +621,40 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		
-		<!--
-		<plugins>
-			<plugin>
-				<groupId>io.earcam.maven.plugin</groupId>
-				<artifactId>io.earcam.maven.plugin.ramdisk</artifactId>
-				<version>0.0.3-SNAPSHOT</version>
-				<extensions>true</extensions>
-			</plugin>
-		</plugins>
-		-->
 	</build>
 
 	<profiles>
+		<profile>
+			<id>distribute</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.2.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<minimizeJar>true</minimizeJar>
+									<shadedClassifierName>uber</shadedClassifierName>
+									<shadedArtifactAttached>true</shadedArtifactAttached>
+									<keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>	
+	
 		<profile>
 			<id>site</id>
 			<activation>

@@ -118,9 +118,6 @@
 							<forkCount>1</forkCount>
 							<reuseForks>false</reuseForks>
 							<argLine>-Djava.system.class.loader=${project.artifactId}.InMemoryClassLoader</argLine>
-<!-- 							<systemProperties> -->
-<!-- 								<java.system.class.loader>${project.artifactId}.InMemoryClassLoader</java.system.class.loader> -->
-<!-- 							</systemProperties> -->
 						</configuration>
 					</execution>
 				</executions>
