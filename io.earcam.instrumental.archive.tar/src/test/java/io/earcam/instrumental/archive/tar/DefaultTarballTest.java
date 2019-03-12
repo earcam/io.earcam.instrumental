@@ -18,10 +18,12 @@
  */
 package io.earcam.instrumental.archive.tar;
 
+import static io.earcam.instrumental.archive.tar.Tarball.tar;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,11 +33,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import io.earcam.instrumental.archive.tar.Tarball;
 import io.earcam.utilitarian.io.IoStreams;
 
 public class DefaultTarballTest {
@@ -45,10 +45,10 @@ public class DefaultTarballTest {
 		@Test
 		public void createSimple() throws Exception
 		{
-			Tarball tarball = Tarball.tar();
 			Path tarFile = Paths.get(".", "target", "simple-created.tar");
 			Path directory = Paths.get(".", "src", "test", "resources", "simple", ".");
-			tarball.write(tarFile, directory);
+			
+			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
 		}
@@ -57,10 +57,10 @@ public class DefaultTarballTest {
 		@Test
 		public void createSoftLinks() throws Exception
 		{
-			Tarball tarball = Tarball.tar();
+
 			Path tarFile = Paths.get(".", "target", "soft-links-created.tar");
 			Path directory = Paths.get(".", "src", "test", "resources", "soft-links");
-			tarball.write(tarFile, directory);
+			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
 		}
@@ -69,10 +69,10 @@ public class DefaultTarballTest {
 		@Test
 		public void createHardLinks() throws Exception
 		{
-			Tarball tarball = Tarball.tar();
+
 			Path tarFile = Paths.get(".", "target", "hard-links-created.tar");
 			Path directory = Paths.get(".", "src", "test", "resources", "hard-links");
-			tarball.write(tarFile, directory);
+			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
 		}
@@ -81,10 +81,10 @@ public class DefaultTarballTest {
 		@Test
 		public void createLinks() throws Exception
 		{
-			Tarball tarball = Tarball.tar();
+
 			Path tarFile = Paths.get(".", "target", "links-created.tar");
 			Path directory = Paths.get(".", "src", "test", "resources", "links");
-			tarball.write(tarFile, directory);
+			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
 		}
@@ -93,7 +93,7 @@ public class DefaultTarballTest {
 		@Test
 		public void createRootfs() throws Exception
 		{
-			Tarball tarball = Tarball.tar();
+
 			Path tarFile = Paths.get(".", "target", "rootfs-created.tar");
 
 			Path orginalTar = Paths.get(".", "src", "test", "resources", "rootfs.tar");
@@ -101,7 +101,7 @@ public class DefaultTarballTest {
 
 			osUntar(orginalTar, directory);
 
-			tarball.write(tarFile, directory);
+			tar().write(tarFile, directory);
 
 			assertSameTarballContents(tarFile, directory);
 		}
@@ -203,10 +203,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSimple() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "simple.tar");
 				Path extract = Paths.get(".", "target", "simple-extracted");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}
@@ -215,10 +215,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSimpleInputStream() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "simple.tar");
 				Path extract = Paths.get(".", "target", "simple-extracted-inputstream");
-				tarball.read(new BufferedInputStream(new FileInputStream(tarFile.toFile())), extract);
+				tar().read(new BufferedInputStream(new FileInputStream(tarFile.toFile())), extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}
@@ -227,10 +227,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractSoftLinks() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "soft-links.tar");
 				Path extract = Paths.get(".", "target", "soft-links-extracted");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}
@@ -239,10 +239,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractHardLinks() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "hard-links.tar");
 				Path extract = Paths.get(".", "target", "hard-links-extracted");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}
@@ -251,10 +251,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractLinks() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "links.tar");
 				Path extract = Paths.get(".", "target", "links-extracted");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}
@@ -263,10 +263,10 @@ public class DefaultTarballTest {
 			@Test
 			public void extractRootfs() throws Exception
 			{
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "rootfs.tar");
 				Path extract = Paths.get(".", "target", "rootfs-extracted");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContentsWithHardDereference(tarFile, extract);
 			}
@@ -275,12 +275,12 @@ public class DefaultTarballTest {
 			@Test
 			public void extractRootfsAsRoot() throws Exception
 			{
-				Assumptions.assumeTrue("root".equals(System.getProperty("user.name")));
+				assumeTrue("root".equals(System.getProperty("user.name")));
 
-				Tarball tarball = Tarball.tar();
+	
 				Path tarFile = Paths.get(".", "src", "test", "resources", "rootfs.tar");
 				Path extract = Paths.get(".", "target", "rootfs-extracted-as-root");
-				tarball.read(tarFile, extract);
+				tar().read(tarFile, extract);
 
 				assertSameTarballContents(tarFile, extract);
 			}

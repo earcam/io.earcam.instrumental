@@ -7,8 +7,19 @@
 
 $h5 Instrumentation via SPI
 
+Trivially acquire the `java.lang.instrument.Instrumentation` instance:
+
 #snippet ( "/src/test/java/io/earcam/instrumental/agent/InstrumentationServiceProviderTest.java", "instrumentation-spi" ) 
+
 
 $h5 Dynamically Load an Agent Class 
 
+Programmatically attach an agent class: 
+
 #snippet ( "/src/test/java/io/earcam/instrumental/agent/DynamicAgentTest.java", "agent-class" ) 
+
+$h5 Dynamically Load an Agent Jar 
+
+Programmatically attach an agent jar:
+
+#snippet ( "/src/test/java/io/earcam/instrumental/agent/DynamicAgentTest.java", "agent-jar" ) 

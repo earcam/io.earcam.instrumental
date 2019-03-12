@@ -21,7 +21,11 @@ according to conventions (Apache Maven's standards for POMs, my own undocumented
 
 To run PiTest use `mvn -P analyse clean install`
 
-To run against SonarQube use `mvn -P analyse,report,sonar`
+To run against SonarQube use `mvn -P analyse,report,sonar,jdk-oracle` (the last profile `jdk-oracle` may be any profile that forces toolchains use). 
+
+If the build fails, having previously warned that the "bootstrap class path" is not set, then ensure a profile specifying toolchains is explicit, 
+or otherwise run maven with JDK 8.
+
 
 ## SCA Metrics
 

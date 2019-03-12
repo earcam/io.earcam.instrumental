@@ -79,8 +79,11 @@ public class DynamicAgentTest {
 	@Test
 	public void loadAgentFromJar() throws IOException
 	{
+		URI jarUrl = urlOfJarFile(jarFile);
+		// EARCAM_SNIPPET_BEGIN: agent-jar
 		String agentArguments = "arbitrary.arguments=go.here";
-		DynamicAgent.loadAgent(urlOfJarFile(jarFile), agentArguments);
+		DynamicAgent.loadAgent(jarUrl, agentArguments);
+		// EARCAM_SNIPPET_END: agent-jar
 		assertThat(StubAgentState.agentMainInvoked, is(true));
 		assertThat(StubAgentState.instrumentation, is(not(nullValue())));
 		assertThat(StubAgentState.arguments, is(equalTo(agentArguments)));
@@ -126,6 +129,8 @@ public class DynamicAgentTest {
 	public void loadAgentFromClassByCreatingStubJar() throws IOException
 	{
 		// EARCAM_SNIPPET_BEGIN: agent-class
+		
+		// Typically you'd need to launch the JVM with "-javaagent:<jarpath>[=<options>]"
 		String agentArguments = "arbitrary.arguments=go.here";
 		Path stubJar = DynamicAgent.loadAgent(StubAgent.class, agentArguments);
 		// EARCAM_SNIPPET_END: agent-class

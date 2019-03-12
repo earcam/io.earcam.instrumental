@@ -202,7 +202,7 @@ class ArchiveBuilder implements ArchiveConfiguration, ArchiveRegistrar {
 	@Override
 	public <R> R to(Function<Archive, R> transformer)
 	{
-		return transformer.apply(toObjectModel());
+		return toObjectModel().to(transformer);
 	}
 
 

@@ -21,7 +21,6 @@ package io.earcam.instrumental.agent;
 import static java.io.File.separatorChar;
 import static java.nio.charset.Charset.defaultCharset;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -78,7 +77,7 @@ final class Attach {
 
 		@SuppressWarnings("squid:S4721")
 		ProcessBuilder pb = new ProcessBuilder(cmd)
-				.directory(new File(System.getProperty("user.dir")));
+				.directory(null);
 
 		Process process = pb.start();
 		int exitCode = process.waitFor();

@@ -94,7 +94,7 @@ public final class ClassLoaders {
 	 *
 	 * @param bytes bytecode
 	 * @return the class defined by the bytecode
-	 * @see InMemoryClassLoader#define(byte[])
+	 * @see InMemoryClassLoader#define(String, byte[], java.security.CodeSource)
 	 */
 	public static Class<?> load(byte[] bytes)
 	{

@@ -24,12 +24,12 @@ import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Set;
 
 import javax.lang.model.SourceVersion;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -96,7 +96,7 @@ public class AsJpmsModuleAutoRequireIntegrationTest {
 		@Test
 		void aSimpleModuleRequiresJavaBase()
 		{
-			Assumptions.assumeTrue(SourceVersion.latest().ordinal() > 8, "Test requires JDK > 8");
+			assumeTrue(SourceVersion.latest().ordinal() > 8, "Test requires JDK > 8");
 
 			Archive archive = archive()
 					.configured(
