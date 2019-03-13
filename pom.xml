@@ -75,7 +75,7 @@
 	<properties>
 		<version.earcam.utilitarian>1.3.0-SNAPSHOT</version.earcam.utilitarian>
 		<version.earcam.unexceptional>1.0.0</version.earcam.unexceptional>
-		<version.earcam.maven.plugin>0.0.4</version.earcam.maven.plugin>
+		<version.earcam.maven.plugin>0.0.5-SNAPSHOT</version.earcam.maven.plugin>
 
 		<version.cglib>3.2.7</version.cglib>
 		<version.objenesis>2.6</version.objenesis>
