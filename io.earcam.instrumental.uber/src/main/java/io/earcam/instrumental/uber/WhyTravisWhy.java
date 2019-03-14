@@ -18,6 +18,6 @@
  */
 package io.earcam.instrumental.uber;
 
-public class WhyTravisWhy {
+public interface WhyTravisWhy {
 
 }
