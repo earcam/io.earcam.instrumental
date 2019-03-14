@@ -26,8 +26,8 @@ before_install:
 - echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections
 - echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections
 - sudo apt-get install oracle-java8-installer oracle-java9-installer oracle-java11-installer -y -q
-- export JAVA_8_HOME=/usr/lib/jvm/java-8-oracle
-- export JAVA_HOME=${JAVA_8_HOME}
+- export JAVA_11_HOME=/usr/lib/jvm/java-11-oracle
+- export JAVA_HOME=${JAVA_11_HOME}
 - mkdir -p $HOME/.m2
 - export M2_HOME=$HOME/apache-maven-3.6.0
 - if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz | tar zxf - -C $HOME; fi
