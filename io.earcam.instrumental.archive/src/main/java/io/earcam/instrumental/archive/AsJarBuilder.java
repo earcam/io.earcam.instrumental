@@ -47,7 +47,7 @@ public interface AsJarBuilder<T extends AsJarBuilder<T>> extends ArchiveConfigur
 
 	/**
 	 * <p>
-	 * Adds SPI details under {@value #SPI_ROOT_PATH}
+	 * Adds SPI details under {@value AbstractAsJarBuilder#SPI_ROOT_PATH}
 	 * </p>
 	 * <p>
 	 * Note the {@code service} parameter is <b>not</b> added to the archive.
