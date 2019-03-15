@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.earcam.maven</groupId>
 		<artifactId>io.earcam.maven.pom</artifactId>
-		<version>2.2.3</version>
+		<version>2.2.4-SNAPSHOT</version>
 	</parent>
 
 	<groupId>io.earcam</groupId>
@@ -77,14 +77,16 @@
 		<version.earcam.unexceptional>1.0.0</version.earcam.unexceptional>
 		<version.earcam.maven.plugin>0.0.5-SNAPSHOT</version.earcam.maven.plugin>
 
-		<version.cglib>3.2.7</version.cglib>
-		<version.objenesis>2.6</version.objenesis>
-		<version.asm>6.2</version.asm>
+		<version.cglib>3.2.10</version.cglib>
+		<version.objenesis>3.0.1</version.objenesis>
+		<version.asm>7.1</version.asm>
 		<version.antlr>4.7.2</version.antlr>
-		<version.bouncy.castle>1.60</version.bouncy.castle>
+		<version.bouncy.castle>1.61</version.bouncy.castle>
 		<version.slf4j>1.8.0-beta4</version.slf4j>
 		<version.junit4>4.12</version.junit4>
-		<version.junit5>5.3.1</version.junit5>
+		<version.junit5>5.4.0</version.junit5>
+		<version.pax.exam>4.13.1</version.pax.exam>
+		<version.pax.url>2.6.1</version.pax.url>
 		<version.sun.tools.attach>1.8.0_jdk8u172-b11</version.sun.tools.attach>
 
 		<site.url>https://instrumental.earcam.io/</site.url>
@@ -248,7 +250,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>2.22.0</version>
+				<version>2.25.0</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -283,35 +285,35 @@
 			<dependency>
 				<groupId>org.ops4j.pax.exam</groupId>
 				<artifactId>pax-exam-junit4</artifactId>
-				<version>4.11.0</version>
+				<version>${version.pax.exam}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.ops4j.pax.exam</groupId>
 				<artifactId>pax-exam-container-native</artifactId>
-				<version>4.11.0</version>
+				<version>${version.pax.exam}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.ops4j.pax.exam</groupId>
 				<artifactId>pax-exam-link-mvn</artifactId>
-				<version>4.11.0</version>
+				<version>${version.pax.exam}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.ops4j.pax.url</groupId>
 				<artifactId>pax-url-aether</artifactId>
-				<version>2.5.4</version>
+				<version>${version.pax.url}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>org.apache.felix.framework</artifactId>
-				<version>5.6.10</version>
+				<version>6.0.2</version>
 				<scope>test</scope>
 			</dependency>
 
