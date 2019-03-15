@@ -8,6 +8,6 @@ module oracle.net {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports com.oracle.nio;
 	exports com.oracle.net;
+	exports com.oracle.nio;
 }

@@ -19,16 +19,16 @@ module jdk.internal.le {
 	exports jdk.internal.jline.console to 
 		jdk.jshell,
 		jdk.scripting.nashorn.shell;
-	exports jdk.internal.jline.internal to 
-		jdk.jshell,
-		jdk.scripting.nashorn.shell;
-	exports jdk.internal.jline.extra to 
+	exports jdk.internal.jline.console.completer to 
 		jdk.jshell,
 		jdk.scripting.nashorn.shell;
 	exports jdk.internal.jline.console.history to 
 		jdk.jshell,
 		jdk.scripting.nashorn.shell;
-	exports jdk.internal.jline.console.completer to 
+	exports jdk.internal.jline.extra to 
+		jdk.jshell,
+		jdk.scripting.nashorn.shell;
+	exports jdk.internal.jline.internal to 
 		jdk.jshell,
 		jdk.scripting.nashorn.shell;
 }

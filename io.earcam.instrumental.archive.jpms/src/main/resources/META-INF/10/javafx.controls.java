@@ -27,17 +27,17 @@ module javafx.controls {
 	 * @modifiers transitive
 	 */
 	requires transitive javafx.graphics;
-	exports javafx.scene.control.skin;
+	exports com.sun.javafx.scene.control to 
+		javafx.web;
 	exports com.sun.javafx.scene.control.behavior to 
+		javafx.web;
+	exports com.sun.javafx.scene.control.inputmap to 
 		javafx.web;
 	exports com.sun.javafx.scene.control.skin to 
 		javafx.graphics,
 		javafx.web;
-	exports javafx.scene.control.cell;
 	exports javafx.scene.chart;
-	exports com.sun.javafx.scene.control to 
-		javafx.web;
-	exports com.sun.javafx.scene.control.inputmap to 
-		javafx.web;
 	exports javafx.scene.control;
+	exports javafx.scene.control.cell;
+	exports javafx.scene.control.skin;
 }

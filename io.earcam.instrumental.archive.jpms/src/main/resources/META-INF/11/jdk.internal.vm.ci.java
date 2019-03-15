@@ -21,11 +21,11 @@ module jdk.internal.vm.ci {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports jdk.vm.ci.services to 
-		jdk.internal.vm.compiler;
 	exports jdk.vm.ci.runtime to 
 		jdk.internal.vm.compiler,
 		jdk.internal.vm.compiler.management;
+	exports jdk.vm.ci.services to 
+		jdk.internal.vm.compiler;
 	uses jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory;
 	uses jdk.vm.ci.services.JVMCIServiceLocator;
 	provides jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory with 

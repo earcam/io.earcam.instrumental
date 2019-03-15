@@ -22,20 +22,20 @@ module java.rmi {
 	 */
 	requires java.base;
 	requires java.logging;
-	exports java.rmi.server;
-	exports java.rmi.activation;
-	exports java.rmi;
 	exports com.sun.rmi.rmid to 
 		java.base;
+	exports java.rmi;
+	exports java.rmi.activation;
+	exports java.rmi.dgc;
+	exports java.rmi.registry;
+	exports java.rmi.server;
+	exports javax.rmi.ssl;
 	exports sun.rmi.registry to 
 		jdk.management.agent;
-	exports javax.rmi.ssl;
-	exports java.rmi.dgc;
 	exports sun.rmi.server to 
 		java.management.rmi,
 		jdk.jconsole,
 		jdk.management.agent;
-	exports java.rmi.registry;
 	exports sun.rmi.transport to 
 		java.management.rmi,
 		jdk.jconsole,

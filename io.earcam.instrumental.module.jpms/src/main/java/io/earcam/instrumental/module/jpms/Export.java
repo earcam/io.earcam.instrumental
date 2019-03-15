@@ -22,6 +22,7 @@ import static io.earcam.instrumental.module.jpms.ExportModifier.MANDATED;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,10 +35,28 @@ import javax.annotation.concurrent.Immutable;
  *
  */
 @Immutable
-public class Export implements Serializable {
+public class Export implements Comparable<Export>, Serializable {
 
 	private static final long serialVersionUID = -4919749651818958350L;
 	private static final transient String[] NO_MODULES = new String[0];
+
+	private static final Comparator<String[]> STRING_ARRAY_COMPARATOR = (a, b) -> {
+		int lendiff = a.length - b.length;
+		if(lendiff == 0) {
+			for(int i = 0, j = 0; i < a.length && j < b.length; i++, j++) {
+				int diff = a[i].compareTo(b[j]);
+				if(diff != 0) {
+					return diff;
+				}
+			}
+		}
+		return lendiff;
+	};
+
+	private static final Comparator<Export> COMPARATOR = Comparator.comparing(Export::paquet)
+			.thenComparing(Export::modules, STRING_ARRAY_COMPARATOR)
+			.thenComparing(Export::access);
+
 	private final String paquet;
 	private final int access;
 	private final String[] modules;
@@ -70,7 +89,15 @@ public class Export implements Serializable {
 	{
 		this.paquet = paquet;
 		this.access = access;
-		this.modules = (modules == null) ? NO_MODULES : Arrays.copyOf(modules, modules.length);
+		this.modules = (modules == null) ? NO_MODULES : copySorted(modules);
+	}
+
+
+	private static String[] copySorted(String[] input)
+	{
+		String[] copied = Arrays.copyOf(input, input.length);
+		Arrays.sort(copied);
+		return copied;
 	}
 
 
@@ -102,6 +129,13 @@ public class Export implements Serializable {
 	public int hashCode()
 	{
 		return Objects.hash(paquet, access, Arrays.hashCode(modules));
+	}
+
+
+	@Override
+	public int compareTo(Export that)
+	{
+		return COMPARATOR.compare(this, that);
 	}
 
 

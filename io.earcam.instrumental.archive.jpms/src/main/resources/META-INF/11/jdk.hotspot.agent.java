@@ -118,9 +118,9 @@ module jdk.hotspot.agent {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.rmi;
 	requires java.datatransfer;
 	requires java.desktop;
+	requires java.rmi;
 	requires java.scripting;
 	exports sun.jvm.hotspot.debugger.remote to 
 		java.rmi;

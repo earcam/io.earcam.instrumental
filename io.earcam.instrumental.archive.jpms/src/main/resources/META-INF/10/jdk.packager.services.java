@@ -5,14 +5,14 @@
  * @package jdk.packager.services.userjvmoptions
  */
 module jdk.packager.services {
-	requires java.prefs;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires java.desktop;
-	exports jdk.packager.services.singleton;
+	requires java.prefs;
 	exports jdk.packager.services;
+	exports jdk.packager.services.singleton;
 	uses jdk.packager.services.UserJvmOptionsService;
 	provides jdk.packager.services.UserJvmOptionsService with 
 		jdk.packager.services.userjvmoptions.LauncherUserJvmOptions;

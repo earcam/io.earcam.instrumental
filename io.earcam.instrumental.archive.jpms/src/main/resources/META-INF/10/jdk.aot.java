@@ -14,11 +14,11 @@
  * @package jdk.tools.jaotc.utils
  */
 module jdk.aot {
-	requires jdk.internal.vm.ci;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires jdk.internal.vm.ci;
 	requires jdk.internal.vm.compiler;
 	requires jdk.management;
 }

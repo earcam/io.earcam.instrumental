@@ -25,35 +25,35 @@ module java.management {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports javax.management.relation;
-	exports com.sun.jmx.remote.util to 
-		java.management.rmi;
-	exports javax.management.timer;
-	exports javax.management;
-	exports sun.management.counter to 
-		jdk.management.agent;
-	exports javax.management.openmbean;
-	exports javax.management.loading;
 	exports com.sun.jmx.remote.internal to 
 		java.management.rmi,
-		jdk.management.agent;
-	exports javax.management.modelmbean;
-	exports javax.management.remote;
-	exports sun.management.spi to 
-		jdk.management,
-		jdk.management.cmm,
-		jdk.management.jfr;
-	exports sun.management to 
-		jdk.jconsole,
-		jdk.management,
-		jdk.management.agent;
-	exports sun.management.counter.perf to 
 		jdk.management.agent;
 	exports com.sun.jmx.remote.security to 
 		java.management.rmi,
 		jdk.management.agent;
-	exports javax.management.monitor;
+	exports com.sun.jmx.remote.util to 
+		java.management.rmi;
 	exports java.lang.management;
+	exports javax.management;
+	exports javax.management.loading;
+	exports javax.management.modelmbean;
+	exports javax.management.monitor;
+	exports javax.management.openmbean;
+	exports javax.management.relation;
+	exports javax.management.remote;
+	exports javax.management.timer;
+	exports sun.management to 
+		jdk.jconsole,
+		jdk.management,
+		jdk.management.agent;
+	exports sun.management.counter to 
+		jdk.management.agent;
+	exports sun.management.counter.perf to 
+		jdk.management.agent;
+	exports sun.management.spi to 
+		jdk.management,
+		jdk.management.cmm,
+		jdk.management.jfr;
 	uses javax.management.remote.JMXConnectorProvider;
 	uses javax.management.remote.JMXConnectorServerProvider;
 	uses sun.management.spi.PlatformMBeanProvider;

@@ -60,54 +60,49 @@
  * @package javax.xml.bind.util
  */
 module java.xml.bind {
-	requires jdk.unsupported;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.activation;
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	requires java.compiler;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.logging;
+	requires java.compiler;
 	requires java.desktop;
-	exports com.sun.xml.internal.bind.v2.schemagen.xmlschema to 
-		java.xml.ws;
+	requires java.logging;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
+	requires jdk.unsupported;
 	exports com.sun.istack.internal to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.org.jvnet.mimepull to 
-		java.xml.ws;
-	exports com.sun.xml.internal.bind.unmarshaller to 
+	exports com.sun.istack.internal.localization to 
 		java.xml.ws,
-		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.bind.v2.model.nav to 
+	exports com.sun.istack.internal.logging to 
 		java.xml.ws,
-		jdk.xml.bind,
 		jdk.xml.ws;
-	exports javax.xml.bind;
-	exports com.sun.xml.internal.fastinfoset to 
-		java.xml.ws;
-	exports com.sun.xml.internal.fastinfoset.vocab to 
-		java.xml.ws;
 	exports com.sun.xml.internal.bind to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.org.jvnet.staxex to 
-		java.xml.ws;
-	exports com.sun.xml.internal.bind.v2.schemagen.episode to 
+	exports com.sun.xml.internal.bind.annotation to 
 		jdk.xml.bind;
-	exports com.sun.xml.internal.org.jvnet.fastinfoset to 
-		java.xml.ws;
-	exports com.sun.xml.internal.bind.v2 to 
+	exports com.sun.xml.internal.bind.api to 
+		java.xml.ws,
+		jdk.xml.bind;
+	exports com.sun.xml.internal.bind.api.impl to 
+		java.xml.ws,
+		jdk.xml.bind;
+	exports com.sun.xml.internal.bind.marshaller to 
+		java.xml.ws,
+		jdk.xml.bind,
+		jdk.xml.ws;
+	exports com.sun.xml.internal.bind.unmarshaller to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
@@ -115,68 +110,73 @@ module java.xml.bind {
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.org.jvnet.staxex.util to 
-		java.xml.ws;
-	exports com.sun.xml.internal.bind.v2.model.runtime to 
-		java.xml.ws;
-	exports com.sun.xml.internal.bind.v2.util to 
+	exports com.sun.xml.internal.bind.v2 to 
+		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
 	exports com.sun.xml.internal.bind.v2.model.annotation to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.bind.annotation to 
+	exports com.sun.xml.internal.bind.v2.model.core to 
 		jdk.xml.bind;
-	exports javax.xml.bind.helpers;
-	exports com.sun.xml.internal.bind.api to 
-		java.xml.ws,
+	exports com.sun.xml.internal.bind.v2.model.impl to 
 		jdk.xml.bind;
-	exports com.sun.xml.internal.txw2.annotation to 
+	exports com.sun.xml.internal.bind.v2.model.nav to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.xml.internal.bind.v2.schemagen to 
-		java.xml.ws,
+	exports com.sun.xml.internal.bind.v2.model.runtime to 
+		java.xml.ws;
+	exports com.sun.xml.internal.bind.v2.model.util to 
 		jdk.xml.bind;
 	exports com.sun.xml.internal.bind.v2.runtime to 
 		java.xml.ws,
 		jdk.xml.bind;
-	exports javax.xml.bind.annotation;
-	exports com.sun.xml.internal.txw2.output to 
-		java.xml.ws,
-		jdk.xml.bind,
-		jdk.xml.ws;
-	exports com.sun.xml.internal.bind.v2.model.util to 
-		jdk.xml.bind;
 	exports com.sun.xml.internal.bind.v2.runtime.unmarshaller to 
 		java.xml.ws;
-	exports com.sun.xml.internal.bind.api.impl to 
+	exports com.sun.xml.internal.bind.v2.schemagen to 
 		java.xml.ws,
 		jdk.xml.bind;
-	exports com.sun.xml.internal.bind.v2.model.impl to 
+	exports com.sun.xml.internal.bind.v2.schemagen.episode to 
 		jdk.xml.bind;
-	exports javax.xml.bind.util;
-	exports javax.xml.bind.attachment;
-	exports com.sun.xml.internal.bind.v2.model.core to 
-		jdk.xml.bind;
-	exports com.sun.xml.internal.bind.marshaller to 
-		java.xml.ws,
+	exports com.sun.xml.internal.bind.v2.schemagen.xmlschema to 
+		java.xml.ws;
+	exports com.sun.xml.internal.bind.v2.util to 
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports javax.xml.bind.annotation.adapters;
+	exports com.sun.xml.internal.fastinfoset to 
+		java.xml.ws;
 	exports com.sun.xml.internal.fastinfoset.stax to 
 		java.xml.ws;
-	exports com.sun.istack.internal.logging to 
-		java.xml.ws,
-		jdk.xml.ws;
+	exports com.sun.xml.internal.fastinfoset.vocab to 
+		java.xml.ws;
+	exports com.sun.xml.internal.org.jvnet.fastinfoset to 
+		java.xml.ws;
+	exports com.sun.xml.internal.org.jvnet.mimepull to 
+		java.xml.ws;
+	exports com.sun.xml.internal.org.jvnet.staxex to 
+		java.xml.ws;
+	exports com.sun.xml.internal.org.jvnet.staxex.util to 
+		java.xml.ws;
 	exports com.sun.xml.internal.txw2 to 
 		java.xml.ws,
 		jdk.xml.bind,
 		jdk.xml.ws;
-	exports com.sun.istack.internal.localization to 
+	exports com.sun.xml.internal.txw2.annotation to 
 		java.xml.ws,
+		jdk.xml.bind,
 		jdk.xml.ws;
+	exports com.sun.xml.internal.txw2.output to 
+		java.xml.ws,
+		jdk.xml.bind,
+		jdk.xml.ws;
+	exports javax.xml.bind;
+	exports javax.xml.bind.annotation;
+	exports javax.xml.bind.annotation.adapters;
+	exports javax.xml.bind.attachment;
+	exports javax.xml.bind.helpers;
+	exports javax.xml.bind.util;
 	opens com.sun.xml.internal.bind.v2.model.nav to 
 		java.xml.ws,
 		jdk.xml.bind,

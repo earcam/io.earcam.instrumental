@@ -9,11 +9,11 @@ module javafx.swing {
 	 */
 	requires java.base;
 	requires java.datatransfer;
-	requires javafx.base;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.desktop;
+	requires javafx.base;
 	/**
 	 * @modifiers transitive
 	 */

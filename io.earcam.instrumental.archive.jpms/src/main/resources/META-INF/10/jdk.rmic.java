@@ -11,11 +11,11 @@
  * @package sun.tools.util
  */
 module jdk.rmic {
-	requires java.corba;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.javadoc;
+	requires java.corba;
 	requires jdk.compiler;
+	requires jdk.javadoc;
 }

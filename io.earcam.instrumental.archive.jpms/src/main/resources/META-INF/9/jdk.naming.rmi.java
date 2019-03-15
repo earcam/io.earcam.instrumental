@@ -10,10 +10,10 @@ module jdk.naming.rmi {
 	requires java.base;
 	requires java.naming;
 	requires java.rmi;
-	exports com.sun.jndi.url.rmi to 
-		java.naming;
 	exports com.sun.jndi.rmi.registry to 
 		java.rmi;
+	exports com.sun.jndi.url.rmi to 
+		java.naming;
 	provides javax.naming.spi.InitialContextFactory with 
 		com.sun.jndi.rmi.registry.RegistryContextFactory;
 }

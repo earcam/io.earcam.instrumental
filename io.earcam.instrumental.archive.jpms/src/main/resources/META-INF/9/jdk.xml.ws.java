@@ -29,17 +29,17 @@
  * @package com.sun.tools.internal.ws.wsdl.parser
  */
 module jdk.xml.ws {
-	requires jdk.xml.bind;
-	requires java.xml;
-	requires java.compiler;
-	requires java.xml.ws;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.rmi;
+	requires java.compiler;
 	requires java.logging;
+	requires java.rmi;
+	requires java.xml;
 	requires java.xml.bind;
+	requires java.xml.ws;
+	requires jdk.xml.bind;
 	uses com.sun.tools.internal.ws.wscompile.Plugin;
 	provides com.sun.tools.internal.ws.wscompile.Plugin with 
 		com.sun.tools.internal.ws.wscompile.plugin.at_generated.PluginImpl;

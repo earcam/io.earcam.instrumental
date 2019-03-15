@@ -29,16 +29,15 @@ import static java.util.stream.Collectors.toList;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 
@@ -52,11 +51,11 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 
 	private TreeSet<String> packages = new TreeSet<>();
 	private TreeSet<String> uses = new TreeSet<>();
-	private HashMap<String, String[]> provides = new HashMap<>();
+	private SortedMap<String, String[]> provides = new TreeMap<>();
 	private String mainClass;
-	private HashSet<Require> requires = new HashSet<>();
-	private HashSet<Export> exports = new HashSet<>();
-	private HashSet<Export> opens = new HashSet<>();
+	private TreeSet<Require> requires = new TreeSet<>();
+	private TreeSet<Export> exports = new TreeSet<>();
+	private TreeSet<Export> opens = new TreeSet<>();
 
 
 	@Override
@@ -349,7 +348,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	private void portsToString(StringBuilder output, HashSet<Export> ports, String portsLabel)
+	private void portsToString(StringBuilder output, TreeSet<Export> ports, String portsLabel)
 	{
 		for(Export export : ports) {
 			addComment(output, "\t", export.modifiers());
@@ -365,7 +364,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	private void usesToString(StringBuilder output)
 	{
 		if(!uses.isEmpty()) {
-			output.append(uses.stream().collect(Collectors.joining(";\n\tuses ", "\tuses ", ";\n")));
+			output.append(uses.stream().collect(joining(";\n\tuses ", "\tuses ", ";\n")));
 		}
 	}
 
@@ -374,7 +373,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	{
 		for(Map.Entry<String, String[]> e : provides.entrySet()) {
 			output.append('\t').append("provides ").append(e.getKey())
-					.append(Arrays.stream(e.getValue()).collect(joining(LIST_JOINING_DELIMITER, " with \n\t\t", "")));
+					.append(Arrays.stream(e.getValue()).sorted().collect(joining(LIST_JOINING_DELIMITER, " with \n\t\t", "")));
 			output.append(";\n");
 		}
 	}

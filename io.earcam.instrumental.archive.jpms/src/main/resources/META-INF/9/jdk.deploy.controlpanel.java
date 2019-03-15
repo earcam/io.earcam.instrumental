@@ -11,26 +11,26 @@
  * @package com.sun.deploy.jcp.selector
  */
 module jdk.deploy.controlpanel {
-	requires jdk.deploy;
-	requires java.xml;
-	requires javafx.fxml;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires javafx.controls;
 	requires java.desktop;
+	requires java.xml;
 	requires javafx.base;
-	requires jdk.javaws;
+	requires javafx.controls;
+	requires javafx.fxml;
 	requires javafx.graphics;
+	requires jdk.deploy;
+	requires jdk.javaws;
 	exports com.sun.deploy.jcp to 
 		javafx.graphics;
+	opens com.sun.deploy.jcp.controller to 
+		javafx.base,
+		javafx.fxml;
 	opens com.sun.deploy.jcp.controller.cacheviewer to 
 		javafx.base,
 		javafx.fxml;
 	opens com.sun.deploy.jcp.controls to 
-		javafx.fxml;
-	opens com.sun.deploy.jcp.controller to 
-		javafx.base,
 		javafx.fxml;
 }

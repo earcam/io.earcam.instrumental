@@ -6,17 +6,17 @@
  * @package javafx.fxml
  */
 module javafx.fxml {
-	requires java.xml;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires java.logging;
+	requires java.scripting;
+	requires java.xml;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive javafx.base;
-	requires java.scripting;
 	requires javafx.graphics;
 	exports javafx.fxml;
 }

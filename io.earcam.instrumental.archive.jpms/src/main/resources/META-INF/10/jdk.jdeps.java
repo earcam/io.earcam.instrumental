@@ -10,11 +10,11 @@
  * @package com.sun.tools.jdeps.resources
  */
 module jdk.jdeps {
-	requires java.compiler;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.compiler;
 	requires jdk.compiler;
 	exports com.sun.tools.classfile to 
 		jdk.jlink;

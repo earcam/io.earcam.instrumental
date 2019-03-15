@@ -5,11 +5,11 @@
  * @package jdk.management.resource.internal.inst
  */
 module jdk.management.resource {
-	requires java.instrument;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.instrument;
 	exports jdk.management.resource;
 	exports jdk.management.resource.internal to 
 		java.base;

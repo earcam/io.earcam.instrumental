@@ -132,70 +132,70 @@
  * @package org.graalvm.compiler.word.nodes
  */
 module jdk.internal.vm.compiler {
-	requires jdk.unsupported;
-	requires java.management;
-	requires jdk.internal.vm.ci;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires java.instrument;
+	requires java.management;
+	requires jdk.internal.vm.ci;
 	requires jdk.management;
-	exports org.graalvm.compiler.debug to 
-		jdk.aot;
-	exports org.graalvm.compiler.api.runtime to 
-		jdk.aot;
-	exports org.graalvm.compiler.phases.tiers to 
-		jdk.aot;
-	exports org.graalvm.compiler.nodes to 
-		jdk.aot;
-	exports org.graalvm.compiler.hotspot to 
-		jdk.aot;
-	exports org.graalvm.compiler.lir.phases to 
-		jdk.aot;
-	exports org.graalvm.compiler.hotspot.word to 
-		jdk.aot;
-	exports org.graalvm.compiler.runtime to 
+	requires jdk.unsupported;
+	exports org.graalvm.compiler.api.directives to 
 		jdk.aot;
 	exports org.graalvm.compiler.api.replacements to 
 		jdk.aot;
-	exports org.graalvm.compiler.core.common to 
+	exports org.graalvm.compiler.api.runtime to 
 		jdk.aot;
-	exports org.graalvm.compiler.graph to 
+	exports org.graalvm.compiler.asm.amd64 to 
+		jdk.aot;
+	exports org.graalvm.compiler.bytecode to 
 		jdk.aot;
 	exports org.graalvm.compiler.code to 
 		jdk.aot;
-	exports org.graalvm.compiler.word to 
-		jdk.aot;
-	exports org.graalvm.compiler.hotspot.replacements to 
-		jdk.aot;
 	exports org.graalvm.compiler.core to 
 		jdk.aot;
-	exports org.graalvm.compiler.hotspot.meta to 
+	exports org.graalvm.compiler.core.common to 
 		jdk.aot;
 	exports org.graalvm.compiler.core.target to 
 		jdk.aot;
-	exports org.graalvm.compiler.replacements to 
+	exports org.graalvm.compiler.debug to 
+		jdk.aot;
+	exports org.graalvm.compiler.debug.internal to 
+		jdk.aot;
+	exports org.graalvm.compiler.graph to 
+		jdk.aot;
+	exports org.graalvm.compiler.hotspot to 
+		jdk.aot;
+	exports org.graalvm.compiler.hotspot.meta to 
+		jdk.aot;
+	exports org.graalvm.compiler.hotspot.replacements to 
 		jdk.aot;
 	exports org.graalvm.compiler.hotspot.stubs to 
 		jdk.aot;
-	exports org.graalvm.compiler.lir.asm to 
+	exports org.graalvm.compiler.hotspot.word to 
 		jdk.aot;
 	exports org.graalvm.compiler.java to 
 		jdk.aot;
-	exports org.graalvm.compiler.asm.amd64 to 
+	exports org.graalvm.compiler.lir.asm to 
+		jdk.aot;
+	exports org.graalvm.compiler.lir.phases to 
+		jdk.aot;
+	exports org.graalvm.compiler.nodes to 
+		jdk.aot;
+	exports org.graalvm.compiler.nodes.graphbuilderconf to 
 		jdk.aot;
 	exports org.graalvm.compiler.options to 
 		jdk.aot;
 	exports org.graalvm.compiler.phases to 
 		jdk.aot;
-	exports org.graalvm.compiler.api.directives to 
+	exports org.graalvm.compiler.phases.tiers to 
 		jdk.aot;
-	exports org.graalvm.compiler.debug.internal to 
+	exports org.graalvm.compiler.replacements to 
 		jdk.aot;
-	exports org.graalvm.compiler.bytecode to 
+	exports org.graalvm.compiler.runtime to 
 		jdk.aot;
-	exports org.graalvm.compiler.nodes.graphbuilderconf to 
+	exports org.graalvm.compiler.word to 
 		jdk.aot;
 	uses org.graalvm.compiler.code.DisassemblerProvider;
 	uses org.graalvm.compiler.core.match.MatchStatementSet;
@@ -206,80 +206,27 @@ module jdk.internal.vm.compiler {
 	uses org.graalvm.compiler.hotspot.HotSpotBackendFactory;
 	uses org.graalvm.compiler.nodes.graphbuilderconf.NodeIntrinsicPluginFactory;
 	uses org.graalvm.compiler.options.OptionDescriptors;
-	provides org.graalvm.compiler.options.OptionDescriptors with 
-		org.graalvm.compiler.core.GraalCompilerOptions_OptionDescriptors,
-		org.graalvm.compiler.core.common.GraalOptions_OptionDescriptors,
-		org.graalvm.compiler.core.common.spi.JavaConstantFieldProvider_OptionDescriptors,
-		org.graalvm.compiler.core.common.util.CompilationAlarm_OptionDescriptors,
-		org.graalvm.compiler.core.phases.HighTier_OptionDescriptors,
-		org.graalvm.compiler.core.phases.LowTier_OptionDescriptors,
-		org.graalvm.compiler.debug.Fingerprint_OptionDescriptors,
-		org.graalvm.compiler.debug.GraalDebugConfig_OptionDescriptors,
-		org.graalvm.compiler.debug.internal.method.MethodMetricsPrinter_OptionDescriptors,
-		org.graalvm.compiler.graph.Graph_OptionDescriptors,
-		org.graalvm.compiler.graph.NodeClass_OptionDescriptors,
-		org.graalvm.compiler.hotspot.BootstrapWatchDog_OptionDescriptors,
-		org.graalvm.compiler.hotspot.CompilationCounters_OptionDescriptors,
-		org.graalvm.compiler.hotspot.CompilationStatistics_OptionDescriptors,
-		org.graalvm.compiler.hotspot.CompilationWatchDog_OptionDescriptors,
-		org.graalvm.compiler.hotspot.CompileTheWorldOptions_OptionDescriptors,
-		org.graalvm.compiler.hotspot.CompilerConfigurationFactory_OptionDescriptors,
-		org.graalvm.compiler.hotspot.HotSpotBackend_OptionDescriptors,
-		org.graalvm.compiler.hotspot.HotSpotGraalCompilerFactory_OptionDescriptors,
-		org.graalvm.compiler.hotspot.HotSpotTTYStreamProvider_OptionDescriptors,
-		org.graalvm.compiler.hotspot.debug.BenchmarkCounters_OptionDescriptors,
-		org.graalvm.compiler.hotspot.meta.HotSpotAOTProfilingPlugin_OptionDescriptors,
-		org.graalvm.compiler.hotspot.meta.HotSpotProfilingPlugin_OptionDescriptors,
-		org.graalvm.compiler.hotspot.nodes.profiling.ProfileNode_OptionDescriptors,
-		org.graalvm.compiler.hotspot.phases.aot.AOTInliningPolicy_OptionDescriptors,
-		org.graalvm.compiler.hotspot.phases.profiling.FinalizeProfileNodesPhase_OptionDescriptors,
-		org.graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions_OptionDescriptors,
-		org.graalvm.compiler.hotspot.stubs.StubOptions_OptionDescriptors,
-		org.graalvm.compiler.java.BytecodeParserOptions_OptionDescriptors,
-		org.graalvm.compiler.lir.BailoutAndRestartBackendException_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.lsra.LinearScanEliminateSpillMovePhase_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.lsra.LinearScan_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.lsra.OptimizingLinearScanWalker_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.trace.DefaultTraceRegisterAllocationPolicy_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.trace.TraceBuilderPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.amd64.phases.StackMoveOptimizationPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.asm.CompilationResultBuilder_OptionDescriptors,
-		org.graalvm.compiler.lir.constopt.ConstantLoadOptimization_OptionDescriptors,
-		org.graalvm.compiler.lir.gen.LIRGenerator_OptionDescriptors,
-		org.graalvm.compiler.lir.phases.LIRPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.phases.PostAllocationOptimizationStage_OptionDescriptors,
-		org.graalvm.compiler.lir.profiling.MoveProfilingPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.ssi.SSIConstructionPhase_OptionDescriptors,
-		org.graalvm.compiler.lir.stackslotalloc.LSStackSlotAllocator_OptionDescriptors,
-		org.graalvm.compiler.loop.DefaultLoopPolicies_OptionDescriptors,
-		org.graalvm.compiler.nodes.util.GraphUtil_OptionDescriptors,
-		org.graalvm.compiler.phases.BasePhase_OptionDescriptors,
-		org.graalvm.compiler.phases.common.DeadCodeEliminationPhase_OptionDescriptors,
-		org.graalvm.compiler.phases.common.inlining.InliningPhase_OptionDescriptors,
-		org.graalvm.compiler.printer.NoDeadCodeVerifyHandler_OptionDescriptors,
-		org.graalvm.compiler.replacements.PEGraphDecoder_OptionDescriptors,
-		org.graalvm.compiler.replacements.SnippetTemplate_OptionDescriptors,
-		org.graalvm.compiler.virtual.phases.ea.PartialEscapePhase_OptionDescriptors;
 	provides jdk.vm.ci.services.JVMCIServiceLocator with 
 		org.graalvm.compiler.hotspot.HotSpotGraalJVMCIServiceLocator;
-	provides org.graalvm.compiler.hotspot.HotSpotBackendFactory with 
-		org.graalvm.compiler.hotspot.aarch64.AArch64HotSpotBackendFactory,
-		org.graalvm.compiler.hotspot.amd64.AMD64HotSpotBackendFactory,
-		org.graalvm.compiler.hotspot.sparc.SPARCHotSpotBackendFactory;
+	provides org.graalvm.compiler.code.DisassemblerProvider with 
+		org.graalvm.compiler.code.HexCodeFileDisassemblerProvider,
+		org.graalvm.compiler.hotspot.meta.HotSpotDisassemblerProvider;
 	provides org.graalvm.compiler.core.match.MatchStatementSet with 
 		org.graalvm.compiler.core.amd64.AMD64NodeMatchRules_MatchStatementSet,
 		org.graalvm.compiler.core.sparc.SPARCNodeMatchRules_MatchStatementSet;
-	provides org.graalvm.compiler.hotspot.CompilerConfigurationFactory with 
-		org.graalvm.compiler.hotspot.CoreCompilerConfigurationFactory,
-		org.graalvm.compiler.hotspot.EconomyCompilerConfigurationFactory;
+	provides org.graalvm.compiler.debug.DebugConfigCustomizer with 
+		org.graalvm.compiler.printer.GraalDebugConfigCustomizer;
 	provides org.graalvm.compiler.debug.DebugInitializationParticipant with 
 		org.graalvm.compiler.core.GraalDebugInitializationParticipant;
 	provides org.graalvm.compiler.debug.TTYStreamProvider with 
 		org.graalvm.compiler.hotspot.HotSpotTTYStreamProvider;
-	provides org.graalvm.compiler.debug.DebugConfigCustomizer with 
-		org.graalvm.compiler.printer.GraalDebugConfigCustomizer;
+	provides org.graalvm.compiler.hotspot.CompilerConfigurationFactory with 
+		org.graalvm.compiler.hotspot.CoreCompilerConfigurationFactory,
+		org.graalvm.compiler.hotspot.EconomyCompilerConfigurationFactory;
+	provides org.graalvm.compiler.hotspot.HotSpotBackendFactory with 
+		org.graalvm.compiler.hotspot.aarch64.AArch64HotSpotBackendFactory,
+		org.graalvm.compiler.hotspot.amd64.AMD64HotSpotBackendFactory,
+		org.graalvm.compiler.hotspot.sparc.SPARCHotSpotBackendFactory;
 	provides org.graalvm.compiler.nodes.graphbuilderconf.NodeIntrinsicPluginFactory with 
 		org.graalvm.compiler.hotspot.PluginFactory_HotSpotBackend,
 		org.graalvm.compiler.hotspot.nodes.PluginFactory_AcquiredCASLockNode,
@@ -389,7 +336,60 @@ module jdk.internal.vm.compiler {
 		org.graalvm.compiler.replacements.nodes.PluginFactory_DirectStoreNode,
 		org.graalvm.compiler.replacements.nodes.PluginFactory_ExplodeLoopNode,
 		org.graalvm.compiler.replacements.nodes.PluginFactory_UnaryMathIntrinsicNode;
-	provides org.graalvm.compiler.code.DisassemblerProvider with 
-		org.graalvm.compiler.code.HexCodeFileDisassemblerProvider,
-		org.graalvm.compiler.hotspot.meta.HotSpotDisassemblerProvider;
+	provides org.graalvm.compiler.options.OptionDescriptors with 
+		org.graalvm.compiler.core.GraalCompilerOptions_OptionDescriptors,
+		org.graalvm.compiler.core.common.GraalOptions_OptionDescriptors,
+		org.graalvm.compiler.core.common.spi.JavaConstantFieldProvider_OptionDescriptors,
+		org.graalvm.compiler.core.common.util.CompilationAlarm_OptionDescriptors,
+		org.graalvm.compiler.core.phases.HighTier_OptionDescriptors,
+		org.graalvm.compiler.core.phases.LowTier_OptionDescriptors,
+		org.graalvm.compiler.debug.Fingerprint_OptionDescriptors,
+		org.graalvm.compiler.debug.GraalDebugConfig_OptionDescriptors,
+		org.graalvm.compiler.debug.internal.method.MethodMetricsPrinter_OptionDescriptors,
+		org.graalvm.compiler.graph.Graph_OptionDescriptors,
+		org.graalvm.compiler.graph.NodeClass_OptionDescriptors,
+		org.graalvm.compiler.hotspot.BootstrapWatchDog_OptionDescriptors,
+		org.graalvm.compiler.hotspot.CompilationCounters_OptionDescriptors,
+		org.graalvm.compiler.hotspot.CompilationStatistics_OptionDescriptors,
+		org.graalvm.compiler.hotspot.CompilationWatchDog_OptionDescriptors,
+		org.graalvm.compiler.hotspot.CompileTheWorldOptions_OptionDescriptors,
+		org.graalvm.compiler.hotspot.CompilerConfigurationFactory_OptionDescriptors,
+		org.graalvm.compiler.hotspot.HotSpotBackend_OptionDescriptors,
+		org.graalvm.compiler.hotspot.HotSpotGraalCompilerFactory_OptionDescriptors,
+		org.graalvm.compiler.hotspot.HotSpotTTYStreamProvider_OptionDescriptors,
+		org.graalvm.compiler.hotspot.debug.BenchmarkCounters_OptionDescriptors,
+		org.graalvm.compiler.hotspot.meta.HotSpotAOTProfilingPlugin_OptionDescriptors,
+		org.graalvm.compiler.hotspot.meta.HotSpotProfilingPlugin_OptionDescriptors,
+		org.graalvm.compiler.hotspot.nodes.profiling.ProfileNode_OptionDescriptors,
+		org.graalvm.compiler.hotspot.phases.aot.AOTInliningPolicy_OptionDescriptors,
+		org.graalvm.compiler.hotspot.phases.profiling.FinalizeProfileNodesPhase_OptionDescriptors,
+		org.graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions_OptionDescriptors,
+		org.graalvm.compiler.hotspot.stubs.StubOptions_OptionDescriptors,
+		org.graalvm.compiler.java.BytecodeParserOptions_OptionDescriptors,
+		org.graalvm.compiler.lir.BailoutAndRestartBackendException_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.lsra.LinearScanEliminateSpillMovePhase_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.lsra.LinearScan_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.lsra.OptimizingLinearScanWalker_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.trace.DefaultTraceRegisterAllocationPolicy_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.trace.TraceBuilderPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.amd64.phases.StackMoveOptimizationPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.asm.CompilationResultBuilder_OptionDescriptors,
+		org.graalvm.compiler.lir.constopt.ConstantLoadOptimization_OptionDescriptors,
+		org.graalvm.compiler.lir.gen.LIRGenerator_OptionDescriptors,
+		org.graalvm.compiler.lir.phases.LIRPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.phases.PostAllocationOptimizationStage_OptionDescriptors,
+		org.graalvm.compiler.lir.profiling.MoveProfilingPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.ssi.SSIConstructionPhase_OptionDescriptors,
+		org.graalvm.compiler.lir.stackslotalloc.LSStackSlotAllocator_OptionDescriptors,
+		org.graalvm.compiler.loop.DefaultLoopPolicies_OptionDescriptors,
+		org.graalvm.compiler.nodes.util.GraphUtil_OptionDescriptors,
+		org.graalvm.compiler.phases.BasePhase_OptionDescriptors,
+		org.graalvm.compiler.phases.common.DeadCodeEliminationPhase_OptionDescriptors,
+		org.graalvm.compiler.phases.common.inlining.InliningPhase_OptionDescriptors,
+		org.graalvm.compiler.printer.NoDeadCodeVerifyHandler_OptionDescriptors,
+		org.graalvm.compiler.replacements.PEGraphDecoder_OptionDescriptors,
+		org.graalvm.compiler.replacements.SnippetTemplate_OptionDescriptors,
+		org.graalvm.compiler.virtual.phases.ea.PartialEscapePhase_OptionDescriptors;
 }

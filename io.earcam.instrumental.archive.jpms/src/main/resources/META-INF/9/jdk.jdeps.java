@@ -10,16 +10,16 @@
  * @package com.sun.tools.jdeps.resources
  */
 module jdk.jdeps {
-	requires java.compiler;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.compiler;
 	requires jdk.compiler;
-	exports com.sun.tools.jdeps to 
-		jdk.packager;
 	exports com.sun.tools.classfile to 
 		jdk.jlink;
+	exports com.sun.tools.jdeps to 
+		jdk.packager;
 	provides java.util.spi.ToolProvider with 
 		com.sun.tools.javap.Main$JavapToolProvider,
 		com.sun.tools.jdeps.Main$JDepsToolProvider;

@@ -27,30 +27,15 @@ module javafx.base {
 	 */
 	requires java.base;
 	requires java.desktop;
-	exports javafx.beans.property.adapter;
-	exports javafx.util;
-	exports com.sun.javafx.runtime to 
-		javafx.graphics;
 	exports com.sun.javafx to 
 		javafx.controls,
 		javafx.fxml,
 		javafx.graphics,
 		javafx.swing;
-	exports javafx.event;
-	exports com.sun.javafx.property to 
-		javafx.controls;
-	exports javafx.collections.transformation;
-	exports com.sun.javafx.logging to 
-		javafx.graphics;
-	exports javafx.util.converter;
 	exports com.sun.javafx.beans to 
 		javafx.controls,
 		javafx.fxml,
 		javafx.graphics;
-	exports javafx.beans;
-	exports com.sun.javafx.reflect to 
-		javafx.fxml,
-		javafx.web;
 	exports com.sun.javafx.binding to 
 		javafx.controls,
 		javafx.graphics;
@@ -62,8 +47,23 @@ module javafx.base {
 	exports com.sun.javafx.event to 
 		javafx.controls,
 		javafx.graphics;
+	exports com.sun.javafx.logging to 
+		javafx.graphics;
+	exports com.sun.javafx.property to 
+		javafx.controls;
+	exports com.sun.javafx.reflect to 
+		javafx.fxml,
+		javafx.web;
+	exports com.sun.javafx.runtime to 
+		javafx.graphics;
+	exports javafx.beans;
 	exports javafx.beans.binding;
-	exports javafx.collections;
-	exports javafx.beans.value;
 	exports javafx.beans.property;
+	exports javafx.beans.property.adapter;
+	exports javafx.beans.value;
+	exports javafx.collections;
+	exports javafx.collections.transformation;
+	exports javafx.event;
+	exports javafx.util;
+	exports javafx.util.converter;
 }

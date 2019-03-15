@@ -4,11 +4,11 @@
  * @package jdk.packager.services.userjvmoptions
  */
 module jdk.packager.services {
-	requires java.prefs;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.prefs;
 	exports jdk.packager.services;
 	uses jdk.packager.services.UserJvmOptionsService;
 	provides jdk.packager.services.UserJvmOptionsService with 

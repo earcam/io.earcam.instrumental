@@ -5,12 +5,12 @@
  * @package sun.plugin2.server.util
  */
 module jdk.plugin.server {
-	requires jdk.deploy;
-	requires jdk.plugin;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires jdk.deploy;
 	requires jdk.javaws;
 	requires jdk.jsobject;
+	requires jdk.plugin;
 }

@@ -6,7 +6,6 @@
  * @package com.sun.security.auth.module
  */
 module jdk.security.auth {
-	requires java.security.jgss;
 	/**
 	 * @modifiers mandated
 	 */
@@ -15,10 +14,11 @@ module jdk.security.auth {
 	 * @modifiers transitive
 	 */
 	requires transitive java.naming;
+	requires java.security.jgss;
+	exports com.sun.security.auth;
+	exports com.sun.security.auth.callback;
 	exports com.sun.security.auth.login;
 	exports com.sun.security.auth.module;
-	exports com.sun.security.auth.callback;
-	exports com.sun.security.auth;
 	provides javax.security.auth.spi.LoginModule with 
 		com.sun.security.auth.module.JndiLoginModule,
 		com.sun.security.auth.module.KeyStoreLoginModule,

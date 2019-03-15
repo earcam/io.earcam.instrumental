@@ -10,8 +10,8 @@ module jdk.unsupported {
 	 */
 	requires java.base;
 	exports com.sun.nio.file;
-	exports sun.reflect;
 	exports sun.misc;
-	opens sun.reflect;
+	exports sun.reflect;
 	opens sun.misc;
+	opens sun.reflect;
 }

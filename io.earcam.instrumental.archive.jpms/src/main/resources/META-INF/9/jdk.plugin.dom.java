@@ -11,7 +11,6 @@
  * @package sun.plugin.dom.views
  */
 module jdk.plugin.dom {
-	requires java.xml;
 	/**
 	 * @modifiers mandated
 	 */
@@ -19,14 +18,15 @@ module jdk.plugin.dom {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive jdk.xml.dom;
-	/**
-	 * @modifiers transitive
-	 */
 	requires transitive java.desktop;
+	requires java.xml;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive jdk.jsobject;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive jdk.xml.dom;
 	exports com.sun.java.browser.plugin2;
 }

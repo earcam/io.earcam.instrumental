@@ -117,61 +117,61 @@
  * @package sun.corba
  */
 module java.corba {
-	requires jdk.unsupported;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.naming;
-	requires java.transaction;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.rmi;
-	requires java.logging;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.desktop;
-	exports org.omg.IOP.CodecPackage;
-	exports org.omg.CosNaming.NamingContextExtPackage;
-	exports org.omg.PortableInterceptor;
-	exports com.sun.jndi.url.iiop to 
-		java.naming;
-	exports org.omg.DynamicAny.DynAnyFactoryPackage;
-	exports org.omg.CORBA.DynAnyPackage;
-	exports org.omg.PortableServer.POAPackage;
-	exports org.omg.CORBA.TypeCodePackage;
-	exports javax.rmi;
-	exports org.omg.CosNaming.NamingContextPackage;
-	exports org.omg.PortableServer.portable;
-	exports org.omg.CORBA.portable;
-	exports org.omg.PortableServer.CurrentPackage;
+	requires java.logging;
+	requires java.naming;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.rmi;
+	requires java.transaction;
+	requires jdk.unsupported;
 	exports com.sun.corba.se.impl.util to 
 		jdk.rmic;
-	exports org.omg.CosNaming;
-	exports org.omg.IOP;
-	exports org.omg.CORBA.ORBPackage;
-	exports javax.activity;
-	exports org.omg.CORBA_2_3.portable;
 	exports com.sun.jndi.url.corbaname to 
 		java.naming;
-	exports org.omg.CORBA_2_3;
-	exports org.omg.Messaging;
-	exports org.omg.PortableServer.POAManagerPackage;
-	exports org.omg.stub.java.rmi;
-	exports org.omg.PortableServer;
-	exports org.omg.SendingContext;
-	exports org.omg.PortableServer.ServantLocatorPackage;
+	exports com.sun.jndi.url.iiop to 
+		java.naming;
 	exports com.sun.jndi.url.iiopname to 
 		java.naming;
-	exports org.omg.IOP.CodecFactoryPackage;
-	exports org.omg.PortableInterceptor.ORBInitInfoPackage;
-	exports org.omg.Dynamic;
+	exports javax.activity;
+	exports javax.rmi;
 	exports javax.rmi.CORBA;
-	exports org.omg.DynamicAny.DynAnyPackage;
 	exports org.omg.CORBA;
+	exports org.omg.CORBA.DynAnyPackage;
+	exports org.omg.CORBA.ORBPackage;
+	exports org.omg.CORBA.TypeCodePackage;
+	exports org.omg.CORBA.portable;
+	exports org.omg.CORBA_2_3;
+	exports org.omg.CORBA_2_3.portable;
+	exports org.omg.CosNaming;
+	exports org.omg.CosNaming.NamingContextExtPackage;
+	exports org.omg.CosNaming.NamingContextPackage;
+	exports org.omg.Dynamic;
 	exports org.omg.DynamicAny;
+	exports org.omg.DynamicAny.DynAnyFactoryPackage;
+	exports org.omg.DynamicAny.DynAnyPackage;
+	exports org.omg.IOP;
+	exports org.omg.IOP.CodecFactoryPackage;
+	exports org.omg.IOP.CodecPackage;
+	exports org.omg.Messaging;
+	exports org.omg.PortableInterceptor;
+	exports org.omg.PortableInterceptor.ORBInitInfoPackage;
+	exports org.omg.PortableServer;
+	exports org.omg.PortableServer.CurrentPackage;
+	exports org.omg.PortableServer.POAManagerPackage;
+	exports org.omg.PortableServer.POAPackage;
+	exports org.omg.PortableServer.ServantLocatorPackage;
+	exports org.omg.PortableServer.portable;
+	exports org.omg.SendingContext;
+	exports org.omg.stub.java.rmi;
 	opens com.sun.jndi.cosnaming to 
 		java.naming;
 }

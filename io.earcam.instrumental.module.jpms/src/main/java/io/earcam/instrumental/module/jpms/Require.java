@@ -19,6 +19,7 @@
 package io.earcam.instrumental.module.jpms;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,9 +32,13 @@ import javax.annotation.concurrent.Immutable;
  *
  */
 @Immutable
-public class Require implements Serializable {
+public class Require implements Comparable<Require>, Serializable {
 
 	private static final long serialVersionUID = 935948472668991696L;
+	private static final Comparator<Require> COMPARATOR = Comparator.comparing(Require::module)
+			.thenComparing(Require::versionOrEmpty)
+			.thenComparing(Require::access);
+
 	private final String module;
 	private final int access;
 	private final String version;
@@ -87,6 +92,13 @@ public class Require implements Serializable {
 	}
 
 
+	@Override
+	public int compareTo(Require that)
+	{
+		return COMPARATOR.compare(this, that);
+	}
+
+
 	/**
 	 * <p>
 	 * module.
@@ -136,5 +148,11 @@ public class Require implements Serializable {
 	public String version()
 	{
 		return version;
+	}
+
+
+	private String versionOrEmpty()
+	{
+		return (version == null) ? "" : version;
 	}
 }

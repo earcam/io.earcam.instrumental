@@ -9,10 +9,10 @@ module java.instrument {
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	exports java.lang.instrument;
 	exports jdk.internal.instrumentation to 
 		jdk.jfr,
 		jdk.management.resource;
 	exports sun.instrument to 
 		java.base;
-	exports java.lang.instrument;
 }

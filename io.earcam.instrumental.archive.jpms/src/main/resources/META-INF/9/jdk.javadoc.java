@@ -39,27 +39,27 @@
  */
 module jdk.javadoc {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.compiler;
-	requires java.xml;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	/**
 	 * @modifiers transitive
 	 */
+	requires transitive java.compiler;
+	requires java.xml;
+	/**
+	 * @modifiers transitive
+	 */
 	requires transitive jdk.compiler;
-	exports com.sun.tools.javadoc;
+	exports com.sun.javadoc;
 	exports com.sun.tools.doclets;
 	exports com.sun.tools.doclets.standard;
-	exports com.sun.javadoc;
+	exports com.sun.tools.javadoc;
 	exports jdk.javadoc.doclet;
-	provides javax.tools.Tool with 
-		jdk.javadoc.internal.api.JavadocTool;
-	provides javax.tools.DocumentationTool with 
-		jdk.javadoc.internal.api.JavadocTool;
 	provides java.util.spi.ToolProvider with 
 		jdk.javadoc.internal.tool.JavadocToolProvider;
+	provides javax.tools.DocumentationTool with 
+		jdk.javadoc.internal.api.JavadocTool;
+	provides javax.tools.Tool with 
+		jdk.javadoc.internal.api.JavadocTool;
 }

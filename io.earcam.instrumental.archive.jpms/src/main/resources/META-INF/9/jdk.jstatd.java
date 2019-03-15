@@ -5,12 +5,12 @@
  * @package sun.tools.jstatd
  */
 module jdk.jstatd {
-	requires jdk.internal.jvmstat;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires java.rmi;
+	requires jdk.internal.jvmstat;
 	exports sun.jvmstat.monitor.remote to 
 		java.rmi;
 	provides sun.jvmstat.monitor.MonitoredHostService with 

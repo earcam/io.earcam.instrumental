@@ -19,8 +19,8 @@ module jdk.jfr {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports jdk.jfr.internal.management to 
-		jdk.management.jfr;
 	exports jdk.jfr;
 	exports jdk.jfr.consumer;
+	exports jdk.jfr.internal.management to 
+		jdk.management.jfr;
 }

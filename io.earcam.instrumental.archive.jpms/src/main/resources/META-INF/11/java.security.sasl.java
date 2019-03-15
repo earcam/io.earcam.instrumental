@@ -12,9 +12,9 @@ module java.security.sasl {
 	 */
 	requires java.base;
 	requires java.logging;
-	exports javax.security.sasl;
 	exports com.sun.security.sasl.util to 
 		jdk.security.jgss;
+	exports javax.security.sasl;
 	provides java.security.Provider with 
 		com.sun.security.sasl.Provider;
 }

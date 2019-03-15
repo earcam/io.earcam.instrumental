@@ -19,18 +19,18 @@
  * @package jdk.packager.internal.resources.tools.legacy
  */
 module jdk.packager {
-	requires java.xml;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.jlink;
-	requires java.logging;
 	requires java.desktop;
-	exports com.sun.javafx.tools.resource;
-	exports com.sun.javafx.tools.packager.bundlers;
-	exports com.sun.javafx.tools.packager;
+	requires java.logging;
+	requires java.xml;
+	requires jdk.jlink;
 	exports com.oracle.tools.packager;
+	exports com.sun.javafx.tools.packager;
+	exports com.sun.javafx.tools.packager.bundlers;
+	exports com.sun.javafx.tools.resource;
 	uses com.oracle.tools.packager.Bundler;
 	uses com.oracle.tools.packager.Bundlers;
 	provides com.oracle.tools.packager.Bundler with 

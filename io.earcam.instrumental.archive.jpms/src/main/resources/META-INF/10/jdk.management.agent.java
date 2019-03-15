@@ -7,11 +7,11 @@
  * @package sun.management.jmxremote
  */
 module jdk.management.agent {
-	requires java.management;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.management;
 	requires java.management.rmi;
 	exports jdk.internal.agent to 
 		jdk.jconsole;

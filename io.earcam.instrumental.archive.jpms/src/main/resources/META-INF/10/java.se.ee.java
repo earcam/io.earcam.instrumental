@@ -7,17 +7,13 @@ module java.se.ee {
 	 */
 	requires transitive java.activation;
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.corba;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml.ws;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.corba;
 	/**
 	 * @modifiers transitive
 	 */
@@ -29,9 +25,13 @@ module java.se.ee {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.xml.ws.annotation;
+	requires transitive java.xml.bind;
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.xml.bind;
+	requires transitive java.xml.ws;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml.ws.annotation;
 }

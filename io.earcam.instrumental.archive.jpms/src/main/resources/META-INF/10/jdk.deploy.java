@@ -45,42 +45,122 @@
  * @package com.sun.deploy.xml
  */
 module jdk.deploy {
-	requires jdk.unsupported;
-	requires java.xml;
-	requires java.management;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.prefs;
-	requires java.naming;
-	requires java.rmi;
-	requires java.logging;
 	requires java.desktop;
+	requires java.logging;
+	requires java.management;
+	requires java.naming;
+	requires java.prefs;
+	requires java.rmi;
 	requires java.scripting;
-	exports com.sun.deploy.association.utility to 
-		jdk.javaws;
-	exports com.sun.deploy.net.offline to 
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
+	requires java.xml;
+	requires jdk.unsupported;
+	exports com.oracle.deploy.update to 
+		jdk.deploy.controlpanel;
 	exports com.sun.applet2 to 
 		javafx.deploy,
 		jdk.javaws,
 		jdk.plugin,
 		jdk.plugin.server;
-	exports com.sun.deploy.net.protocol.jar to 
-		java.base;
+	exports com.sun.applet2.preloader to 
+		javafx.deploy,
+		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.applet2.preloader.event to 
+		javafx.deploy,
+		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.deploy to 
+		javafx.deploy,
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
 	exports com.sun.deploy.appcontext to 
 		javafx.deploy,
 		jdk.javaws,
 		jdk.plugin;
-	exports com.sun.deploy.net.protocol.jnlp to 
-		java.base;
+	exports com.sun.deploy.association to 
+		jdk.javaws;
+	exports com.sun.deploy.association.utility to 
+		jdk.javaws;
+	exports com.sun.deploy.cache to 
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.deploy.config to 
+		javafx.deploy,
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.model to 
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.deploy.nativesandbox to 
+		jdk.javaws,
+		jdk.plugin;
 	exports com.sun.deploy.net to 
 		javafx.deploy,
 		jdk.javaws,
 		jdk.plugin;
+	exports com.sun.deploy.net.cookie to 
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.net.offline to 
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.net.protocol.about to 
+		java.base;
+	exports com.sun.deploy.net.protocol.chrome to 
+		java.base;
+	exports com.sun.deploy.net.protocol.https to 
+		java.base;
+	exports com.sun.deploy.net.protocol.jar to 
+		java.base;
+	exports com.sun.deploy.net.protocol.javascript to 
+		java.base;
+	exports com.sun.deploy.net.protocol.jnlp to 
+		java.base;
+	exports com.sun.deploy.net.protocol.jnlps to 
+		java.base;
+	exports com.sun.deploy.net.proxy to 
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.net.socket to 
+		jdk.plugin;
+	exports com.sun.deploy.ref to 
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.resources to 
+		javafx.deploy,
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.deploy.security to 
+		javafx.deploy,
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.security.ruleset to 
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
+	exports com.sun.deploy.services to 
+		jdk.deploy.controlpanel,
+		jdk.javaws,
+		jdk.plugin,
+		jdk.plugin.server;
 	exports com.sun.deploy.si to 
 		jdk.deploy.controlpanel,
 		jdk.javaws,
@@ -91,63 +171,24 @@ module jdk.deploy {
 		jdk.javaws,
 		jdk.plugin,
 		jdk.plugin.server;
-	exports com.sun.deploy.services to 
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.association to 
-		jdk.javaws;
-	exports com.sun.deploy.security.ruleset to 
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.xdg to 
-		jdk.javaws;
-	exports com.sun.deploy.model to 
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin;
-	exports com.sun.deploy.net.protocol.about to 
-		java.base;
-	exports com.sun.deploy.security to 
-		javafx.deploy,
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.net.protocol.jnlps to 
-		java.base;
-	exports com.sun.deploy to 
-		javafx.deploy,
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.applet2.preloader to 
-		javafx.deploy,
-		jdk.javaws,
-		jdk.plugin;
-	exports com.sun.deploy.net.proxy to 
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
 	exports com.sun.deploy.ui to 
 		javafx.deploy,
 		jdk.deploy.controlpanel,
 		jdk.javaws,
 		jdk.plugin;
-	exports com.sun.applet2.preloader.event to 
+	exports com.sun.deploy.uitoolkit to 
 		javafx.deploy,
+		jdk.deploy.controlpanel,
 		jdk.javaws,
+		jdk.plugin;
+	exports com.sun.deploy.uitoolkit.impl.awt to 
+		jdk.plugin;
+	exports com.sun.deploy.uitoolkit.impl.awt.ui to 
 		jdk.plugin;
 	exports com.sun.deploy.uitoolkit.ui to 
 		javafx.deploy,
 		jdk.deploy.controlpanel,
 		jdk.javaws,
-		jdk.plugin;
-	exports com.sun.deploy.uitoolkit.impl.awt.ui to 
 		jdk.plugin;
 	exports com.sun.deploy.util to 
 		javafx.deploy,
@@ -155,51 +196,10 @@ module jdk.deploy {
 		jdk.javaws,
 		jdk.plugin,
 		jdk.plugin.server;
-	exports com.sun.deploy.net.protocol.chrome to 
-		java.base;
-	exports com.sun.deploy.uitoolkit.impl.awt to 
-		jdk.plugin;
+	exports com.sun.deploy.xdg to 
+		jdk.javaws;
 	exports com.sun.deploy.xml to 
 		jdk.javaws;
-	exports com.sun.deploy.net.protocol.https to 
-		java.base;
-	exports com.sun.deploy.resources to 
-		javafx.deploy,
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin;
-	exports com.sun.deploy.net.socket to 
-		jdk.plugin;
-	exports com.sun.deploy.uitoolkit to 
-		javafx.deploy,
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin;
-	exports com.oracle.deploy.update to 
-		jdk.deploy.controlpanel;
-	exports com.sun.deploy.config to 
-		javafx.deploy,
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.net.protocol.javascript to 
-		java.base;
-	exports com.sun.deploy.nativesandbox to 
-		jdk.javaws,
-		jdk.plugin;
-	exports com.sun.deploy.ref to 
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.net.cookie to 
-		jdk.javaws,
-		jdk.plugin,
-		jdk.plugin.server;
-	exports com.sun.deploy.cache to 
-		jdk.deploy.controlpanel,
-		jdk.javaws,
-		jdk.plugin;
 	provides java.security.Provider with 
 		com.sun.deploy.security.MozillaJSSProvider;
 }

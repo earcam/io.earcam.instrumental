@@ -5,13 +5,13 @@
  */
 module jdk.management.cmm {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.management;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.management;
 	requires jdk.management;
 	exports jdk.management.cmm;
 	provides sun.management.spi.PlatformMBeanProvider with 

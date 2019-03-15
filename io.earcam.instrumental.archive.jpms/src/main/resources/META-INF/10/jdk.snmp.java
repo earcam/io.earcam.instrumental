@@ -15,13 +15,13 @@
  * @package sun.management.snmp.util
  */
 module jdk.snmp {
-	requires java.management;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.management.agent;
 	requires java.logging;
+	requires java.management;
+	requires jdk.management.agent;
 	provides jdk.internal.agent.spi.AgentProvider with 
 		sun.management.snmp.SnmpAgentProvider;
 }

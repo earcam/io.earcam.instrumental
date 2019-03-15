@@ -23,16 +23,16 @@ module java.naming {
 	 */
 	requires java.base;
 	requires java.security.sasl;
+	exports com.sun.jndi.toolkit.ctx to 
+		jdk.naming.dns;
 	exports com.sun.jndi.toolkit.url to 
 		jdk.naming.dns,
 		jdk.naming.rmi;
+	exports javax.naming;
 	exports javax.naming.directory;
 	exports javax.naming.event;
-	exports javax.naming;
-	exports com.sun.jndi.toolkit.ctx to 
-		jdk.naming.dns;
-	exports javax.naming.spi;
 	exports javax.naming.ldap;
+	exports javax.naming.spi;
 	uses javax.naming.ldap.StartTlsResponse;
 	uses javax.naming.spi.InitialContextFactory;
 	provides java.security.Provider with 

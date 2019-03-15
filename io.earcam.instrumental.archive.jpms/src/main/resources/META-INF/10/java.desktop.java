@@ -130,11 +130,6 @@
  */
 module java.desktop {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	requires java.prefs;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
@@ -142,75 +137,80 @@ module java.desktop {
 	 * @modifiers transitive
 	 */
 	requires transitive java.datatransfer;
-	exports sun.awt.image to 
+	requires java.prefs;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
+	exports java.applet;
+	exports java.awt;
+	exports java.awt.color;
+	exports java.awt.desktop;
+	exports java.awt.dnd;
+	exports java.awt.dnd.peer to 
 		javafx.swing;
-	exports javax.swing.text.html.parser;
-	exports sun.swing to 
-		javafx.swing;
-	exports java.awt.im.spi;
-	exports javax.imageio.plugins.jpeg;
+	exports java.awt.event;
+	exports java.awt.font;
 	exports java.awt.geom;
+	exports java.awt.im;
+	exports java.awt.im.spi;
+	exports java.awt.image;
+	exports java.awt.image.renderable;
+	exports java.awt.print;
+	exports java.beans;
+	exports java.beans.beancontext;
+	exports javax.accessibility;
+	exports javax.imageio;
+	exports javax.imageio.event;
+	exports javax.imageio.metadata;
+	exports javax.imageio.plugins.bmp;
+	exports javax.imageio.plugins.jpeg;
+	exports javax.imageio.plugins.tiff;
+	exports javax.imageio.spi;
+	exports javax.imageio.stream;
+	exports javax.print;
+	exports javax.print.attribute;
+	exports javax.print.attribute.standard;
+	exports javax.print.event;
+	exports javax.sound.midi;
+	exports javax.sound.midi.spi;
+	exports javax.sound.sampled;
+	exports javax.sound.sampled.spi;
+	exports javax.swing;
+	exports javax.swing.border;
+	exports javax.swing.colorchooser;
+	exports javax.swing.event;
+	exports javax.swing.filechooser;
+	exports javax.swing.plaf;
+	exports javax.swing.plaf.basic;
+	exports javax.swing.plaf.metal;
+	exports javax.swing.plaf.multi;
+	exports javax.swing.plaf.nimbus;
+	exports javax.swing.plaf.synth;
+	exports javax.swing.table;
+	exports javax.swing.text;
+	exports javax.swing.text.html;
+	exports javax.swing.text.html.parser;
+	exports javax.swing.text.rtf;
+	exports javax.swing.tree;
+	exports javax.swing.undo;
 	exports sun.awt to 
 		javafx.swing,
 		jdk.accessibility,
 		oracle.desktop;
-	exports javax.imageio.spi;
-	exports java.awt.dnd.peer to 
+	exports sun.awt.dnd to 
 		javafx.swing;
-	exports javax.imageio.metadata;
-	exports javax.swing.text.html;
-	exports javax.swing.plaf.multi;
-	exports javax.swing.undo;
+	exports sun.awt.image to 
+		javafx.swing;
 	exports sun.font.lookup to 
 		javafx.graphics;
-	exports java.awt.image;
-	exports javax.print.event;
-	exports java.awt.font;
-	exports java.awt.event;
-	exports javax.swing.table;
-	exports javax.sound.midi;
-	exports javax.imageio;
-	exports javax.swing.plaf.metal;
-	exports javax.imageio.event;
-	exports javax.print.attribute.standard;
-	exports javax.swing.plaf.synth;
-	exports java.awt.print;
-	exports javax.swing.colorchooser;
-	exports javax.sound.sampled.spi;
 	exports sun.java2d to 
 		javafx.swing,
 		oracle.desktop;
-	exports javax.imageio.plugins.tiff;
 	exports sun.print to 
 		javafx.graphics;
-	exports javax.swing;
-	exports sun.awt.dnd to 
+	exports sun.swing to 
 		javafx.swing;
-	exports javax.swing.plaf.basic;
-	exports java.awt.im;
-	exports javax.sound.midi.spi;
-	exports java.applet;
-	exports javax.swing.filechooser;
-	exports javax.print.attribute;
-	exports javax.print;
-	exports javax.swing.event;
-	exports java.awt.dnd;
-	exports javax.imageio.plugins.bmp;
-	exports javax.imageio.stream;
-	exports javax.swing.text.rtf;
-	exports javax.swing.border;
-	exports java.beans;
-	exports javax.swing.text;
-	exports javax.swing.tree;
-	exports javax.swing.plaf.nimbus;
-	exports java.awt.color;
-	exports javax.swing.plaf;
-	exports java.awt.desktop;
-	exports java.beans.beancontext;
-	exports javax.accessibility;
-	exports java.awt.image.renderable;
-	exports javax.sound.sampled;
-	exports java.awt;
 	opens javax.swing.plaf.basic to 
 		jdk.jconsole;
 	uses java.awt.im.spi.InputMethodDescriptor;
@@ -230,36 +230,26 @@ module java.desktop {
 	uses javax.sound.sampled.spi.AudioFileWriter;
 	uses javax.sound.sampled.spi.FormatConversionProvider;
 	uses javax.sound.sampled.spi.MixerProvider;
+	provides java.net.ContentHandlerFactory with 
+		sun.awt.www.content.MultimediaContentHandlers;
+	provides javax.print.PrintServiceLookup with 
+		sun.print.PrintServiceLookupProvider;
 	provides javax.print.StreamPrintServiceFactory with 
 		sun.print.PSStreamPrinterFactory;
-	provides sun.datatransfer.DesktopDatatransferService with 
-		sun.awt.datatransfer.DesktopDatatransferServiceImpl;
-	provides javax.sound.sampled.spi.MixerProvider with 
-		com.sun.media.sound.DirectAudioDeviceProvider,
-		com.sun.media.sound.PortMixerProvider;
-	provides javax.sound.midi.spi.MidiFileReader with 
-		com.sun.media.sound.StandardMidiFileReader;
-	provides javax.sound.midi.spi.SoundbankReader with 
-		com.sun.media.sound.AudioFileSoundbankReader,
-		com.sun.media.sound.DLSSoundbankReader,
-		com.sun.media.sound.JARSoundbankReader,
-		com.sun.media.sound.SF2SoundbankReader;
 	provides javax.sound.midi.spi.MidiDeviceProvider with 
 		com.sun.media.sound.MidiInDeviceProvider,
 		com.sun.media.sound.MidiOutDeviceProvider,
 		com.sun.media.sound.RealTimeSequencerProvider,
 		com.sun.media.sound.SoftProvider;
+	provides javax.sound.midi.spi.MidiFileReader with 
+		com.sun.media.sound.StandardMidiFileReader;
 	provides javax.sound.midi.spi.MidiFileWriter with 
 		com.sun.media.sound.StandardMidiFileWriter;
-	provides java.net.ContentHandlerFactory with 
-		sun.awt.www.content.MultimediaContentHandlers;
-	provides javax.print.PrintServiceLookup with 
-		sun.print.PrintServiceLookupProvider;
-	provides javax.sound.sampled.spi.FormatConversionProvider with 
-		com.sun.media.sound.AlawCodec,
-		com.sun.media.sound.AudioFloatFormatConverter,
-		com.sun.media.sound.PCMtoPCMCodec,
-		com.sun.media.sound.UlawCodec;
+	provides javax.sound.midi.spi.SoundbankReader with 
+		com.sun.media.sound.AudioFileSoundbankReader,
+		com.sun.media.sound.DLSSoundbankReader,
+		com.sun.media.sound.JARSoundbankReader,
+		com.sun.media.sound.SF2SoundbankReader;
 	provides javax.sound.sampled.spi.AudioFileReader with 
 		com.sun.media.sound.AiffFileReader,
 		com.sun.media.sound.AuFileReader,
@@ -272,4 +262,14 @@ module java.desktop {
 		com.sun.media.sound.AuFileWriter,
 		com.sun.media.sound.WaveFileWriter,
 		com.sun.media.sound.WaveFloatFileWriter;
+	provides javax.sound.sampled.spi.FormatConversionProvider with 
+		com.sun.media.sound.AlawCodec,
+		com.sun.media.sound.AudioFloatFormatConverter,
+		com.sun.media.sound.PCMtoPCMCodec,
+		com.sun.media.sound.UlawCodec;
+	provides javax.sound.sampled.spi.MixerProvider with 
+		com.sun.media.sound.DirectAudioDeviceProvider,
+		com.sun.media.sound.PortMixerProvider;
+	provides sun.datatransfer.DesktopDatatransferService with 
+		sun.awt.datatransfer.DesktopDatatransferServiceImpl;
 }

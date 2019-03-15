@@ -72,39 +72,39 @@
  */
 module jdk.xml.bind {
 	requires java.activation;
-	requires java.xml;
-	requires java.compiler;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
+	requires java.compiler;
+	requires java.desktop;
 	requires java.logging;
+	requires java.xml;
 	requires java.xml.bind;
 	requires jdk.compiler;
-	requires java.desktop;
-	exports com.sun.xml.internal.xsom.parser to 
+	exports com.sun.codemodel.internal to 
 		jdk.xml.ws;
-	exports com.sun.tools.internal.xjc.generator.bean to 
-		java.xml.bind;
-	exports com.sun.tools.internal.xjc.reader to 
+	exports com.sun.codemodel.internal.writer to 
+		jdk.xml.ws;
+	exports com.sun.istack.internal.tools to 
 		jdk.xml.ws;
 	exports com.sun.tools.internal.jxc.ap to 
 		jdk.xml.ws;
-	exports com.sun.tools.internal.xjc.reader.internalizer to 
-		jdk.xml.ws;
-	exports com.sun.codemodel.internal to 
-		jdk.xml.ws;
 	exports com.sun.tools.internal.jxc.model.nav to 
-		jdk.xml.ws;
-	exports com.sun.codemodel.internal.writer to 
 		jdk.xml.ws;
 	exports com.sun.tools.internal.xjc to 
 		jdk.xml.ws;
 	exports com.sun.tools.internal.xjc.api to 
 		jdk.xml.ws;
+	exports com.sun.tools.internal.xjc.generator.bean to 
+		java.xml.bind;
+	exports com.sun.tools.internal.xjc.reader to 
+		jdk.xml.ws;
+	exports com.sun.tools.internal.xjc.reader.internalizer to 
+		jdk.xml.ws;
 	exports com.sun.tools.internal.xjc.util to 
 		jdk.xml.ws;
-	exports com.sun.istack.internal.tools to 
+	exports com.sun.xml.internal.xsom.parser to 
 		jdk.xml.ws;
 	opens com.sun.tools.internal.xjc.reader.xmlschema.bindinfo to 
 		java.xml.bind;

@@ -24,22 +24,22 @@ module java.security.jgss {
 	 */
 	requires java.base;
 	requires java.naming;
+	exports javax.security.auth.kerberos;
+	exports org.ietf.jgss;
 	exports sun.security.jgss to 
 		jdk.security.jgss;
-	exports sun.security.krb5.internal.ktab to 
+	exports sun.security.jgss.krb5 to 
 		jdk.security.auth;
 	exports sun.security.krb5 to 
 		jdk.security.auth;
-	exports sun.security.jgss.krb5 to 
-		jdk.security.auth;
-	exports javax.security.auth.kerberos;
 	exports sun.security.krb5.internal to 
 		jdk.security.jgss;
-	exports org.ietf.jgss;
+	exports sun.security.krb5.internal.ktab to 
+		jdk.security.auth;
 	opens sun.net.www.protocol.http.spnego to 
 		java.base;
-	provides sun.security.ssl.ClientKeyExchangeService with 
-		sun.security.krb5.internal.ssl.Krb5KeyExchangeService;
 	provides java.security.Provider with 
 		sun.security.jgss.SunProvider;
+	provides sun.security.ssl.ClientKeyExchangeService with 
+		sun.security.krb5.internal.ssl.Krb5KeyExchangeService;
 }

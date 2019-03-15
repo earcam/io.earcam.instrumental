@@ -32,55 +32,55 @@
  * @package sun.plugin2.util
  */
 module jdk.plugin {
-	requires java.xml;
-	requires jdk.deploy;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.rmi;
+	requires java.desktop;
 	requires java.jnlp;
 	requires java.logging;
+	requires java.rmi;
+	requires java.xml;
+	requires jdk.deploy;
 	requires jdk.javaws;
-	requires java.desktop;
 	requires jdk.jsobject;
-	exports sun.plugin2.message to 
+	exports sun.plugin.services to 
+		jdk.plugin.server;
+	exports sun.plugin2.applet to 
 		javafx.deploy,
 		jdk.plugin.server;
-	exports sun.plugin2.uitoolkit.impl.awt to 
-		jdk.deploy;
-	exports sun.plugin2.message.transport to 
-		jdk.plugin.server;
+	exports sun.plugin2.applet.viewer to 
+		jdk.javaws;
+	exports sun.plugin2.applet2 to 
+		javafx.deploy;
+	exports sun.plugin2.fxhooks to 
+		javafx.deploy;
 	exports sun.plugin2.ipc to 
+		jdk.plugin.server;
+	exports sun.plugin2.ipc.windows to 
+		jdk.plugin.server;
+	exports sun.plugin2.jvm to 
+		jdk.plugin.server;
+	exports sun.plugin2.liveconnect to 
 		jdk.plugin.server;
 	exports sun.plugin2.main.client to 
 		javafx.deploy,
 		jdk.javaws,
 		jdk.plugin.server;
-	exports sun.plugin2.fxhooks to 
-		javafx.deploy;
-	exports sun.plugin2.applet2 to 
-		javafx.deploy;
-	exports sun.plugin2.liveconnect to 
-		jdk.plugin.server;
-	exports sun.plugin2.util to 
+	exports sun.plugin2.message to 
 		javafx.deploy,
 		jdk.plugin.server;
-	exports sun.plugin2.applet.viewer to 
-		jdk.javaws;
-	exports sun.plugin.services to 
+	exports sun.plugin2.message.transport to 
 		jdk.plugin.server;
 	exports sun.plugin2.uitoolkit to 
 		javafx.deploy,
 		jdk.deploy;
-	exports sun.plugin2.applet to 
-		javafx.deploy,
-		jdk.plugin.server;
-	exports sun.plugin2.ipc.windows to 
-		jdk.plugin.server;
+	exports sun.plugin2.uitoolkit.impl.awt to 
+		jdk.deploy;
 	exports sun.plugin2.uitoolkit.ui to 
 		javafx.deploy;
-	exports sun.plugin2.jvm to 
+	exports sun.plugin2.util to 
+		javafx.deploy,
 		jdk.plugin.server;
 	provides jdk.internal.netscape.javascript.spi.JSObjectProvider with 
 		sun.plugin2.main.client.PluginJSObjectProvider;

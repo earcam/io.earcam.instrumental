@@ -3,12 +3,12 @@
  * @package jdk.nashorn.tools.jjs
  */
 module jdk.scripting.nashorn.shell {
-	requires java.compiler;
-	requires jdk.scripting.nashorn;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.internal.le;
+	requires java.compiler;
 	requires java.desktop;
+	requires jdk.internal.le;
+	requires jdk.scripting.nashorn;
 }

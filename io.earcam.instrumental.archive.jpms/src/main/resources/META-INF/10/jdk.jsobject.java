@@ -9,8 +9,8 @@ module jdk.jsobject {
 	 */
 	requires java.base;
 	requires java.desktop;
-	exports netscape.javascript;
 	exports jdk.internal.netscape.javascript.spi to 
 		jdk.plugin;
+	exports netscape.javascript;
 	uses jdk.internal.netscape.javascript.spi.JSObjectProvider;
 }

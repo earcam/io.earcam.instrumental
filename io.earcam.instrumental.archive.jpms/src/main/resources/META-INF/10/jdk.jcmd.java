@@ -10,10 +10,10 @@
  * @package sun.tools.jstat.resources
  */
 module jdk.jcmd {
-	requires jdk.internal.jvmstat;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires jdk.attach;
+	requires jdk.internal.jvmstat;
 }

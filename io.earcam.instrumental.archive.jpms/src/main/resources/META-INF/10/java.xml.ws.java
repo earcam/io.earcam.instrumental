@@ -147,97 +147,97 @@ module java.xml.ws {
 	 * @modifiers transitive
 	 */
 	requires transitive java.activation;
-	requires jdk.unsupported;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	requires java.management;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.httpserver;
-	requires java.xml.ws.annotation;
+	requires java.desktop;
 	requires java.logging;
+	requires java.management;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.xml.bind;
-	requires java.desktop;
-	exports com.sun.xml.internal.ws.api.wsdl.parser to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.api.databinding to 
+	requires java.xml.ws.annotation;
+	requires jdk.httpserver;
+	requires jdk.unsupported;
+	exports com.oracle.webservices.internal.api.databinding to 
 		jdk.xml.ws;
 	exports com.sun.xml.internal.messaging.saaj.soap to 
 		java.activation;
-	exports javax.xml.ws.handler;
-	exports com.sun.xml.internal.ws.wsdl.parser to 
-		jdk.xml.ws;
-	exports javax.xml.soap;
-	exports javax.xml.ws.spi.http;
-	exports com.sun.xml.internal.ws.api.addressing to 
-		jdk.xml.ws;
-	exports javax.xml.ws.handler.soap;
-	exports com.sun.xml.internal.ws.api.server to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.api to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.binding to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.util.xml to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.model to 
-		jdk.xml.ws;
-	exports javax.jws;
-	exports javax.xml.ws;
-	exports com.oracle.webservices.internal.api.databinding to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.db to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.util to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.wsdl.writer to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.policy.sourcemodel.wspolicy to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.addressing.v200408 to 
-		jdk.xml.ws;
-	exports javax.xml.ws.wsaddressing;
-	exports com.sun.xml.internal.ws.util.exception to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.streaming to 
-		jdk.xml.ws;
-	exports javax.jws.soap;
-	exports com.sun.xml.internal.ws.api.streaming to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.spi.db to 
-		jdk.xml.ws;
-	exports com.sun.xml.internal.ws.api.model to 
-		jdk.xml.ws;
-	exports javax.xml.ws.http;
 	exports com.sun.xml.internal.ws.addressing to 
 		java.xml.bind,
 		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.addressing.v200408 to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.addressing to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.databinding to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.model to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.server to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.streaming to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.api.wsdl.parser to 
+		jdk.xml.ws;
 	exports com.sun.xml.internal.ws.api.wsdl.writer to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.binding to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.db to 
 		jdk.xml.ws;
 	exports com.sun.xml.internal.ws.encoding to 
 		java.activation;
-	exports javax.xml.ws.spi;
+	exports com.sun.xml.internal.ws.model to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.policy.sourcemodel.wspolicy to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.spi.db to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.streaming to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.util to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.util.exception to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.util.xml to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.wsdl.parser to 
+		jdk.xml.ws;
+	exports com.sun.xml.internal.ws.wsdl.writer to 
+		jdk.xml.ws;
+	exports javax.jws;
+	exports javax.jws.soap;
+	exports javax.xml.soap;
+	exports javax.xml.ws;
+	exports javax.xml.ws.handler;
+	exports javax.xml.ws.handler.soap;
+	exports javax.xml.ws.http;
 	exports javax.xml.ws.soap;
-	opens javax.xml.ws.wsaddressing to 
-		java.xml.bind;
-	opens com.sun.xml.internal.ws.runtime.config to 
-		java.xml.bind;
-	opens com.sun.xml.internal.ws.addressing.v200408 to 
-		java.xml.bind;
-	opens com.sun.xml.internal.ws.fault to 
+	exports javax.xml.ws.spi;
+	exports javax.xml.ws.spi.http;
+	exports javax.xml.ws.wsaddressing;
+	opens com.oracle.xmlns.internal.webservices.jaxws_databinding to 
 		java.xml.bind;
 	opens com.sun.xml.internal.ws.addressing to 
 		java.xml.bind;
-	opens com.oracle.xmlns.internal.webservices.jaxws_databinding to 
+	opens com.sun.xml.internal.ws.addressing.v200408 to 
 		java.xml.bind;
 	opens com.sun.xml.internal.ws.developer to 
+		java.xml.bind;
+	opens com.sun.xml.internal.ws.fault to 
+		java.xml.bind;
+	opens com.sun.xml.internal.ws.runtime.config to 
+		java.xml.bind;
+	opens javax.xml.ws.wsaddressing to 
 		java.xml.bind;
 	uses javax.xml.soap.MessageFactory;
 	uses javax.xml.soap.SAAJMetaFactory;

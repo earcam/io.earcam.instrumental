@@ -39,22 +39,22 @@ module jdk.scripting.nashorn {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.dynalink;
 	requires java.logging;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.scripting;
+	requires jdk.dynalink;
+	exports jdk.nashorn.api.scripting;
 	exports jdk.nashorn.api.tree;
 	exports jdk.nashorn.internal.objects to 
 		jdk.scripting.nashorn.shell;
-	exports jdk.nashorn.api.scripting;
 	exports jdk.nashorn.internal.runtime to 
 		jdk.scripting.nashorn.shell;
 	exports jdk.nashorn.tools to 
 		jdk.scripting.nashorn.shell;
-	provides jdk.dynalink.linker.GuardingDynamicLinkerExporter with 
-		jdk.nashorn.api.linker.NashornLinkerExporter;
 	provides javax.script.ScriptEngineFactory with 
 		jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+	provides jdk.dynalink.linker.GuardingDynamicLinkerExporter with 
+		jdk.nashorn.api.linker.NashornLinkerExporter;
 }

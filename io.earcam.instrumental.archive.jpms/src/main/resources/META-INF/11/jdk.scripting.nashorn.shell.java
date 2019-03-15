@@ -5,15 +5,15 @@
  */
 module jdk.scripting.nashorn.shell {
 	/**
-	 * @modifiers static
-	 */
-	requires static java.compiler;
-	requires jdk.scripting.nashorn;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.internal.le;
+	/**
+	 * @modifiers static
+	 */
+	requires static java.compiler;
 	requires jdk.internal.ed;
+	requires jdk.internal.le;
+	requires jdk.scripting.nashorn;
 	uses jdk.internal.editor.spi.BuildInEditorProvider;
 }

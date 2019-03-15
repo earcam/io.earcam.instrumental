@@ -150,7 +150,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	@SuppressWarnings("squid:S1192")
 	private static String script(Path output)
 	{
-		return "import static java.util.stream.Collectors.toSet; \n" +
+		return "import static java.util.stream.Collectors.*; \n" +
 				"\n" +
 				"import static java.nio.charset.StandardCharsets.UTF_8;\n" +
 				"import static java.nio.file.StandardOpenOption.*;\n" +
@@ -223,21 +223,21 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"\n" +
 				"				return builder.construct(); \n" +
 				"			}) \n" +
-				"		    .collect(java.util.stream.Collectors.toList()); \n" +
+				"		    .collect(toList()); \n" +
 				"\n" +
-				"	StringBuilder index = new StringBuilder();  \n" +
+				"	TreeSet<String> index = new TreeSet<String>();  \n" +
 				"	l.forEach(m -> {  \n" +
 				"		try {  \n" +
 				"			String name = m.name() + \".java\";  \n" +
 				"			Files.write(Paths.get(\"" + output.toAbsolutePath() + "/\" + name), m.toString().getBytes(UTF_8), CREATE, TRUNCATE_EXISTING);  \n" +
-				"			index.append(name).append('\\n');  \n" +
+				"			index.add(name);  \n" +
 				"		} catch(IOException e) {  \n" +
 				"			throw new UncheckedIOException(e);  \n" +
 				"		}  \n" +
 				"	});  \n" +
 				"	try {  \n" +
 				"			Files.write(Paths.get(\"" + output.toAbsolutePath()
-				+ "/index.txt\"), index.toString().getBytes(UTF_8), CREATE, TRUNCATE_EXISTING);  \n" +
+				+ "/index.txt\"), index.stream().collect(joining(\"\\n\")).getBytes(UTF_8), CREATE, TRUNCATE_EXISTING);  \n" +
 				"		} catch(IOException e) {  \n" +
 				"			throw new UncheckedIOException(e);  \n" +
 				"		}  \n" +

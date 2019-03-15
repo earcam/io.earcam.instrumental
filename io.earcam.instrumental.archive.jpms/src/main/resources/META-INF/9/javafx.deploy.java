@@ -7,17 +7,17 @@
  * @package com.sun.javafx.applet
  */
 module javafx.deploy {
-	requires jdk.deploy;
-	requires jdk.plugin;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires javafx.controls;
-	requires jdk.jsobject;
 	requires java.desktop;
 	requires javafx.base;
+	requires javafx.controls;
 	requires javafx.graphics;
+	requires jdk.deploy;
+	requires jdk.jsobject;
+	requires jdk.plugin;
 	exports com.sun.deploy.uitoolkit.impl.fx to 
 		javafx.controls,
 		javafx.graphics,

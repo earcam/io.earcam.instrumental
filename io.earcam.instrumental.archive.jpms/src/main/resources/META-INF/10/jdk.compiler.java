@@ -34,62 +34,62 @@
  */
 module jdk.compiler {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.compiler;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports jdk.internal.shellsupport.doc to 
-		jdk.jshell,
-		jdk.scripting.nashorn.shell;
-	exports com.sun.tools.javac.main to 
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.compiler;
+	exports com.sun.source.doctree;
+	exports com.sun.source.tree;
+	exports com.sun.source.util;
+	exports com.sun.tools.doclint to 
+		jdk.javadoc;
+	exports com.sun.tools.javac;
+	exports com.sun.tools.javac.api to 
 		jdk.javadoc,
 		jdk.jshell;
-	exports com.sun.source.tree;
 	exports com.sun.tools.javac.code to 
 		jdk.javadoc,
 		jdk.jshell;
-	exports com.sun.tools.doclint to 
-		jdk.javadoc;
-	exports com.sun.tools.javac.tree to 
-		jdk.javadoc,
-		jdk.jshell;
-	exports com.sun.tools.javac.jvm to 
-		jdk.javadoc;
-	exports com.sun.tools.javac;
-	exports com.sun.tools.javac.parser to 
-		jdk.jshell;
-	exports com.sun.source.doctree;
 	exports com.sun.tools.javac.comp to 
 		jdk.javadoc,
 		jdk.jshell;
 	exports com.sun.tools.javac.file to 
 		jdk.javadoc,
 		jdk.jdeps;
-	exports com.sun.source.util;
-	exports com.sun.tools.javac.util to 
+	exports com.sun.tools.javac.jvm to 
+		jdk.javadoc;
+	exports com.sun.tools.javac.main to 
 		jdk.javadoc,
-		jdk.jdeps,
+		jdk.jshell;
+	exports com.sun.tools.javac.model to 
+		jdk.javadoc;
+	exports com.sun.tools.javac.parser to 
 		jdk.jshell;
 	exports com.sun.tools.javac.platform to 
 		jdk.javadoc,
 		jdk.jdeps;
-	exports com.sun.tools.javac.model to 
-		jdk.javadoc;
-	exports com.sun.tools.javac.api to 
+	exports com.sun.tools.javac.tree to 
 		jdk.javadoc,
 		jdk.jshell;
+	exports com.sun.tools.javac.util to 
+		jdk.javadoc,
+		jdk.jdeps,
+		jdk.jshell;
+	exports jdk.internal.shellsupport.doc to 
+		jdk.jshell,
+		jdk.scripting.nashorn.shell;
 	uses com.sun.source.util.Plugin;
 	uses com.sun.tools.javac.platform.PlatformProvider;
 	uses javax.annotation.processing.Processor;
-	provides javax.tools.JavaCompiler with 
-		com.sun.tools.javac.api.JavacTool;
-	provides javax.tools.Tool with 
-		com.sun.tools.javac.api.JavacTool;
 	provides com.sun.tools.javac.platform.PlatformProvider with 
 		com.sun.tools.javac.platform.JDKPlatformProvider;
 	provides java.util.spi.ToolProvider with 
 		com.sun.tools.javac.main.JavacToolProvider;
+	provides javax.tools.JavaCompiler with 
+		com.sun.tools.javac.api.JavacTool;
+	provides javax.tools.Tool with 
+		com.sun.tools.javac.api.JavacTool;
 }

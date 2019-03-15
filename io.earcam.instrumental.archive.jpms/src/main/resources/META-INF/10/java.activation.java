@@ -8,10 +8,10 @@ module java.activation {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.logging;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.datatransfer;
+	requires java.logging;
 	exports javax.activation;
 }

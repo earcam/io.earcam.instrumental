@@ -12,13 +12,16 @@
  * @package jdk.tools.jmod.resources
  */
 module jdk.jlink {
-	requires jdk.jdeps;
 	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires jdk.internal.opt;
+	requires jdk.jdeps;
 	uses jdk.tools.jlink.plugin.Plugin;
+	provides java.util.spi.ToolProvider with 
+		jdk.tools.jlink.internal.Main$JlinkToolProvider,
+		jdk.tools.jmod.Main$JmodToolProvider;
 	provides jdk.tools.jlink.plugin.Plugin with 
 		jdk.tools.jlink.internal.plugins.DefaultCompressPlugin,
 		jdk.tools.jlink.internal.plugins.ExcludeFilesPlugin,
@@ -33,7 +36,4 @@ module jdk.jlink {
 		jdk.tools.jlink.internal.plugins.StripDebugPlugin,
 		jdk.tools.jlink.internal.plugins.StripNativeCommandsPlugin,
 		jdk.tools.jlink.internal.plugins.SystemModulesPlugin;
-	provides java.util.spi.ToolProvider with 
-		jdk.tools.jlink.internal.Main$JlinkToolProvider,
-		jdk.tools.jmod.Main$JmodToolProvider;
 }

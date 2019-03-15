@@ -5,14 +5,6 @@
  */
 module java.sql {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.transaction.xa;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
@@ -20,7 +12,15 @@ module java.sql {
 	 * @modifiers transitive
 	 */
 	requires transitive java.logging;
-	exports javax.sql;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.transaction.xa;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
 	exports java.sql;
+	exports javax.sql;
 	uses java.sql.Driver;
 }

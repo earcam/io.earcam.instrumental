@@ -24,31 +24,31 @@
  */
 module javafx.web {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	requires jdk.xml.dom;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive javafx.controls;
+	requires java.desktop;
 	requires java.logging;
 	/**
 	 * @modifiers transitive
 	 */
+	requires transitive java.xml;
+	/**
+	 * @modifiers transitive
+	 */
 	requires transitive javafx.base;
-	requires jdk.jsobject;
-	requires javafx.media;
-	requires java.desktop;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive javafx.controls;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive javafx.graphics;
-	exports javafx.scene.web;
+	requires javafx.media;
+	requires jdk.jsobject;
+	requires jdk.xml.dom;
 	exports com.sun.javafx.fxml.builder.web to 
 		javafx.fxml;
+	exports javafx.scene.web;
 }

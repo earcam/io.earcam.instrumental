@@ -15,17 +15,17 @@ module java.sql.rowset {
 	/**
 	 * @modifiers transitive
 	 */
+	requires transitive java.logging;
+	/**
+	 * @modifiers transitive
+	 */
 	requires transitive java.naming;
 	/**
 	 * @modifiers transitive
 	 */
 	requires transitive java.sql;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.logging;
+	exports javax.sql.rowset;
 	exports javax.sql.rowset.serial;
 	exports javax.sql.rowset.spi;
-	exports javax.sql.rowset;
 	uses javax.sql.rowset.RowSetFactory;
 }

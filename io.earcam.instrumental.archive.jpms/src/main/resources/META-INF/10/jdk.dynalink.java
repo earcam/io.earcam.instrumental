@@ -13,10 +13,10 @@ module jdk.dynalink {
 	 */
 	requires java.base;
 	requires java.logging;
-	exports jdk.dynalink.linker;
-	exports jdk.dynalink.beans;
 	exports jdk.dynalink;
-	exports jdk.dynalink.support;
+	exports jdk.dynalink.beans;
+	exports jdk.dynalink.linker;
 	exports jdk.dynalink.linker.support;
+	exports jdk.dynalink.support;
 	uses jdk.dynalink.linker.GuardingDynamicLinkerExporter;
 }

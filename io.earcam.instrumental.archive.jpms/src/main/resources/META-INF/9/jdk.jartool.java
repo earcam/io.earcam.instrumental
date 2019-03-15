@@ -11,8 +11,8 @@ module jdk.jartool {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports jdk.security.jarsigner;
 	exports com.sun.jarsigner;
+	exports jdk.security.jarsigner;
 	provides java.util.spi.ToolProvider with 
 		sun.tools.jar.JarToolProvider;
 }
