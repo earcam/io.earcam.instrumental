@@ -188,19 +188,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-toolchains-plugin</artifactId>
-				<configuration>
-					<toolchains>
-						<jdk>
-							<version>11</version>
-							<vendor>oracle</vendor>
-						</jdk>
-					</toolchains>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<inherited>false</inherited>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<release>${maven.compiler.target}</release>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<compilerArgument>-Xlint:all</compilerArgument>
+				</configuration>
 			</plugin>
 
 			<plugin>
