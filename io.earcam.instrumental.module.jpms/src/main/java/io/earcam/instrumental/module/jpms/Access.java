@@ -44,28 +44,11 @@ final class Access {
 	/** Constant <code>ACC_MANDATED=0x8000</code> */
 	public static final int ACC_MANDATED = 0x8000;
 
-	private static final Predicate<Modifier> EXCLUDE_NOT_REAL = m -> m.access() != ACC_NOT_REAL;
+	static final Predicate<Modifier<?>> EXCLUDE_NOT_REAL = m -> m.access() != ACC_NOT_REAL;
 
 
 	private Access()
 	{}
-
-
-	/**
-	 * <p>
-	 * access.
-	 * </p>
-	 *
-	 * @param modifiers a {@link java.util.Set} object.
-	 * @return a int.
-	 */
-	public static int access(Set<? extends Modifier> modifiers)
-	{
-		return modifiers.stream()
-				.filter(EXCLUDE_NOT_REAL)
-				.mapToInt(Modifier::access)
-				.reduce(0, Access::bitwiseOr);
-	}
 
 
 	/**
@@ -93,7 +76,7 @@ final class Access {
 	 * @param <M> a M object.
 	 * @return a {@link java.util.Set} object.
 	 */
-	public static <M extends Enum<M> & Modifier> Set<M> modifiers(Class<M> modifierType, int access)
+	public static <M extends Enum<M> & Modifier<M>> Set<M> modifiers(Class<M> modifierType, int access)
 	{
 		return EnumSet.allOf(modifierType).stream()
 				.filter(EXCLUDE_NOT_REAL)

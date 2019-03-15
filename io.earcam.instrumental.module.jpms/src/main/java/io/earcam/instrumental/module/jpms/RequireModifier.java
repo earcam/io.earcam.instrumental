@@ -24,7 +24,7 @@ package io.earcam.instrumental.module.jpms;
  * </p>
  *
  */
-public enum RequireModifier implements Modifier {
+public enum RequireModifier implements Modifier<RequireModifier> {
 
 	TRANSITIVE(Access.ACC_TRANSITIVE, true), //
 	STATIC(Access.ACC_STATIC_PHASE, true),   //

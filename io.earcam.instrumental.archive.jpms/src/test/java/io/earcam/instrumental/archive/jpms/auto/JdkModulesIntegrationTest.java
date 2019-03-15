@@ -20,30 +20,23 @@ package io.earcam.instrumental.archive.jpms.auto;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.io.FileMatchers.anExistingFile;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.earcam.instrumental.archive.jpms.PackageModuleMapper;
-import io.earcam.instrumental.archive.jpms.auto.JdkModules;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 
 /**
- * Cache must be built - either by running main method of {@link JdkModules} directly
- * running this test, or via the maven build (which ensures cache populated regardless of
- * running the integration-test phase).
- * 
- * 
  * Tests below may fail when Java version they're run against changes.. View JDK jmods with:
  * 
  * for filename in `ls $JAVA_10_HOME/jmods/*.jmod`; do $JAVA_10_HOME/bin/jmod describe $filename; echo; echo; done |
@@ -51,20 +44,6 @@ import io.earcam.instrumental.module.jpms.ModuleInfo;
  * 
  */
 public class JdkModulesIntegrationTest {
-
-	@BeforeAll
-	public static void cacheIsPresent() throws IOException, InterruptedException
-	{
-		synchronized(JdkModules.class) {
-
-			Path cache = JdkModules.DEFAULT_DIRECTORY.resolve(JdkModules.substituteVersion(JdkModules.CACHE_FILENAME, 9));
-			Files.deleteIfExists(cache);
-
-			JdkModules.main(new String[0]);
-			assertThat(cache.toFile(), is(anExistingFile()));
-		}
-	}
-
 
 	@Test
 	public void mapperIsAvailableViaSpi()

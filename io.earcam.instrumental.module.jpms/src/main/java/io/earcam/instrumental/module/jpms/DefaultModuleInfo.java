@@ -308,7 +308,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	private String visibleModifiers(Set<? extends Modifier> modifiers)
+	private String visibleModifiers(Set<? extends Modifier<?>> modifiers)
 	{
 		String mods = modifiers.stream()
 				.filter(Modifier::sourceVisible)
@@ -380,7 +380,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	private static <M extends Enum<M> & Modifier> void addComment(StringBuilder output, String indent, Set<M> modifiers)
+	private static <M extends Enum<M> & Modifier<M>> void addComment(StringBuilder output, String indent, Set<M> modifiers)
 	{
 		if(!modifiers.isEmpty()) {
 			startComment(output, indent);
@@ -415,7 +415,7 @@ class DefaultModuleInfo implements ModuleInfo, ModuleInfoBuilder, Serializable {
 	}
 
 
-	private static void accessComment(StringBuilder output, String indent, Set<? extends Modifier> modifiers)
+	private static void accessComment(StringBuilder output, String indent, Set<? extends Modifier<?>> modifiers)
 	{
 		if(!modifiers.isEmpty()) {
 			output.append(indent).append(" * @modifiers ")

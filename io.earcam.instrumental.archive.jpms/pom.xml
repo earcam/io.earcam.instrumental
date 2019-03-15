@@ -213,18 +213,23 @@
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>cache-file-exists</id>
+						<id>cache-files-exist</id>
 						<goals>
 							<goal>enforce</goal>
 						</goals>
-						<phase>pa</phase>
+						<phase>package</phase>
 						<configuration>
 							<rules>
 								<requireFilesExist>
 									<files>
-										<file>${project.build.outputDirectory}/META-INF/9.jpms.cache</file>
-										<file>${project.build.outputDirectory}/META-INF/10.jpms.cache</file>
-										<file>${project.build.outputDirectory}/META-INF/11.jpms.cache</file>
+										<file>${project.build.outputDirectory}/META-INF/9/index.txt</file>
+										<file>${project.build.outputDirectory}/META-INF/10/index.txt</file>
+										<file>${project.build.outputDirectory}/META-INF/11/index.txt</file>
+										<file>${project.build.outputDirectory}/META-INF/12/index.txt</file>
+										<file>${project.build.outputDirectory}/META-INF/9/java.base.java</file>
+										<file>${project.build.outputDirectory}/META-INF/10/java.base.java</file>
+										<file>${project.build.outputDirectory}/META-INF/11/java.base.java</file>
+										<file>${project.build.outputDirectory}/META-INF/12/java.base.java</file>
 									</files>
 								</requireFilesExist>
 							</rules>
@@ -232,6 +237,17 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>main/resources/META-INF/**/*.java</exclude>
+						<exclude>main/resources/META-INF/**/*.txt</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

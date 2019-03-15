@@ -18,7 +18,6 @@
  */
 package io.earcam.instrumental.archive.jpms.auto;
 
-import static io.earcam.instrumental.archive.jpms.auto.JdkModules.CACHE_FILENAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,11 +53,13 @@ public class JdkModulesTest {
 
 		JdkModules.main(new String[] { directory.toString() });
 
-		Path cache = directory.resolve(JdkModules.substituteVersion(CACHE_FILENAME, 11));
+		Path base = directory.resolve("11");
+
+		Path cache = base.resolve("index.txt");
 
 		assertThat("expecting " + cache, cache.toFile(), is(anExistingFile()));
 
-		List<ModuleInfo> modules = JdkModules.deserialize(new FileInputStream(cache.toFile()));
+		List<ModuleInfo> modules = JdkModules.load(base.toString());
 
 		// completely arbitrary, previous observed JDK9 module counts have been 96 and 99
 		assertThat(modules, hasSize(greaterThan(50)));
@@ -72,7 +72,7 @@ public class JdkModulesTest {
 				.requiring("java.compiler", 0, null)
 				.requiring("jdk.compiler", 0, null)
 
-				.exporting("com.sun.tools.classfile", 0, "jdk.jlink")
+				.exporting("com.sun.tools.classfile", 32768, "jdk.jlink")
 				.providing("java.util.spi.ToolProvider", "com.sun.tools.javap.Main$JavapToolProvider", "com.sun.tools.jdeps.Main$JDepsToolProvider")
 				.packaging(
 						new TreeSet<>(Arrays.asList(

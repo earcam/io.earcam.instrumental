@@ -24,7 +24,7 @@ package io.earcam.instrumental.module.jpms;
  * </p>
  *
  */
-public enum ExportModifier implements Modifier {
+public enum ExportModifier implements Modifier<ExportModifier> {
 
 	SYNTHETIC(Access.ACC_SYNTHETIC), MANDATED(Access.ACC_MANDATED);
 

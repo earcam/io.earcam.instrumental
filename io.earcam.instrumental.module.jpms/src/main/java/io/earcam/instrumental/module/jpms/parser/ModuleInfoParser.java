@@ -18,8 +18,12 @@
  */
 package io.earcam.instrumental.module.jpms.parser;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
+
+import javax.annotation.WillClose;
 
 import io.earcam.instrumental.module.jpms.ModuleInfo;
 
@@ -38,13 +42,19 @@ public final class ModuleInfoParser {
 
 	private static ModuleInfo parse(Java9Parser parser)
 	{
-		AntlrParser listener = new AntlrParser();
+		AntlrParser listener = new AntlrParser(parser.getTokenStream());
 		Parsing.walk(parser.modularCompilation(), listener);
 		return listener.builder().construct();
 	}
 
 
-	public static ModuleInfo parse(InputStream source, Charset charset)
+	public static ModuleInfo parse(@WillClose InputStream source)
+	{
+		return parse(source, UTF_8);
+	}
+
+
+	public static ModuleInfo parse(@WillClose InputStream source, Charset charset)
 	{
 		Java9Parser parser = Parsing.failFastParserFor(source, charset);
 		return parse(parser);

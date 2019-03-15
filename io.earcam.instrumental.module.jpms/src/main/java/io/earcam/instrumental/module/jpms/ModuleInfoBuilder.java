@@ -72,7 +72,7 @@ public interface ModuleInfoBuilder {
 	 */
 	public default ModuleInfoBuilder withAccess(Set<ModuleModifier> modifiers)
 	{
-		return withAccess(Access.access(modifiers));
+		return withAccess(Modifier.access(modifiers));
 	}
 
 
@@ -191,7 +191,7 @@ public interface ModuleInfoBuilder {
 	 */
 	public default ModuleInfoBuilder requiring(String module, Set<RequireModifier> modifiers, String version)
 	{
-		return requiring(module, Access.access(modifiers), version);
+		return requiring(module, Modifier.access(modifiers), version);
 	}
 
 
@@ -234,7 +234,7 @@ public interface ModuleInfoBuilder {
 	 */
 	public default ModuleInfoBuilder exporting(String paquet, Set<ExportModifier> modifiers, String... modules)
 	{
-		return exporting(paquet, Access.access(modifiers), modules);
+		return exporting(paquet, Modifier.access(modifiers), modules);
 	}
 
 
@@ -294,7 +294,7 @@ public interface ModuleInfoBuilder {
 	 */
 	public default ModuleInfoBuilder opening(String paquet, Set<ExportModifier> modifiers, String... modules)
 	{
-		return opening(paquet, Access.access(modifiers), modules);
+		return opening(paquet, Modifier.access(modifiers), modules);
 	}
 
 

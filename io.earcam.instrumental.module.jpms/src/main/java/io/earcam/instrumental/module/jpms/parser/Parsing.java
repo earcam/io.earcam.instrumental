@@ -21,6 +21,8 @@ package io.earcam.instrumental.module.jpms.parser;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import javax.annotation.WillClose;
+
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -53,7 +55,7 @@ final class Parsing {
 	}
 
 
-	static Java9Parser failFastParserFor(InputStream value, Charset charset)
+	static Java9Parser failFastParserFor(@WillClose InputStream value, Charset charset)
 	{
 		Java9Parser parser = parser(Exceptional.apply(CharStreams::fromStream, value, charset));
 		parser.setErrorHandler(new BailErrorStrategy());

@@ -19,22 +19,28 @@
 package io.earcam.instrumental.archive.jpms.auto;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-import javax.annotation.WillClose;
 import javax.lang.model.SourceVersion;
 
 import io.earcam.instrumental.module.jpms.ModuleInfo;
-import io.earcam.unexceptional.Closing;
+import io.earcam.instrumental.module.jpms.parser.ModuleInfoParser;
+import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.IoStreams;
 
 /**
@@ -53,17 +59,16 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	private static final String META_INF = "META-INF";
 
 	private static final String VERSION_PLACEHOLDER = "$$$";
-	public static final String CACHE_FILENAME = "$$$.jpms.cache";
 
 	/**
 	 * A path to a JDK &ge; 9, where '$$$' will be replaced by '9', '10', '11', ...
 	 */
 	public static final String PROPERTY_JDK_HOME_PATTERN = "instrumental.jdk.home";
 
-	static final Path DEFAULT_DIRECTORY = Paths.get("target", "classes", META_INF);
+	static final Path DEFAULT_DIRECTORY = Paths.get("src", "main", "resources", META_INF);
 	static final String JDK_HOME = "/usr/lib/jvm/java-" + VERSION_PLACEHOLDER + "-oracle/";
 
-	private static List<ModuleInfo> modules;
+	private static final Map<Integer, List<ModuleInfo>> modules = new HashMap<>();
 
 	private final int version;
 
@@ -101,6 +106,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 			Path outputFile = outputFile(args, version);
 			Path jdkHome = jdkHome(version);
 			if(jdkHome.toFile().isDirectory()) {
+				outputFile.toFile().mkdirs();
 				String script = runnableScript(outputFile);
 				execute(jdkHome, script);
 			}
@@ -112,7 +118,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	{
 		Path output = outputDirectory(args);
 		output.toFile().mkdirs();
-		return output.resolve(substituteVersion(CACHE_FILENAME, version));
+		return output.resolve(Integer.toString(version));
 	}
 
 
@@ -137,7 +143,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 
 	private static String runnableScript(Path outputFile)
 	{
-		return script(outputFile).replace('\n', ' ') + '\n';
+		return script(outputFile).replace('\n', ' ').replace('\t', ' ') + '\n';
 	}
 
 
@@ -145,6 +151,10 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	private static String script(Path output)
 	{
 		return "import static java.util.stream.Collectors.toSet; \n" +
+				"\n" +
+				"import static java.nio.charset.StandardCharsets.UTF_8;\n" +
+				"import static java.nio.file.StandardOpenOption.*;\n" +
+				"" +
 				"\n" +
 				"import java.io.File; \n" +
 				"import java.io.FileOutputStream; \n" +
@@ -156,6 +166,12 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"import java.util.List; \n" +
 				"import java.util.Set; \n" +
 				"import java.util.TreeSet; \n" +
+				"import java.io.UncheckedIOException;\n" +
+				"import java.nio.charset.StandardCharsets;\n" +
+				"import java.nio.file.Files;\n" +
+				"import java.nio.file.Path;\n" +
+				"import java.nio.file.Paths;\n" +
+				"import java.nio.file.StandardOpenOption;\n" +
 				"\n" +
 				"import io.earcam.instrumental.module.jpms.ExportModifier; \n" +
 				"import io.earcam.instrumental.module.jpms.ModuleInfo; \n" +
@@ -209,15 +225,26 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 				"			}) \n" +
 				"		    .collect(java.util.stream.Collectors.toList()); \n" +
 				"\n" +
-				"	try(ObjectOutputStream oos = new ObjectOutputStream( \n" +
-				"				new BufferedOutputStream(new FileOutputStream(new File(\"" + output.toAbsolutePath() + "\"))))) { \n" +
-				"	    oos.writeObject(l); \n" +
-				"	} catch(IOException ioe) { \n" +
-				"	    throw new UncheckedIOException(ioe); \n" +
-				"	} \n" +
+				"	StringBuilder index = new StringBuilder();  \n" +
+				"	l.forEach(m -> {  \n" +
+				"		try {  \n" +
+				"			String name = m.name() + \".java\";  \n" +
+				"			Files.write(Paths.get(\"" + output.toAbsolutePath() + "/\" + name), m.toString().getBytes(UTF_8), CREATE, TRUNCATE_EXISTING);  \n" +
+				"			index.append(name).append('\\n');  \n" +
+				"		} catch(IOException e) {  \n" +
+				"			throw new UncheckedIOException(e);  \n" +
+				"		}  \n" +
+				"	});  \n" +
+				"	try {  \n" +
+				"			Files.write(Paths.get(\"" + output.toAbsolutePath()
+				+ "/index.txt\"), index.toString().getBytes(UTF_8), CREATE, TRUNCATE_EXISTING);  \n" +
+				"		} catch(IOException e) {  \n" +
+				"			throw new UncheckedIOException(e);  \n" +
+				"		}  \n" +
+
 				// printed as individual chars concatenated, in case script error causes dumping
 				// of script source (and we're checking output for "DONE" aside from exit code)
-				"	System.out.println(\"D\" + \"O\" + \"N\" + \"E\"); \n" +
+				"	System.out.println(\"D\" + \"O\" + \"N\" + \"E\");  \n" +
 				"";
 	}
 
@@ -263,24 +290,56 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	protected List<ModuleInfo> modules()
 	{
 		loadCache();
-		return modules;
+		return modules.getOrDefault(version, emptyList());
 	}
 
 
 	private synchronized void loadCache()
 	{
-		if(modules == null) {
-			String resource = META_INF + '/' + substituteVersion(CACHE_FILENAME, version);
-			InputStream serial = JdkModules.class.getClassLoader().getResourceAsStream(resource);
-			Objects.requireNonNull(serial, "Unable to load " + resource);
-			modules = deserialize(serial);
+		modules.computeIfAbsent(version, this::load);
+	}
+
+
+	private synchronized List<ModuleInfo> load(int jdkVersion)
+	{
+		String base = META_INF + '/' + jdkVersion + '/';
+		return load(base);
+	}
+
+
+	static synchronized List<ModuleInfo> load(String base)
+	{
+		base = ensureTrailingSlash(base);
+		ClassLoader classLoader = JdkModules.class.getClassLoader();
+		String indexTxt = base + "index.txt";
+		InputStream index = resourceAsStream(classLoader, indexTxt);
+		try {
+			return Arrays.stream(new String(IoStreams.readAllBytes(index), UTF_8).split("\r?\n"))
+					.map(base::concat)
+					.map(r -> resourceAsStream(classLoader, r))
+					.map(ModuleInfoParser::parse)
+					.collect(toList());
+		} finally {
+			Exceptional.run(index::close);
 		}
 	}
 
 
-	@SuppressWarnings("unchecked")
-	static List<ModuleInfo> deserialize(@WillClose InputStream in)
+	static InputStream resourceAsStream(ClassLoader classLoader, String resource)
 	{
-		return List.class.cast(Closing.closeAfterApplying(ObjectInputStream::new, in, ObjectInputStream::readObject));
+		InputStream index = classLoader.getResourceAsStream(resource);
+		if(index == null) {
+			index = Exceptional.apply(Files::newInputStream, Paths.get(resource));
+			if(index == null) {
+				throw new UncheckedIOException("Cannot load " + resource, new FileNotFoundException());
+			}
+		}
+		return index;
+	}
+
+
+	private static String ensureTrailingSlash(String base)
+	{
+		return (base.charAt(base.length() - 1) == '/') ? base : base + '/';
 	}
 }

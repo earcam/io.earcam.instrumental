@@ -18,13 +18,19 @@
  */
 package io.earcam.instrumental.module.jpms;
 
+import static java.util.Locale.ROOT;
+
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * <p>
  * Modifier interface.
  * </p>
  *
  */
-public interface Modifier {
+public interface Modifier<M extends Enum<M>> {
 
 	/**
 	 * <p>
@@ -70,5 +76,27 @@ public interface Modifier {
 	public default boolean sourceVisible()
 	{
 		return true;
+	}
+
+
+	public static <M extends Enum<M> & Modifier<M>> Set<M> from(Class<M> type, String text)
+	{
+		EnumSet<M> set = EnumSet.noneOf(type);
+
+		Arrays.stream(text.split("\\s+"))
+				.map(e -> e.toUpperCase(ROOT))
+				.map(n -> Enum.valueOf(type, n))
+				.forEach(set::add);
+
+		return set;
+	}
+
+
+	public static int access(Set<? extends Modifier<?>> modifiers)
+	{
+		return modifiers.stream()
+				.filter(Access.EXCLUDE_NOT_REAL)
+				.mapToInt(Modifier::access)
+				.reduce(0, Access::bitwiseOr);
 	}
 }

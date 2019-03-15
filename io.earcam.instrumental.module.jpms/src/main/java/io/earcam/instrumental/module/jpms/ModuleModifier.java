@@ -26,7 +26,7 @@ import static io.earcam.instrumental.module.jpms.Access.*;
  * </p>
  *
  */
-public enum ModuleModifier implements Modifier {
+public enum ModuleModifier implements Modifier<ModuleModifier> {
 
 	OPEN(ACC_OPEN, true), AUTOMATIC(ACC_NOT_REAL, false), SYNTHETIC(ACC_SYNTHETIC, false), MANDATED(ACC_MANDATED, false);
 

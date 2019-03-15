@@ -18,9 +18,15 @@
  */
 package io.earcam.instrumental.module.jpms.parser;
 
+import static io.earcam.instrumental.module.jpms.ModuleModifier.OPEN;
+import static io.earcam.instrumental.module.jpms.Modifier.access;
+import static io.earcam.instrumental.module.jpms.ModuleModifier.MANDATED;
+import static io.earcam.instrumental.module.jpms.ModuleModifier.SYNTHETIC;
+import static io.earcam.instrumental.module.jpms.RequireModifier.STATIC;
 import static io.earcam.instrumental.module.jpms.RequireModifier.TRANSITIVE;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.EnumSet.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.allOf;
@@ -42,6 +48,7 @@ import org.junit.jupiter.api.Test;
 
 import io.earcam.instrumental.module.jpms.Export;
 import io.earcam.instrumental.module.jpms.ModuleInfo;
+import io.earcam.instrumental.module.jpms.ModuleModifier;
 import io.earcam.instrumental.module.jpms.Require;
 
 @SuppressWarnings("squid:S2187") // SonarQube false-positive
@@ -430,6 +437,127 @@ public class AntlrParserTest {
 							"com.acme.imp.Hello",
 							"com.acme.imp.Hey",
 							"com.acme.imp.Howdy"))));
+		}
+
+	}
+
+	@Nested
+	public class Javadoc {
+
+		@Test
+		void requireVersion()
+		{
+			// @formatter:off
+			String source =
+					"module com.acme.mod {   \n" +
+					"                        \n" +
+					"   /**                  \n" +
+					"     * @version 1.2.34  \n" +
+					"     */                 \n" +
+					"   requires java.sql;   \n" +
+					"}                       \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(source);
+
+			assertThat(moduleInfo.requires(), contains(new Require("java.sql", 0, "1.2.34")));
+		}
+
+
+		@Test
+		void requireAccessModifiers()
+		{
+			// @formatter:off
+			String source =
+					"module com.acme.mod {                \n" +
+					"                                     \n" +
+					"   /**                               \n" +
+					"     * @modifiers static             \n" +
+					"     * @version 9ea.pfft             \n" +
+					"     */                              \n" +
+					"   requires java.sql;                \n" +
+					"                                     \n" +
+					"   /**                               \n" +
+					"     * @modifiers transitive         \n" +
+					"     * @version 11.0.2+a.b.c         \n" +
+					"     */                              \n" +
+					"   requires java.activation;         \n" +
+					"}                                    \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(source);
+
+			Require expectedS = new Require("java.sql", access(of(STATIC)), "9ea.pfft");
+			Require expectedA = new Require("java.activation", access(of(TRANSITIVE)), "11.0.2+a.b.c");
+			assertThat(moduleInfo.requires(), containsInAnyOrder(expectedS, expectedA));
+		}
+
+
+		@Test
+		void moduleVersion()
+		{
+			// @formatter:off
+			String source =
+					"/**                     \n" +
+					"  * @version x.y.z      \n" +
+					"  * @package a.b.c      \n" +
+					"  * @package d.e.f      \n" +
+					"  */                    \n" +
+					"module com.acme.mod {   \n" +
+					"                        \n" +
+					"   requires java.sql;   \n" +
+					"}                       \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(source);
+
+			assertThat(moduleInfo.version(), is(equalTo("x.y.z")));
+		}
+
+
+		@Test
+		void packages()
+		{
+			// @formatter:off
+			String source =
+					"/**                     \n" +
+							"  * @package x.y.z      \n" +
+							"  * @package a.b.c      \n" +
+							"  * @package d.e.f      \n" +
+							"  */                    \n" +
+							"module com.acme.mod {   \n" +
+							"                        \n" +
+							"   requires java.sql;   \n" +
+							"}                       \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(source);
+
+			assertThat(moduleInfo.packages(), containsInAnyOrder("x.y.z", "a.b.c", "d.e.f"));
+		}
+
+
+		/**
+		 * Note: {@link ModuleModifier#AUTOMATIC} is not a "real" modifier,
+		 * so isn't written into javadoc (unlike SYNTHETIC, cough cough, ahem).
+		 */
+		@Test
+		void moduleAccessModifiers()
+		{
+			// @formatter:off
+			String source =
+					"/**                                     \n" +
+					"  * @modifiers open synthetic mandated  \n" +
+					"  */                                    \n" +
+					"module com.acme.mod {                   \n" +
+					"                                        \n" +
+					"   requires java.sql;                   \n" +
+					"}                                       \n";
+			// @formatter:on
+
+			ModuleInfo moduleInfo = ModuleInfoParser.parse(source);
+
+			assertThat(moduleInfo.modifiers(), containsInAnyOrder(OPEN, SYNTHETIC, MANDATED));
 		}
 
 	}
