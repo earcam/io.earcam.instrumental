@@ -48,7 +48,7 @@
 		<module>io.earcam.instrumental.agent.junit</module>
 		<module>io.earcam.instrumental.agent.defy</module>
 
-		<module>io.earcam.instrumental.uber</module>
+		<!-- <module>io.earcam.instrumental.uber</module> -->
 	</modules>
 
 	<scm>
