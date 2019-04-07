@@ -34,7 +34,7 @@ public final class Handler extends URLStreamHandler {
 	public static void addProtocolHandlerSystemProperty()
 	{
 		String property = System.getProperty(JAVA_PROTOCOL_HANDLER_PKGS, "");
-		if(property.length() > 0) {
+		if(property.isEmpty()) {
 			property += '|';
 		}
 		System.setProperty(JAVA_PROTOCOL_HANDLER_PKGS, property + parentPackage());

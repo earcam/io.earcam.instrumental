@@ -21,16 +21,32 @@ package io.earcam.instrumental.lade;
 import static io.earcam.instrumental.lade.ClassLoaders.inMemoryClassLoader;
 import static io.earcam.instrumental.lade.InMemoryClassLoader.MANIFEST_PATH;
 import static io.earcam.instrumental.lade.InMemoryClassLoader.URL_PROTOCOL;
-import static io.earcam.instrumental.lade.InMemoryClassLoader.inputStreamToBytes;
 import static io.earcam.instrumental.reflect.Names.typeToInternalName;
 import static io.earcam.instrumental.reflect.Names.typeToResourceName;
+import static io.earcam.utilitarian.io.IoStreams.readAllBytes;
 import static io.earcam.utilitarian.security.Certificates.certificate;
 import static io.earcam.utilitarian.security.KeyStores.keyStore;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
+import static org.hamcrest.Matchers.emptyArray;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 
@@ -51,6 +67,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import javax.annotation.concurrent.NotThreadSafe;
+
 import org.junit.Test;
 
 import io.earcam.instrumental.reflect.Resources;
@@ -185,7 +202,7 @@ public class InMemoryClassLoaderTest {
 
 	private byte[] createJar(Class<?> type, String manifestKey, String manifestValue)
 	{
-		return Exceptional.get(() -> inputStreamToBytes(bundle()
+		return Exceptional.get(() -> readAllBytes(bundle()
 				.add(type)
 				.set(manifestKey, manifestValue)
 				.build()));
@@ -259,7 +276,7 @@ public class InMemoryClassLoaderTest {
 
 			assertThat(resource.getProtocol(), is(equalTo(URL_PROTOCOL)));
 
-			String contents = new String(inputStreamToBytes(resource.openStream()), UTF_8);
+			String contents = new String(readAllBytes(resource.openStream()), UTF_8);
 
 			assertThat(contents, containsString(key + ": " + value));
 		}
@@ -283,7 +300,7 @@ public class InMemoryClassLoaderTest {
 
 			assertThat(resource.getProtocol(), is(equalTo(URL_PROTOCOL)));
 
-			String contents = new String(inputStreamToBytes(resource.openStream()), UTF_8);
+			String contents = new String(readAllBytes(resource.openStream()), UTF_8);
 
 			assertThat(contents, containsString(key + ": " + value));
 		}
@@ -548,7 +565,7 @@ public class InMemoryClassLoaderTest {
 
 	private byte[] createFakeSignedJar(Class<?> type, String filePrefix, byte[] fileContent)
 	{
-		return Exceptional.get(() -> inputStreamToBytes(bundle()
+		return Exceptional.get(() -> readAllBytes(bundle()
 				.add(type)
 				.add(filePrefix + ".SF", new ByteArrayInputStream("not currently processed".getBytes(UTF_8)))
 				.add(filePrefix + ".RSA", new ByteArrayInputStream(fileContent))

@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import javax.annotation.concurrent.ThreadSafe;
 
 import io.earcam.unexceptional.Exceptional;
+import io.earcam.utilitarian.io.IoStreams;
 import io.earcam.utilitarian.security.Signatures;
 
 /**
@@ -255,7 +256,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 		JarEntry jarEntry;
 		try(JarInputStream wrap = jar) {
 			while((jarEntry = wrap.getNextJarEntry()) != null) {
-				resources.computeIfAbsent(jarEntry.getName(), k -> new ConcurrentHashMap<>()).put(name, inputStreamToBytes(wrap));
+				resources.computeIfAbsent(jarEntry.getName(), k -> new ConcurrentHashMap<>()).put(name, IoStreams.readAllBytes(wrap));
 			}
 		}
 	}
@@ -275,19 +276,6 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 			X509Certificate[] certificates = Signatures.certificatesFromSignature(bytes).stream().toArray(s -> new X509Certificate[s]);
 			codeSources.put(name, new CodeSource(createResourceUrl(name, ""), certificates));
 		}
-	}
-
-
-	static byte[] inputStreamToBytes(InputStream input) throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		int read = input.read();
-		while(read != -1) {
-			baos.write(read);
-			read = input.read();
-		}
-		return baos.toByteArray();
 	}
 
 
