@@ -23,18 +23,18 @@ module java.security.jgss {
 	 */
 	requires java.base;
 	requires java.naming;
-	exports sun.security.krb5.internal.ktab to 
-		jdk.security.auth;
+	exports javax.security.auth.kerberos;
+	exports org.ietf.jgss;
 	exports sun.security.jgss to 
 		jdk.security.jgss;
-	exports sun.security.krb5 to 
-		jdk.security.auth;
 	exports sun.security.jgss.krb5 to 
 		jdk.security.auth;
-	exports org.ietf.jgss;
-	exports javax.security.auth.kerberos;
+	exports sun.security.krb5 to 
+		jdk.security.auth;
 	exports sun.security.krb5.internal to 
 		jdk.security.jgss;
+	exports sun.security.krb5.internal.ktab to 
+		jdk.security.auth;
 	opens sun.net.www.protocol.http.spnego to 
 		java.base;
 	provides java.security.Provider with 

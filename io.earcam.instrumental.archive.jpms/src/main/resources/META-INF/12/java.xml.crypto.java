@@ -36,19 +36,19 @@
  */
 module java.xml.crypto {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
 	requires java.logging;
-	exports javax.xml.crypto.dsig.dom;
-	exports javax.xml.crypto.dsig.keyinfo;
-	exports javax.xml.crypto.dsig;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
 	exports javax.xml.crypto;
 	exports javax.xml.crypto.dom;
+	exports javax.xml.crypto.dsig;
+	exports javax.xml.crypto.dsig.dom;
+	exports javax.xml.crypto.dsig.keyinfo;
 	exports javax.xml.crypto.dsig.spec;
 	provides java.security.Provider with 
 		org.jcp.xml.dsig.internal.dom.XMLDSigRI;

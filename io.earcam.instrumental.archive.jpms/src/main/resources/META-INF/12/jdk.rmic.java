@@ -14,6 +14,6 @@ module jdk.rmic {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.javadoc;
 	requires jdk.compiler;
+	requires jdk.javadoc;
 }

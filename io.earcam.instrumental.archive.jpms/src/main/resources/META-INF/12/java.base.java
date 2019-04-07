@@ -156,6 +156,7 @@
  * @package sun.text.resources
  * @package sun.text.resources.cldr
  * @package sun.text.spi
+ * @package sun.usagetracker
  * @package sun.util
  * @package sun.util.calendar
  * @package sun.util.cldr
@@ -167,20 +168,62 @@
  * @package sun.util.spi
  */
 module java.base {
-	exports sun.net.ext to 
-		jdk.net;
-	exports jdk.internal.org.objectweb.asm.commons to 
-		jdk.jfr,
-		jdk.scripting.nashorn;
-	exports jdk.internal.jmod to 
-		jdk.compiler,
-		jdk.jlink;
-	exports sun.security.action to 
-		java.desktop,
-		java.security.jgss;
+	exports com.sun.security.ntlm to 
+		java.security.sasl;
+	exports java.io;
+	exports java.lang;
+	exports java.lang.annotation;
+	exports java.lang.constant;
+	exports java.lang.invoke;
+	exports java.lang.module;
+	exports java.lang.ref;
+	exports java.lang.reflect;
+	exports java.math;
+	exports java.net;
+	exports java.net.spi;
+	exports java.nio;
+	exports java.nio.channels;
+	exports java.nio.channels.spi;
+	exports java.nio.charset;
+	exports java.nio.charset.spi;
+	exports java.nio.file;
+	exports java.nio.file.attribute;
+	exports java.nio.file.spi;
+	exports java.security;
+	exports java.security.acl;
+	exports java.security.cert;
+	exports java.security.interfaces;
+	exports java.security.spec;
+	exports java.text;
+	exports java.text.spi;
+	exports java.time;
+	exports java.time.chrono;
+	exports java.time.format;
+	exports java.time.temporal;
+	exports java.time.zone;
+	exports java.util;
+	exports java.util.concurrent;
+	exports java.util.concurrent.atomic;
+	exports java.util.concurrent.locks;
+	exports java.util.function;
+	exports java.util.jar;
+	exports java.util.regex;
+	exports java.util.spi;
+	exports java.util.stream;
+	exports java.util.zip;
 	exports javax.crypto;
-	exports sun.security.provider.certpath to 
-		java.naming;
+	exports javax.crypto.interfaces;
+	exports javax.crypto.spec;
+	exports javax.net;
+	exports javax.net.ssl;
+	exports javax.security.auth;
+	exports javax.security.auth.callback;
+	exports javax.security.auth.login;
+	exports javax.security.auth.spi;
+	exports javax.security.auth.x500;
+	exports javax.security.cert;
+	exports jdk.internal to 
+		jdk.jfr;
 	exports jdk.internal.access to 
 		java.desktop,
 		java.logging,
@@ -189,178 +232,20 @@ module java.base {
 		java.rmi,
 		jdk.jlink,
 		jdk.net;
-	exports java.util.regex;
-	exports java.nio.file;
-	exports sun.net.util to 
-		java.desktop,
-		java.net.http,
-		jdk.jconsole;
-	exports javax.net.ssl;
-	exports sun.security.internal.interfaces to 
-		jdk.crypto.cryptoki;
-	exports jdk.internal.vm.annotation to 
-		jdk.internal.vm.ci,
-		jdk.unsupported;
-	exports jdk.internal to 
-		jdk.jfr;
-	exports sun.nio.ch to 
-		java.management,
-		jdk.crypto.cryptoki,
-		jdk.net,
-		jdk.sctp;
-	exports javax.security.cert;
-	exports java.time.chrono;
-	exports javax.security.auth;
 	exports jdk.internal.event to 
 		jdk.jfr;
-	exports java.nio.charset;
-	exports javax.security.auth.callback;
-	exports sun.security.pkcs to 
-		jdk.crypto.ec,
-		jdk.jartool;
+	exports jdk.internal.jimage to 
+		jdk.jlink;
 	exports jdk.internal.jimage.decompressor to 
 		jdk.jlink;
-	exports sun.security.util.math to 
-		jdk.crypto.ec;
-	exports jdk.internal.vm to 
-		jdk.internal.jvmstat,
-		jdk.management.agent;
-	exports sun.security.util.math.intpoly to 
-		jdk.crypto.ec;
-	exports sun.net.www to 
-		java.net.http,
-		jdk.jartool;
-	exports java.security.spec;
-	exports sun.security.util to 
-		java.desktop,
-		java.naming,
-		java.rmi,
-		java.security.jgss,
-		java.security.sasl,
-		java.smartcardio,
-		java.xml.crypto,
-		jdk.crypto.cryptoki,
-		jdk.crypto.ec,
-		jdk.jartool,
-		jdk.security.auth,
-		jdk.security.jgss;
-	exports java.io;
-	exports javax.security.auth.x500;
-	exports sun.security.tools to 
-		jdk.jartool;
-	exports java.util.jar;
-	exports sun.security.validator to 
-		jdk.jartool;
-	exports jdk.internal.logger to 
-		java.logging;
-	exports java.nio.charset.spi;
-	exports javax.crypto.spec;
-	exports sun.util.cldr to 
+	exports jdk.internal.jmod to 
+		jdk.compiler,
 		jdk.jlink;
-	exports jdk.internal.reflect to 
-		java.logging,
-		java.sql,
-		java.sql.rowset,
-		jdk.dynalink,
-		jdk.scripting.nashorn,
-		jdk.unsupported;
-	exports java.time.zone;
-	exports javax.net;
-	exports jdk.internal.org.objectweb.asm.util to 
-		jdk.jfr,
-		jdk.scripting.nashorn;
-	exports java.security;
-	exports java.nio.channels;
-	exports javax.security.auth.spi;
-	exports jdk.internal.org.xml.sax to 
-		jdk.jfr;
-	exports sun.net.dns to 
-		java.security.jgss,
-		jdk.naming.dns;
-	exports sun.security.timestamp to 
-		jdk.jartool;
-	exports javax.crypto.interfaces;
-	exports java.net.spi;
-	exports java.lang.reflect;
-	exports jdk.internal.org.objectweb.asm.signature to 
-		jdk.scripting.nashorn;
-	exports sun.util.resources to 
-		jdk.localedata;
-	exports java.util.zip;
-	exports java.text.spi;
-	exports java.time.temporal;
-	exports java.security.acl;
-	exports sun.reflect.generics.reflectiveObjects to 
-		java.desktop;
-	exports java.lang.ref;
-	exports java.lang;
-	exports java.nio.channels.spi;
 	exports jdk.internal.loader to 
 		java.instrument,
 		java.logging;
-	exports java.security.interfaces;
-	exports java.time;
-	exports jdk.internal.util.xml to 
-		jdk.jfr;
-	exports jdk.internal.util.jar to 
-		jdk.jartool;
-	exports jdk.internal.ref to 
-		java.desktop;
-	exports java.lang.constant;
-	exports sun.reflect.annotation to 
-		jdk.compiler;
-	exports sun.net.www.protocol.http to 
-		java.security.jgss;
-	exports java.lang.invoke;
-	exports jdk.internal.module to 
-		java.instrument,
-		java.management.rmi,
-		jdk.jartool,
-		jdk.jfr,
-		jdk.jlink;
-	exports java.util.spi;
-	exports java.nio.file.spi;
-	exports java.lang.module;
-	exports sun.util.locale.provider to 
-		java.desktop,
-		jdk.jlink,
-		jdk.localedata;
-	exports java.lang.annotation;
-	exports java.nio;
-	exports com.sun.security.ntlm to 
-		java.security.sasl;
-	exports java.util.stream;
-	exports jdk.internal.org.objectweb.asm.tree to 
-		jdk.jfr,
-		jdk.jlink;
-	exports java.util.concurrent.locks;
-	exports sun.security.jca to 
-		java.smartcardio,
-		jdk.crypto.cryptoki,
-		jdk.crypto.ec,
-		jdk.naming.dns;
-	exports jdk.internal.org.objectweb.asm to 
-		jdk.jartool,
-		jdk.jfr,
-		jdk.jlink,
-		jdk.scripting.nashorn;
-	exports sun.security.rsa to 
-		jdk.crypto.cryptoki;
-	exports sun.util.logging to 
-		java.desktop,
-		java.logging,
-		java.prefs;
-	exports java.nio.file.attribute;
-	exports java.util.concurrent;
-	exports java.util;
-	exports sun.security.internal.spec to 
-		jdk.crypto.cryptoki;
-	exports jdk.internal.org.xml.sax.helpers to 
-		jdk.jfr;
-	exports sun.security.x509 to 
-		jdk.crypto.cryptoki,
-		jdk.crypto.ec,
-		jdk.jartool;
+	exports jdk.internal.logger to 
+		java.logging;
 	exports jdk.internal.misc to 
 		java.desktop,
 		java.logging,
@@ -379,33 +264,86 @@ module java.base {
 		jdk.scripting.nashorn,
 		jdk.scripting.nashorn.shell,
 		jdk.unsupported;
-	exports java.text;
-	exports sun.security.provider to 
-		java.rmi,
-		java.security.jgss,
-		jdk.crypto.cryptoki,
-		jdk.security.auth;
-	exports java.net;
-	exports java.util.function;
-	exports java.security.cert;
-	exports java.util.concurrent.atomic;
-	exports java.time.format;
-	exports javax.security.auth.login;
-	exports sun.net to 
-		java.net.http,
-		jdk.naming.dns;
-	exports jdk.internal.jimage to 
+	exports jdk.internal.module to 
+		java.instrument,
+		java.management.rmi,
+		jdk.jartool,
+		jdk.jfr,
 		jdk.jlink;
-	exports jdk.internal.util.xml.impl to 
+	exports jdk.internal.org.objectweb.asm to 
+		jdk.jartool,
+		jdk.jfr,
+		jdk.jlink,
+		jdk.scripting.nashorn;
+	exports jdk.internal.org.objectweb.asm.commons to 
+		jdk.jfr,
+		jdk.scripting.nashorn;
+	exports jdk.internal.org.objectweb.asm.signature to 
+		jdk.scripting.nashorn;
+	exports jdk.internal.org.objectweb.asm.tree to 
+		jdk.jfr,
+		jdk.jlink;
+	exports jdk.internal.org.objectweb.asm.util to 
+		jdk.jfr,
+		jdk.scripting.nashorn;
+	exports jdk.internal.org.xml.sax to 
+		jdk.jfr;
+	exports jdk.internal.org.xml.sax.helpers to 
 		jdk.jfr;
 	exports jdk.internal.perf to 
 		java.management,
 		jdk.internal.jvmstat,
 		jdk.management.agent;
-	exports java.math;
+	exports jdk.internal.ref to 
+		java.desktop;
+	exports jdk.internal.reflect to 
+		java.logging,
+		java.sql,
+		java.sql.rowset,
+		jdk.dynalink,
+		jdk.scripting.nashorn,
+		jdk.unsupported;
+	exports jdk.internal.util.jar to 
+		jdk.jartool;
+	exports jdk.internal.util.xml to 
+		jdk.jfr;
+	exports jdk.internal.util.xml.impl to 
+		jdk.jfr;
+	exports jdk.internal.vm to 
+		jdk.internal.jvmstat,
+		jdk.management.agent;
+	exports jdk.internal.vm.annotation to 
+		jdk.internal.vm.ci,
+		jdk.unsupported;
+	exports sun.net to 
+		java.net.http,
+		jdk.naming.dns;
+	exports sun.net.dns to 
+		java.security.jgss,
+		jdk.naming.dns;
+	exports sun.net.ext to 
+		jdk.net;
+	exports sun.net.util to 
+		java.desktop,
+		java.net.http,
+		jdk.jconsole;
+	exports sun.net.www to 
+		java.net.http,
+		jdk.jartool;
+	exports sun.net.www.protocol.http to 
+		java.security.jgss;
+	exports sun.nio.ch to 
+		java.management,
+		jdk.crypto.cryptoki,
+		jdk.net,
+		jdk.sctp;
 	exports sun.nio.cs to 
 		java.desktop,
 		jdk.charsets;
+	exports sun.reflect.annotation to 
+		jdk.compiler;
+	exports sun.reflect.generics.reflectiveObjects to 
+		java.desktop;
 	exports sun.reflect.misc to 
 		java.datatransfer,
 		java.desktop,
@@ -413,6 +351,69 @@ module java.base {
 		java.management.rmi,
 		java.rmi,
 		java.sql.rowset;
+	exports sun.security.action to 
+		java.desktop,
+		java.security.jgss;
+	exports sun.security.internal.interfaces to 
+		jdk.crypto.cryptoki;
+	exports sun.security.internal.spec to 
+		jdk.crypto.cryptoki;
+	exports sun.security.jca to 
+		java.smartcardio,
+		jdk.crypto.cryptoki,
+		jdk.crypto.ec,
+		jdk.naming.dns;
+	exports sun.security.pkcs to 
+		jdk.crypto.ec,
+		jdk.jartool;
+	exports sun.security.provider to 
+		java.rmi,
+		java.security.jgss,
+		jdk.crypto.cryptoki,
+		jdk.security.auth;
+	exports sun.security.provider.certpath to 
+		java.naming;
+	exports sun.security.rsa to 
+		jdk.crypto.cryptoki;
+	exports sun.security.timestamp to 
+		jdk.jartool;
+	exports sun.security.tools to 
+		jdk.jartool;
+	exports sun.security.util to 
+		java.desktop,
+		java.naming,
+		java.rmi,
+		java.security.jgss,
+		java.security.sasl,
+		java.smartcardio,
+		java.xml.crypto,
+		jdk.crypto.cryptoki,
+		jdk.crypto.ec,
+		jdk.jartool,
+		jdk.security.auth,
+		jdk.security.jgss;
+	exports sun.security.util.math to 
+		jdk.crypto.ec;
+	exports sun.security.util.math.intpoly to 
+		jdk.crypto.ec;
+	exports sun.security.validator to 
+		jdk.jartool;
+	exports sun.security.x509 to 
+		jdk.crypto.cryptoki,
+		jdk.crypto.ec,
+		jdk.jartool;
+	exports sun.util.cldr to 
+		jdk.jlink;
+	exports sun.util.locale.provider to 
+		java.desktop,
+		jdk.jlink,
+		jdk.localedata;
+	exports sun.util.logging to 
+		java.desktop,
+		java.logging,
+		java.prefs;
+	exports sun.util.resources to 
+		jdk.localedata;
 	uses java.lang.System$LoggerFinder;
 	uses java.net.ContentHandlerFactory;
 	uses java.net.spi.URLStreamHandlerProvider;

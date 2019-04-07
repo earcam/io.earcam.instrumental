@@ -15,13 +15,13 @@ module jdk.jdi {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires jdk.jdwp.agent;
 	requires jdk.attach;
-	exports com.sun.jdi.connect.spi;
-	exports com.sun.jdi.request;
-	exports com.sun.jdi.connect;
+	requires jdk.jdwp.agent;
 	exports com.sun.jdi;
+	exports com.sun.jdi.connect;
+	exports com.sun.jdi.connect.spi;
 	exports com.sun.jdi.event;
+	exports com.sun.jdi.request;
 	uses com.sun.jdi.connect.Connector;
 	uses com.sun.jdi.connect.spi.TransportService;
 	provides com.sun.jdi.connect.Connector with 

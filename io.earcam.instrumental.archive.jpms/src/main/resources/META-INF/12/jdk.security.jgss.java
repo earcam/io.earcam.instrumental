@@ -5,15 +5,15 @@
  */
 module jdk.security.jgss {
 	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.security.jgss;
-	/**
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	requires java.security.sasl;
 	requires java.logging;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.security.jgss;
+	requires java.security.sasl;
 	exports com.sun.security.jgss;
 	provides java.security.Provider with 
 		com.sun.security.sasl.gsskerb.JdkSASL;

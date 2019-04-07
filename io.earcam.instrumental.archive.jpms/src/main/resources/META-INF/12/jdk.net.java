@@ -8,6 +8,6 @@ module jdk.net {
 	 * @modifiers mandated
 	 */
 	requires java.base;
-	exports jdk.nio;
 	exports jdk.net;
+	exports jdk.nio;
 }

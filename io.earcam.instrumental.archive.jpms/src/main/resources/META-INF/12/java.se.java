@@ -3,13 +3,9 @@
  */
 module java.se {
 	/**
-	 * @modifiers transitive
+	 * @modifiers mandated
 	 */
-	requires transitive java.transaction.xa;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.xml;
+	requires java.base;
 	/**
 	 * @modifiers transitive
 	 */
@@ -17,39 +13,7 @@ module java.se {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.management;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.security.jgss;
-	/**
-	 * @modifiers mandated
-	 */
-	requires java.base;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.instrument;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.naming;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.sql;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.security.sasl;
-	/**
-	 * @modifiers transitive
-	 */
 	requires transitive java.datatransfer;
-	/**
-	 * @modifiers transitive
-	 */
-	requires transitive java.logging;
 	/**
 	 * @modifiers transitive
 	 */
@@ -57,11 +21,27 @@ module java.se {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.net.http;
+	requires transitive java.instrument;
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.xml.crypto;
+	requires transitive java.logging;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.management;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.management.rmi;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.naming;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.net.http;
 	/**
 	 * @modifiers transitive
 	 */
@@ -73,7 +53,19 @@ module java.se {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.management.rmi;
+	requires transitive java.scripting;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.security.jgss;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.security.sasl;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.sql;
 	/**
 	 * @modifiers transitive
 	 */
@@ -81,5 +73,13 @@ module java.se {
 	/**
 	 * @modifiers transitive
 	 */
-	requires transitive java.scripting;
+	requires transitive java.transaction.xa;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml;
+	/**
+	 * @modifiers transitive
+	 */
+	requires transitive java.xml.crypto;
 }
