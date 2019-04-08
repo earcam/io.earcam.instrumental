@@ -40,7 +40,7 @@ before_script:
 - mvn -v
 script:
 - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -U -P 'analyse,report,jdk-oracle,sonar'  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
-- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -U -P 'analyse,report,jdk-oracle,site-graphic,site'  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
+- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -B -U -P 'analyse,report,jdk-oracle,sonar'  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
+- sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml -B -U -P 'analyse,report,jdk-oracle,site-graphic,site'  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
 - #sudo $M2_HOME/bin/mvn --toolchains $HOME/.m2/toolchains.xml --settings $HOME/ci-settings.xml org.eluder.coveralls:coveralls-maven-plugin:report  -Drevapi.skip=true  -Dforbiddenapis.skip=true -Dskip.execution.pitest=true
 after_success: bash <(curl -s https://codecov.io/bash)
