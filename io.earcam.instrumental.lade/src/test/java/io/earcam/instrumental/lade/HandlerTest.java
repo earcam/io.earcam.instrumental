@@ -19,14 +19,17 @@
 package io.earcam.instrumental.lade;
 
 import static io.earcam.instrumental.lade.Handler.JAVA_PROTOCOL_HANDLER_PKGS;
-import static io.earcam.instrumental.lade.Handler.*;
+import static io.earcam.instrumental.lade.Handler.addProtocolHandlerSystemProperty;
 import static io.earcam.instrumental.lade.Handler.parentPackage;
+import static io.earcam.instrumental.lade.Handler.removeProtocolHandlerSystemProperty;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HandlerTest {
 

@@ -46,13 +46,23 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.objectweb.asm.Opcodes.ACC_FINAL;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ACC_STATIC;
+import static org.objectweb.asm.Opcodes.ACC_SUPER;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.BIPUSH;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.IRETURN;
+import static org.objectweb.asm.Opcodes.RETURN;
 import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyPair;
@@ -67,9 +77,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.lang.model.SourceVersion;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 
+import io.earcam.instrumental.reflect.Methods;
 import io.earcam.instrumental.reflect.Resources;
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.security.Keys;
@@ -86,6 +102,11 @@ public class InMemoryClassLoaderTest {
 	private static final X509Certificate CERTIFICATE = certificate(KEYS, SUBJECT).toX509();
 	private static final KeyStore KEYSTORE = keyStore(ALIAS, PASSWORD, KEYS, CERTIFICATE);
 	private static final OpenedKeyStore OPENED_KEYSTORE = new OpenedKeyStore(KEYSTORE, ALIAS, PASSWORD);
+
+	static final String CLASS_WHICH = "io.earcam.acme.gen.asm.WhichVersion";
+	static final String BINARY_WHICH = CLASS_WHICH.replace('.', '/');
+	static final String PATH_WHICH = BINARY_WHICH + ".class";
+	static final String MR_PREFIX = "META-INF/versions/";
 
 
 	@Test
@@ -587,6 +608,114 @@ public class InMemoryClassLoaderTest {
 			Object[] signers = loaded.getSigners();
 
 			assertThat(signers, is(nullValue()));
+		}
+	}
+
+	@Nested
+	public class MultiRelease {
+
+		@Test
+		public void multiRelease() throws ReflectiveOperationException
+		{
+			byte[] mrJar = Exceptional.get(() -> readAllBytes(bundle()
+					.add(PATH_WHICH, whichVersion(8, 8))
+					.add(MR_PREFIX + "9/" + PATH_WHICH, whichVersion(9, 9))
+					.add(MR_PREFIX + "10/" + PATH_WHICH, whichVersion(10, 10))
+					.add(MR_PREFIX + "11/" + PATH_WHICH, whichVersion(11, 11))
+					.add(MR_PREFIX + "12/" + PATH_WHICH, whichVersion(12, 12))
+					.build()));
+
+			int expectedVersion = Math.min(12, SourceVersion.latest().ordinal());
+
+			try(InMemoryClassLoader loader = ClassLoaders.inMemoryClassLoader().jar(mrJar).forceMultiReleaseVersion(SourceVersion.latest())) {
+				Class<?> loaded = loader.loadClass(CLASS_WHICH);
+
+				Method method = Methods.getMethod(loaded, "javaVersion").orElseThrow(NullPointerException::new);
+
+				Object response = method.invoke(null);
+
+				assertThat(response, is(expectedVersion));
+			}
+		}
+
+
+		@Test
+		public void forceMultiReleaseVersion() throws ReflectiveOperationException
+		{
+			byte[] mrJar = Exceptional.get(() -> readAllBytes(bundle()
+					.add(PATH_WHICH, whichVersion(8, 8))
+					.add(MR_PREFIX + "9/" + PATH_WHICH, whichVersion(9, 9))
+					.add(MR_PREFIX + "4096/" + PATH_WHICH, whichVersion(8, 42))
+					.build()));
+
+			try(InMemoryClassLoader loader = ClassLoaders.inMemoryClassLoader().jar(mrJar).forceMultiReleaseVersion(4096)) {
+				Class<?> loaded = loader.loadClass(CLASS_WHICH);
+
+				Method method = Methods.getMethod(loaded, "javaVersion").orElseThrow(NullPointerException::new);
+
+				Object response = method.invoke(null);
+
+				assertThat(response, is(42));
+			}
+		}
+
+
+		private InputStream whichVersion(int compileVersion, int reportVersion) throws Exception
+		{
+			return new ByteArrayInputStream(whichVersionByteCode(compileVersion, reportVersion));
+		}
+
+
+		// @formatter:off
+		
+		private byte[] whichVersionByteCode(int compileVersion, int reportVersion) throws Exception
+		{
+			ClassWriter cw = new ClassWriter(0);
+			MethodVisitor mv;
+
+			cw.visit(classVersion(compileVersion), ACC_PUBLIC + ACC_FINAL + ACC_SUPER, BINARY_WHICH, null, "java/lang/Object", null);
+
+			cw.visitSource("WhichVersion.java", null);
+
+
+			{
+				mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+				mv.visitCode();
+				Label l0 = new Label();
+				mv.visitLabel(l0);
+				mv.visitLineNumber(3, l0);
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+				mv.visitInsn(RETURN);
+				Label l1 = new Label();
+				mv.visitLabel(l1);
+				mv.visitLocalVariable("this", "L" + BINARY_WHICH + ";", null, l0, l1, 0);
+				mv.visitMaxs(1, 1);
+				mv.visitEnd();
+			}
+			
+			{
+				mv = cw.visitMethod(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "javaVersion", "()I", null, null);
+				mv.visitCode();
+				Label l0 = new Label();
+				mv.visitLabel(l0);
+				mv.visitLineNumber(8, l0);
+				mv.visitIntInsn(BIPUSH, reportVersion);
+				mv.visitInsn(IRETURN);
+				mv.visitMaxs(1, 0);
+				mv.visitEnd();
+			}
+			cw.visitEnd();
+
+			return cw.toByteArray();
+		}
+		// @formatter:on
+
+
+		private int classVersion(int version)
+		{
+			int classVersion = 0 << 16 | (44 + version);
+			return classVersion;
 		}
 	}
 }

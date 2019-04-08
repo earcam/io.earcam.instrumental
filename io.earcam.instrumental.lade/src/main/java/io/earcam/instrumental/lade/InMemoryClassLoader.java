@@ -35,8 +35,10 @@ import java.security.CodeSource;
 import java.security.SecureClassLoader;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -49,6 +51,7 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
 import javax.annotation.concurrent.ThreadSafe;
+import javax.lang.model.SourceVersion;
 
 import io.earcam.unexceptional.Exceptional;
 import io.earcam.utilitarian.io.IoStreams;
@@ -103,6 +106,8 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 
 	private boolean addCodeSources = true;
 
+	private int multiReleaseVersion = SourceVersion.latest().ordinal();
+
 
 	/**
 	 * Exposed for use as the "<tt>java.system.class.loader</tt>"
@@ -136,12 +141,39 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 
 
 	/**
+	 * Forces the supported version to use when loading from Multi-Release JARs.
+	 * Note: classes loaded will be <i>at most</i> the specified version.
+	 * 
+	 * @param version the version to use.
+	 * @return {@code this} for method chaining.
+	 */
+	public InMemoryClassLoader forceMultiReleaseVersion(SourceVersion version)
+	{
+		return forceMultiReleaseVersion(version.ordinal());
+	}
+
+
+	/**
+	 * Forces the supported version to use when loading from Multi-Release JARs.
+	 * Note: classes loaded will be <i>at most</i> the specified version.
+	 * 
+	 * @param version the version to use.
+	 * @return {@code this} for method chaining.
+	 */
+	public InMemoryClassLoader forceMultiReleaseVersion(int version)
+	{
+		multiReleaseVersion = version;
+		return this;
+	}
+
+
+	/**
 	 * <p>
 	 * jars.
 	 * </p>
 	 *
 	 * @param jars an array of {@link byte} objects.
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jars(byte[]... jars)
 	{
@@ -155,7 +187,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	 * </p>
 	 *
 	 * @param jars a {@link java.util.Collection} object.
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jars(Collection<byte[]> jars)
 	{
@@ -169,7 +201,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	 * </p>
 	 *
 	 * @param jars a {@link java.util.stream.Stream} object.
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jars(Stream<byte[]> jars)
 	{
@@ -190,7 +222,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	 * </p>
 	 *
 	 * @param jar an array of {@link byte} objects.
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jar(byte[] jar)
 	{
@@ -205,7 +237,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	 *
 	 * @param jar adds the byte array representing a jar's contents
 	 * @param name the "name" to use for this jar (for URL resource references etc)
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jar(byte[] jar, String name)
 	{
@@ -221,7 +253,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	 *
 	 * @param jar adds the {@link java.io.InputStream} representing a jar's contents
 	 * @param name the "name" to use for this jar (for URL resource references etc)
-	 * @return a {@link io.earcam.instrumental.lade.InMemoryClassLoader} object.
+	 * @return {@code this} for method chaining.
 	 */
 	public InMemoryClassLoader jar(InputStream jar, String name)
 	{
@@ -287,7 +319,20 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 			return wasLoaded;
 		}
 		String className = classToResourceName(name);
-		Iterator<Entry<String, byte[]>> iterator = resourcesForName(className).entrySet().iterator();
+
+		Iterator<Entry<String, byte[]>> iterator = emptyIterator();
+
+		for(int v = multiReleaseVersion; v > 8; v--) {
+			String prefix = "META-INF/versions/" + v + "/";
+			iterator = resourcesForName(prefix + className).entrySet().iterator();
+			if(iterator.hasNext()) {
+				break;
+			}
+		}
+
+		if(!iterator.hasNext()) {
+			iterator = resourcesForName(className).entrySet().iterator();
+		}
 		if(!iterator.hasNext()) {
 			if(getParent() == null) {
 				throw new ClassNotFoundException(name);
@@ -295,6 +340,7 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 			return getParent().loadClass(name);
 		}
 		Entry<String, byte[]> resource = iterator.next();
+
 		byte[] bytes = resource.getValue();
 		Class<?> defined = defineClass(name, bytes, 0, bytes.length, codeSources.get(resource.getKey()));
 		loaded.put(name, defined);
@@ -305,6 +351,13 @@ public final class InMemoryClassLoader extends SecureClassLoader implements Auto
 	private static String classToResourceName(String name)
 	{
 		return name.replace('.', '/') + ".class";
+	}
+
+
+	private static <T> Iterator<T> emptyIterator()
+	{
+		List<T> emptyList = Collections.emptyList();
+		return emptyList.iterator();
 	}
 
 

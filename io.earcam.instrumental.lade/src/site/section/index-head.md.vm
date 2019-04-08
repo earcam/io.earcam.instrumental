@@ -24,7 +24,9 @@ The `${project.artifactId}.InMemoryClassLoader`:
     * JPMS (also supports dynamic layers with custom ModuleFinder)
     * the JVM System ClassLoader (["java.system.class.loader"][system-classloader]) 
     * [Felix Connect][felix-connect] (formerly known as PojoSR) 
+    * [Multi-Release JARs][mr-jar] (can explicitly force a version to use)
 
 [classloader-defineclass]: https://docs.oracle.com/javase/10/docs/api/java/lang/ClassLoader.html#defineClass(byte[],int,int)
 [system-classloader]: https://docs.oracle.com/javase/10/docs/api/java/lang/ClassLoader.html#getSystemClassLoader()
 [felix-connect]: [https://github.com/apache/felix/tree/trunk/connect]
+[mr-jar]: [https://openjdk.java.net/jeps/238]
