@@ -55,6 +55,7 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	public static final String MAIN_CLASS = Name.MAIN_CLASS.toString();
 	public static final String MANIFEST_PATH = "META-INF/MANIFEST.MF";
 	public static final String SPI_ROOT_PATH = "META-INF/services/";
+	public static final String MULTI_RELEASE_ROOT_PATH = "META-INF/versions/";
 	public static final String CREATED_BY = "Created-By";
 	public static final String V1_0 = "1.0";
 
@@ -102,7 +103,7 @@ public abstract class AbstractAsJarBuilder<T extends AsJarBuilder<T>>
 	@Override
 	public void added(ArchiveResource resource)
 	{
-		if(packageMatcher.test(resource.pkg())) {
+		if(!resource.isMultiVersion() && packageMatcher.test(resource.pkg())) {
 			sealedPackages.add(resource.pkg());
 		}
 	}

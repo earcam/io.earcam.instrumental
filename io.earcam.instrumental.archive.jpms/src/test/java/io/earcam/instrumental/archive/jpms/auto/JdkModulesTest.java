@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.archive.jpms.auto;
 
+import static io.earcam.instrumental.archive.jpms.auto.JdkModules.DEFAULT_DIRECTORY;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -26,7 +27,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -131,5 +133,22 @@ public class JdkModulesTest {
 			JdkModules.processOutput(process);
 			fail();
 		} catch(IOException e) {}
+	}
+
+
+	@Test
+	public void defaultOutputDirectory()
+	{
+		assertThat(JdkModules.outputDirectory(new String[0]), is(equalTo(DEFAULT_DIRECTORY)));
+	}
+
+
+	@Test
+	public void throwsWhenCannotFindIndex()
+	{
+		try {
+			JdkModules.load("/dev/null");
+			fail();
+		} catch(UncheckedIOException e) {}
 	}
 }

@@ -18,6 +18,9 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.MULTI_RELEASE_ROOT_PATH;
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.SPI_ROOT_PATH;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,12 +28,11 @@ import java.io.UncheckedIOException;
 import java.util.Objects;
 
 import io.earcam.unexceptional.Exceptional;
-import io.earcam.utilitarian.charstar.CharSequences;
 import io.earcam.utilitarian.io.IoStreams;
 
 /**
  * <p>
- * ArchiveResource class.
+ * Rather poor abstraction over elements of an archive's contents.
  * </p>
  * <p>
  * Callers are expected to close {@link InputStream}s where read. Otherwise, reliance is
@@ -41,42 +43,77 @@ import io.earcam.utilitarian.io.IoStreams;
  */
 public class ArchiveResource {
 
-	private String name;
+	private final String name;
+	private final String className;
 	private byte[] contents;
 	private InputStream inputStream;
 
 
 	/**
 	 * <p>
-	 * Constructor for ArchiveResource.
+	 * Constructor for byte array content.
 	 * </p>
 	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param contents an array of {@link byte} objects.
+	 * @param name the fully qualified name
+	 * @param contents the "file" contents
 	 */
 	public ArchiveResource(String name, byte[] contents)
 	{
-		this.name = (name.charAt(0) == '/') ? name.substring(1) : name;
+		this(name);
 		this.contents = contents;
 		this.inputStream = new ByteArrayInputStream(contents);
 	}
 
 
+	private ArchiveResource(String name)
+	{
+		this.name = trimLeadingSlash(reduceConsecutiveSlashes(name));
+		this.className = isClass() ? stripLeadingMultiVersion(this.name) : "";
+	}
+
+
+	private static String reduceConsecutiveSlashes(String name)
+	{
+		return name.replaceAll("//+", "/");
+	}
+
+
+	private static String trimLeadingSlash(String name)
+	{
+		return (name.charAt(0) == '/') ? name.substring(1) : name;
+	}
+
+
+	private static String stripLeadingMultiVersion(String name)
+	{
+		return name.startsWith(MULTI_RELEASE_ROOT_PATH) ? name.substring(name.indexOf('/', MULTI_RELEASE_ROOT_PATH.length()) + 1) : name;
+	}
+
+
 	/**
 	 * <p>
-	 * Constructor for ArchiveResource.
+	 * Constructor for {@link InputStream} content.
 	 * </p>
 	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param inputStream a {@link java.io.InputStream} object.
+	 * @param name the fully qualified name
+	 * @param inputStream the "file" contents
 	 */
 	public ArchiveResource(String name, InputStream inputStream)
 	{
-		this.name = name;
+		this(name);
 		this.inputStream = inputStream;
 	}
 
 
+	/**
+	 * <p>
+	 * Rename an existing {@link ArchiveResource}
+	 * </p>
+	 * 
+	 * @param aka the new fully qualified name
+	 * @param formerly an existing {@link ArchiveResource}
+	 * @return an {@link ArchiveResource}
+	 */
 	public static ArchiveResource rename(String aka, ArchiveResource formerly)
 	{
 		return formerly.isInputStreamBacked() ? new ArchiveResource(aka, formerly.inputStream())
@@ -92,24 +129,10 @@ public class ArchiveResource {
 	 * 
 	 * @param name a prospective resource name.
 	 * @return {@code true} IFF the supplied argument matches this name.
-	 *
-	 * @see #sameName(CharSequence, CharSequence)
 	 */
-	public boolean sameName(CharSequence name)
+	public boolean sameName(String name)
 	{
-		return sameName(this.name, name);
-	}
-
-
-	static boolean sameName(CharSequence a, CharSequence b)
-	{
-		return CharSequences.same(trimLeadingSlash(a), trimLeadingSlash(b));
-	}
-
-
-	private static CharSequence trimLeadingSlash(CharSequence text)
-	{
-		return (text.charAt(0) == '/') ? text.subSequence(1, text.length()) : text;
+		return Objects.equals(this.name, trimLeadingSlash(name));
 	}
 
 
@@ -122,11 +145,13 @@ public class ArchiveResource {
 
 	/**
 	 * <p>
-	 * equals.
+	 * A type specific overload of {@link #equals(Object)}.
 	 * </p>
 	 *
-	 * @param that a {@link io.earcam.instrumental.archive.ArchiveResource} object.
-	 * @return a boolean.
+	 * @param that another {@link ArchiveResource}.
+	 * @return {@code true} iff {@code this} resource has the same {@link #name()} as {@code that}.
+	 * 
+	 * @see #equals(Object)
 	 */
 	public boolean equals(ArchiveResource that)
 	{
@@ -145,10 +170,10 @@ public class ArchiveResource {
 	/**
 	 * Writes the underlying rep - which may be an {@link java.io.InputStream} or {@code byte[]}
 	 *
-	 * @param output a {@link java.io.OutputStream} object.
+	 * @param output the output stream to write too.
 	 * @throws UncheckedIOException if an {@link java.io.IOException} is thrown
 	 */
-	public void write(OutputStream output)
+	public void write(/* @WillNotClose */ OutputStream output)
 	{
 		if(isInputStreamBacked()) {
 			IoStreams.transfer(inputStream, output);
@@ -163,7 +188,7 @@ public class ArchiveResource {
 	 * isInputStreamBacked.
 	 * </p>
 	 *
-	 * @return a boolean.
+	 * @return {@code true} iff this {@link ArchiveResource} is backed by an InputStream.
 	 */
 	public boolean isInputStreamBacked()
 	{
@@ -173,10 +198,11 @@ public class ArchiveResource {
 
 	/**
 	 * <p>
-	 * name.
+	 * The fully qualified path name (i.e. this will include {@value AbstractAsJarBuilder#MULTI_RELEASE_ROOT_PATH}
+	 * if present).
 	 * </p>
 	 *
-	 * @return a {@link java.lang.String} object.
+	 * @return the resource's full path name
 	 */
 	public String name()
 	{
@@ -184,6 +210,24 @@ public class ArchiveResource {
 	}
 
 
+	/**
+	 * <p>
+	 * The binary class name (this only differs from {@link #name()} in that
+	 * {@value AbstractAsJarBuilder#MULTI_RELEASE_ROOT_PATH}
+	 * will be stripped if present).
+	 * </p>
+	 *
+	 * @return the binary class name (i.e. slash delimited), or empty string if not a class.
+	 */
+	public String className()
+	{
+		return className;
+	}
+
+
+	/**
+	 * @return the filename suffix.
+	 */
 	public String extension()
 	{
 		int index = name.lastIndexOf('.');
@@ -192,11 +236,7 @@ public class ArchiveResource {
 
 
 	/**
-	 * <p>
-	 * bytes.
-	 * </p>
-	 *
-	 * @return an array of {@link byte} objects.
+	 * @return the contents as a byte array.
 	 */
 	public byte[] bytes()
 	{
@@ -214,11 +254,7 @@ public class ArchiveResource {
 
 
 	/**
-	 * <p>
-	 * inputStream.
-	 * </p>
-	 *
-	 * @return a {@link java.io.InputStream} object.
+	 * @return the contents as an {@link InputStream}.
 	 */
 	public InputStream inputStream()
 	{
@@ -227,11 +263,7 @@ public class ArchiveResource {
 
 
 	/**
-	 * <p>
-	 * unknownSize.
-	 * </p>
-	 *
-	 * @return a boolean.
+	 * @return {@code true} iff the size is known (i.e. backed by byte array).
 	 */
 	public boolean unknownSize()
 	{
@@ -240,11 +272,7 @@ public class ArchiveResource {
 
 
 	/**
-	 * <p>
-	 * knownSize.
-	 * </p>
-	 *
-	 * @return a long.
+	 * @return the content length is known, otherwise {@code -1}.
 	 */
 	public long knownSize()
 	{
@@ -254,26 +282,57 @@ public class ArchiveResource {
 
 	/**
 	 * <p>
-	 * pkg.
+	 * Returns the package name (i.e. the FQN as in Java Language).
 	 * </p>
 	 *
-	 * @return a {@link java.lang.String} object.
+	 * @return the package name for this class, or empty string if not a class.
 	 */
 	public String pkg()
 	{
-		int end = name.lastIndexOf('/');
-		return ((end == -1) ? "" : name.substring(0, end)).replace('/', '.');
+		int end = className.lastIndexOf('/');
+		return ((end == -1) ? "" : className.substring(0, end)).replace('/', '.');
 	}
 
 
+	/**
+	 * 
+	 * @return {@code true} iff the file suffix is {@code .class} and the package is non-empty
+	 * 
+	 * @see #isClass()
+	 */
 	public boolean isQualifiedClass()
 	{
-		return isClass() && !"".equals(pkg());
+		return isClass() && className.indexOf('/') != -1;
 	}
 
 
+	/**
+	 * 
+	 * @return {@code true} iff the path begins with {@value AbstractAsJarBuilder#MULTI_RELEASE_ROOT_PATH}
+	 */
+	public boolean isMultiVersion()
+	{
+		return name.startsWith(MULTI_RELEASE_ROOT_PATH);
+	}
+
+
+	/**
+	 * 
+	 * @return {@code true} iff the file suffix is {@code .class}
+	 * 
+	 * @see #isQualifiedClass()
+	 */
 	public boolean isClass()
 	{
 		return ".class".equals(extension());
+	}
+
+
+	/**
+	 * @return {@code true} iff the path begins with {@value AbstractAsJarBuilder#SPI_ROOT_PATH}
+	 */
+	public boolean isSpi()
+	{
+		return name.startsWith(SPI_ROOT_PATH);
 	}
 }

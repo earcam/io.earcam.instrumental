@@ -131,20 +131,46 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	public void added(ArchiveResource resource)
 	{
 		super.added(resource);
-		if(listingPackages) {
-			builder.packaging(resource.pkg());
-		}
 		if(resource.isQualifiedClass()) {
-			if(autoRequiring != null) {
-				autoRequiring.process(resource);
+			addedClass(resource);
+		} else if(providingFromMetaInfServices && resource.isSpi()) {
+			addedSpi(resource);
+		}
+	}
+
+
+	private void addedSpi(ArchiveResource resource)
+	{
+		String service = resource.name().substring(SPI_ROOT_PATH.length());
+		String[] implementations = extractSpiImplementations(resource.bytes());
+		builder.providing(service, implementations);
+	}
+
+
+	String[] extractSpiImplementations(byte[] bytes)
+	{
+		Predicate<? super String> isEmpty = String::isEmpty;
+		return Arrays.stream(new String(bytes, UTF_8).split("\r?\n"))
+				.map(String::trim)
+				.filter(isEmpty.negate())
+				.filter(l -> l.charAt(0) != '#')
+				.toArray(String[]::new);
+	}
+
+
+	private void addedClass(ArchiveResource resource)
+	{
+		if(autoRequiring != null) {
+			autoRequiring.process(resource);
+		}
+		// TODO multi-version JARs could require different module-info definitions
+		if(!resource.isMultiVersion()) {
+			if(listingPackages) {
+				builder.packaging(resource.pkg());
 			}
 			for(ExportMatcher matcher : exportMatchers) {
 				matcher.test(resource);
 			}
-		} else if(providingFromMetaInfServices && resource.name().startsWith(SPI_ROOT_PATH)) { // config optional
-			String service = resource.name().substring(SPI_ROOT_PATH.length());
-			String[] implementations = new String(resource.bytes(), UTF_8).split("\r?\n");
-			builder.providing(service, implementations);
 		}
 	}
 
@@ -154,7 +180,6 @@ class DefaultAsJpmsModule extends AbstractAsJarBuilder<AsJpmsModule> implements 
 	{
 		Stream<ArchiveResource> drained = super.drain(stage);
 		if(stage == PRE_MANIFEST) {
-
 			resolveAutoImports();
 			ArchiveResource moduleInfo = new ArchiveResource("module-info.class", builder.construct().toBytecode());
 			drained = Stream.concat(drained, Stream.of(moduleInfo));

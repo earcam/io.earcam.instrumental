@@ -18,6 +18,7 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -33,10 +34,10 @@ import org.junit.jupiter.api.Test;
 public class ArchiveResourceTest {
 
 	@Nested
-	class Equality {
+	public class Equality {
 
 		@Test
-		void equalByNameAlone()
+		public void equalByNameAlone()
 		{
 			ArchiveResource a = new ArchiveResource("name", new ByteArrayInputStream(new byte[0]));
 			ArchiveResource b = new ArchiveResource("name", new byte[] { 0, 1, 2, 3 });
@@ -48,7 +49,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void notEqualByNameAlone()
+		public void notEqualByNameAlone()
 		{
 			byte[] contents = new byte[] { 0, 1, 2, 3 };
 			ArchiveResource a = new ArchiveResource("eman", contents);
@@ -59,7 +60,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void notEqualToNull()
+		public void notEqualToNull()
 		{
 			ArchiveResource a = new ArchiveResource("name", new byte[0]);
 			ArchiveResource b = null;
@@ -69,7 +70,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void notEqualToNullObject()
+		public void notEqualToNullObject()
 		{
 			ArchiveResource a = new ArchiveResource("name", new byte[0]);
 			Object b = null;
@@ -82,7 +83,63 @@ public class ArchiveResourceTest {
 	public class Naming {
 
 		@Test
-		void extensionPresentGivenPathIsNonExistent()
+		public void leadingAndMultipleConsecutiveSlashesAreReduced()
+		{
+			ArchiveResource a = new ArchiveResource("//com////acme/api///Ooops.class", new byte[0]);
+
+			assertThat(a.name(), is("com/acme/api/Ooops.class"));
+		}
+
+
+		@Test
+		public void multiReleaseModuleInfo()
+		{
+			String name = MULTI_RELEASE_ROOT_PATH + "12/module-info.class";
+			ArchiveResource a = new ArchiveResource(name, new byte[0]);
+
+			assertThat(a.isMultiVersion(), is(true));
+			assertThat(a.isClass(), is(true));
+			assertThat(a.isQualifiedClass(), is(false));
+			assertThat(a.isSpi(), is(false));
+
+			assertThat(a.name(), is(equalTo(name)));
+			assertThat(a.pkg(), is(emptyString()));
+			assertThat(a.className(), is(equalTo("module-info.class")));
+		}
+
+
+		@Test
+		public void multiReleaseClass()
+		{
+			String name = MULTI_RELEASE_ROOT_PATH + "9/com/acme/FooFoo.class";
+			ArchiveResource a = new ArchiveResource(name, new byte[0]);
+
+			assertThat(a.isMultiVersion(), is(true));
+			assertThat(a.isClass(), is(true));
+			assertThat(a.isQualifiedClass(), is(true));
+			assertThat(a.isSpi(), is(false));
+
+			assertThat(a.name(), is(equalTo(name)));
+			assertThat(a.pkg(), is(equalTo("com.acme")));
+			assertThat(a.className(), is(equalTo("com/acme/FooFoo.class")));
+		}
+
+
+		@Test
+		public void spi()
+		{
+			ArchiveResource a = new ArchiveResource(SPI_ROOT_PATH + "/com.acme.FooFoo", new byte[0]);
+
+			assertThat(a.isMultiVersion(), is(false));
+			assertThat(a.isClass(), is(false));
+			assertThat(a.isQualifiedClass(), is(false));
+			assertThat(a.isSpi(), is(true));
+			assertThat(a.pkg(), is(emptyString()));
+		}
+
+
+		@Test
+		public void extensionPresentGivenPathIsNonExistent()
 		{
 			ArchiveResource a = new ArchiveResource("name.ext", new byte[0]);
 
@@ -91,7 +148,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void extensionPresentGivenPathIsPresent()
+		public void extensionPresentGivenPathIsPresent()
 		{
 			ArchiveResource a = new ArchiveResource("/some/path/to/name.yay", new byte[0]);
 
@@ -100,7 +157,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void extensionNotPresentGivenPathIsNonExistent()
+		public void extensionNotPresentGivenPathIsNonExistent()
 		{
 			ArchiveResource a = new ArchiveResource("name", new byte[0]);
 
@@ -109,7 +166,7 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void extensionNotPresentGivenPathIsPresent()
+		public void extensionNotPresentGivenPathIsPresent()
 		{
 			ArchiveResource a = new ArchiveResource("/some/path/to/no-extension", new byte[0]);
 
@@ -118,34 +175,44 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void isClassThatIsNotQualfied()
+		public void isClassThatIsNotQualfied()
 		{
 			ArchiveResource a = new ArchiveResource("Poor.class", new byte[0]);
 
+			assertThat(a.isMultiVersion(), is(false));
 			assertThat(a.isClass(), is(true));
+			assertThat(a.isQualifiedClass(), is(false));
+			assertThat(a.isSpi(), is(false));
+
 		}
 
 
 		@Test
-		void isNotClassButIsQualified()
+		public void isNotClassButIsQualified()
 		{
 			ArchiveResource a = new ArchiveResource("/something/probably/a/resource", new byte[0]);
 
+			assertThat(a.isMultiVersion(), is(false));
 			assertThat(a.isClass(), is(false));
+			assertThat(a.isQualifiedClass(), is(false));
+			assertThat(a.isSpi(), is(false));
 		}
 
 
 		@Test
-		void isClassThatIsQualfied()
+		public void isClassThatIsQualfied()
 		{
 			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new byte[0]);
 
+			assertThat(a.isMultiVersion(), is(false));
 			assertThat(a.isClass(), is(true));
+			assertThat(a.isQualifiedClass(), is(true));
+			assertThat(a.isSpi(), is(false));
 		}
 
 
 		@Test
-		void isQualfiedClass()
+		public void isQualfiedClass()
 		{
 			ArchiveResource a = new ArchiveResource("/com/acme/dummy/Fqn.class", new byte[0]);
 
@@ -154,18 +221,9 @@ public class ArchiveResourceTest {
 
 
 		@Test
-		void isNotQualfiedClassButIsQualified()
+		public void isNotQualfiedClassButIsQualified()
 		{
 			ArchiveResource a = new ArchiveResource("/something/probably/a/resource", new byte[0]);
-
-			assertThat(a.isQualifiedClass(), is(false));
-		}
-
-
-		@Test
-		void isNotQualfiedClassButIsClass()
-		{
-			ArchiveResource a = new ArchiveResource("Poor.class", new byte[0]);
 
 			assertThat(a.isQualifiedClass(), is(false));
 		}

@@ -18,9 +18,12 @@
  */
 package io.earcam.instrumental.archive.jpms;
 
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.MULTI_RELEASE_ROOT_PATH;
 import static io.earcam.instrumental.archive.Archive.archive;
 import static io.earcam.instrumental.archive.jpms.AsJpmsModule.asJpmsModule;
 import static io.earcam.instrumental.module.jpms.ExportModifier.MANDATED;
+import static io.earcam.instrumental.reflect.Names.typeToInternalName;
+import static io.earcam.instrumental.reflect.Resources.classAsBytes;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
@@ -54,8 +57,31 @@ import io.earcam.instrumental.module.jpms.RequireModifier;
 
 public class AsJpmsModuleTest {
 
+	/**
+	 * FIXME this test "documents" undesired behaviour - currently there is no automatic
+	 * way of producing separate module-info under each version of a multi-release JAR.
+	 * 
+	 * The required fix is part of a broader scope, to allow uber/shaded JARs and merging
+	 * of any module-info.classes
+	 */
 	@Test
-	void emptyModule()
+	public void multiVersionedClassNotExported()
+	{
+		Archive archive = archive()
+				.configured(asJpmsModule()
+						.named("foo")
+						.exporting(x -> true))
+				.with(MULTI_RELEASE_ROOT_PATH + "12/" + typeToInternalName(DummyIntComparator.class) + ".class", classAsBytes(DummyIntComparator.class))
+				.toObjectModel();
+
+		ModuleInfo moduleInfo = moduleInfoFrom(archive);
+
+		assertThat(moduleInfo.exports(), is(empty()));
+	}
+
+
+	@Test
+	public void emptyModule()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -79,7 +105,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void mainClass()
+	public void mainClass()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -105,7 +131,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void provides()
+	public void provides()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -128,7 +154,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void export()
+	public void export()
 	{
 		// EARCAM_SNIPPET_BEGIN: export-predicate
 		Predicate<String> predicate = e -> !e.contains("internal");
@@ -158,7 +184,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void exportsTo()
+	public void exportsTo()
 	{
 		String packageA = pkg(DummyIntComparator.class);
 		String packageB = pkg(Ext.class);
@@ -186,7 +212,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void opens()
+	public void opens()
 	{
 		String packageA = pkg(DummyIntComparator.class);
 		String packageB = pkg(Ext.class);
@@ -214,7 +240,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void requires()
+	public void requires()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -233,7 +259,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void uses()
+	public void uses()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -249,7 +275,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void packages()
+	public void packages()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
@@ -266,14 +292,16 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void providingFromMetaInfServices()
+	public void providingFromMetaInfServices()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()
 						.named("foo")
 						.providingFromMetaInfServices())
 				.with(DummyIntComparator.class)
-				.with("META-INF/services/java.util.Comparator", cn(DummyIntComparator.class).getBytes(UTF_8))
+				.with("META-INF/services/java.util.Comparator", ("# SPI files may contain comments like this\r\n" +
+						"# And like this\n\n\n\n" +
+						cn(DummyIntComparator.class)).getBytes(UTF_8))
 				.with("META-INF/servicehistory", "one careful owner".getBytes(UTF_8))
 				.toObjectModel();
 
@@ -286,7 +314,7 @@ public class AsJpmsModuleTest {
 
 
 	@Test
-	void notProvidingFromMetaInfServices()
+	public void notProvidingFromMetaInfServices()
 	{
 		Archive archive = archive()
 				.configured(asJpmsModule()

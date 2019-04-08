@@ -213,8 +213,8 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * contentFrom.
 	 * </p>
 	 *
-	 * @param path a {@link java.nio.file.Path} object.
-	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * @param path a JAR or exploded-JAR directory
+	 * @return a {@link ArchiveResourceSource}.
 	 * 
 	 * @see #sourcing(ArchiveResourceSource)
 	 */
@@ -230,8 +230,8 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * contentFrom.
 	 * </p>
 	 *
-	 * @param path a {@link java.io.File} object.
-	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * @param path a JAR or exploded-JAR directory
+	 * @return a {@link ArchiveResourceSource}.
 	 * 
 	 * @see #sourcing(ArchiveResourceSource)
 	 */
@@ -247,9 +247,9 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * contentFrom.
 	 * </p>
 	 *
-	 * @param path a {@link java.io.File} object.
-	 * @param filter a {@link java.util.function.Predicate} object.
-	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * @param path a JAR or exploded-JAR directory.
+	 * @param filter a resource name filter (note: must not expect a leading slash).
+	 * @return a {@link ArchiveResourceSource}.
 	 * 
 	 * @see #sourcing(ArchiveResourceSource)
 	 */
@@ -265,9 +265,9 @@ public interface ArchiveConstruction extends ArchiveTransform {
 	 * contentFrom.
 	 * </p>
 	 *
-	 * @param path a {@link java.nio.file.Path} object.
-	 * @param filter a {@link java.util.function.Predicate} object.
-	 * @return a {@link io.earcam.instrumental.archive.ArchiveResourceSource} object.
+	 * @param path a JAR or exploded-JAR directory.
+	 * @param filter a resource name filter (note: must not expect a leading slash).
+	 * @return a {@link ArchiveResourceSource}.
 	 * 
 	 * @see #sourcing(ArchiveResourceSource)0
 	 */
@@ -281,9 +281,9 @@ public interface ArchiveConstruction extends ArchiveTransform {
 
 	/**
 	 * 
-	 * @param inputStream
-	 * @param filter
-	 * @return
+	 * @param inputStream a JAR or exploded-JAR directory.
+	 * @param filter a resource name filter (note: must not expect a leading slash).
+	 * @return a {@link ArchiveResourceSource}.
 	 * 
 	 * @see #sourcing(ArchiveResourceSource)
 	 */

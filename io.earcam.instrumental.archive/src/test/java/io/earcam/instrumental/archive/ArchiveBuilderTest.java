@@ -94,6 +94,7 @@ public class ArchiveBuilderTest {
 
 		Path bJar = archive()
 				.with(name, bytes("You shall not pass"))
+				.with(name + ".bak", bytes("You'll see this one"))
 				.to(dir.resolve("b.jar"));
 
 		File cJar = archive()
@@ -102,12 +103,13 @@ public class ArchiveBuilderTest {
 
 		Archive sourced = archive()
 				.sourcing(contentFrom(aJar))
-				.sourcing(contentFrom(bJar, n -> !ArchiveResource.sameName(n, name)))
+				.sourcing(contentFrom(bJar, n -> !name.substring(1).equals(n)))
 				.sourcing(contentFrom(cJar))
 				.with("other.txt", bytes("other"))
 				.toObjectModel();
 
 		assertThat(sourced.content(name).get().bytes(), is(equalTo(contents)));
+		assertThat(sourced.content(name + ".bak").get().bytes(), is(equalTo(bytes("You'll see this one"))));
 		assertThat(sourced.content("another.txt").get().bytes(), is(equalTo(bytes("May thee fare well"))));
 		assertThat(sourced.content("other.txt").get().bytes(), is(equalTo(bytes("other"))));
 	}

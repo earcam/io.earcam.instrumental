@@ -18,9 +18,11 @@
  */
 package io.earcam.instrumental.archive;
 
+import static io.earcam.instrumental.archive.AbstractAsJarBuilder.MULTI_RELEASE_ROOT_PATH;
 import static io.earcam.instrumental.archive.ArchiveResourceSource.ResourceSourceLifecycle.INITIAL;
 import static java.lang.Boolean.TRUE;
 
+import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
@@ -28,7 +30,7 @@ import javax.lang.model.SourceVersion;
 
 final class DefaultAsMultiReleaseJar implements AsMultiReleaseJar, AsReleaseJar, ArchiveResourceSource, ManifestProcessor {
 
-	private static final String HEADER_MULTI_RELEASE = "Multi-Release";
+	private static final Name HEADER_MULTI_RELEASE = new Name("Multi-Release");
 	private Stream<ArchiveResource> resources;
 
 	private static class ReleasePathFilter implements ArchiveResourceFilter {
@@ -44,7 +46,7 @@ final class DefaultAsMultiReleaseJar implements AsMultiReleaseJar, AsReleaseJar,
 
 		private static String pathPrefixFor(int version)
 		{
-			return "META-INF/versions/" + version + "/";
+			return MULTI_RELEASE_ROOT_PATH + version + "/";
 		}
 
 
@@ -99,6 +101,6 @@ final class DefaultAsMultiReleaseJar implements AsMultiReleaseJar, AsReleaseJar,
 	@Override
 	public void process(Manifest manifest)
 	{
-		manifest.getMainAttributes().putValue(HEADER_MULTI_RELEASE, TRUE.toString());
+		manifest.getMainAttributes().put(HEADER_MULTI_RELEASE, TRUE.toString());
 	}
 }

@@ -22,11 +22,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -122,7 +120,7 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 	}
 
 
-	private static Path outputDirectory(String[] args)
+	static Path outputDirectory(String[] args)
 	{
 		return (args.length == 0) ? DEFAULT_DIRECTORY : Paths.get(args[0]);
 	}
@@ -330,9 +328,6 @@ public final class JdkModules extends AbstractPackageModuleMapper {
 		InputStream index = classLoader.getResourceAsStream(resource);
 		if(index == null) {
 			index = Exceptional.apply(Files::newInputStream, Paths.get(resource));
-			if(index == null) {
-				throw new UncheckedIOException("Cannot load " + resource, new FileNotFoundException());
-			}
 		}
 		return index;
 	}
